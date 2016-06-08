@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import Fixture from './Fixture'
 
-const FixtureList = ({ fixtures }) => (
+const FixtureList = ({ fixtures, predictions }) => (
 	<table>
 		<thead>
 			<tr>
@@ -11,7 +11,15 @@ const FixtureList = ({ fixtures }) => (
 		</thead>
 		<tbody>
 			{fixtures.map(fixture => {
-					fixture.key = fixture.homeTeamName + fixture.awayTeamName;
+					fixture.key = fixture.id;
+					fixture.prediction = predictions.reduce((filtered,prediction) => { 
+						if(prediction.id === fixture.id) 
+						{ 
+							return Object.assign({},filtered,prediction);
+						} else {
+							return Object.assign({},filtered);
+						}
+					});
 					return <Fixture links="fixture._links" key="fixture.key" {...fixture}	/>;
 				}
 			)}

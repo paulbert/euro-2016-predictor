@@ -3,7 +3,8 @@ import FixtureList from '../components/FixtureList'
 
 const mapStateToProps = (state) => {
 	return {
-		fixtures:state.fixtures
+		fixtures:state.fixtures,
+		predictions:state.predictions
 	}
 };
 
