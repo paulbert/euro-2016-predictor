@@ -14,8 +14,8 @@ let fixtureId = fixture => Object.assign({},fixture,{ f_id:makeId(fixture.homeTe
 
 let makeBlankPrediction = fixtures => fixtures.map((fixture) => {
 	var prediction = {};
-	prediction[fixture.homeTeamName] = 1;
-	prediction[fixture.awayTeamName] = 0;
+	prediction[fixture.homeTeamName] = null;
+	prediction[fixture.awayTeamName] = null;
 	return {
 		prediction:prediction,
 		p_id:fixture.f_id

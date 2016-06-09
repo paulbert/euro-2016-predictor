@@ -22137,8 +22137,8 @@
 	var makeBlankPrediction = function makeBlankPrediction(fixtures) {
 		return fixtures.map(function (fixture) {
 			var prediction = {};
-			prediction[fixture.homeTeamName] = 1;
-			prediction[fixture.awayTeamName] = 0;
+			prediction[fixture.homeTeamName] = null;
+			prediction[fixture.awayTeamName] = null;
 			return {
 				prediction: prediction,
 				p_id: fixture.f_id

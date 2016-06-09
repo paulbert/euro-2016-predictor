@@ -22462,7 +22462,18 @@
 
 			dispatch(loginSubmit());
 
-			return (0, _isomorphicFetch2.default)(url, { method: 'POST', body: { user: loginValues.user, pass: loginValues.pass } }).then(function (response) {
+			return (0, _isomorphicFetch2.default)(url, {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+					'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+				},
+				body: JSON.stringify({
+					'user': loginValues.user,
+					'pass': loginValues.pass
+				}) }).then(function (response) {
+				console.log(response.headers.has("Set-Cookie"));
 				return response.json();
 			}).then(function (json) {
 				if (json.message === 'Login success') {

@@ -53,31 +53,13 @@ MongoClient.connect(mongodb_connection_string,function(err,db) {
 	app.set('port',process.env.OPENSHIFT_NODEJS_PORT || 3000);
 	app.set('ip',process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 
-	app.use(bodyParser.urlencoded({'extended':'false'}));
+	app.use(bodyParser.urlencoded({'extended':'true'}));
 	app.use(bodyParser.json());
 	app.use(cookieParser());
 	app.use(express.static(path.join(__dirname,'builds')));
 
 	compiler.watch(compilerOptions,compilerFunction);
 
-	app.get('/', function(req,res) { 
-		console.log('new6');
-		if(req.cookies.user) {
-			console.log(req.cookies);
-			res.sendFile(path.join(__dirname + '/builds/templates/index.html'));
-		} else {
-			console.log(req.cookies);
-			res.sendFile(path.join(__dirname + '/builds/templates/login.html'));
-		}
-	});
-	
-	app.post('/signup', function(req,res) {
-		console.log('signup req');
-	});
-	
-	app.post('/login', function(req,res) {
-		res.cookie('user','paul',{expires: new Date(Date.now() + 900000),httpOnly:false,domain:'superdomain.com'}).send();
-	});
 
 	app.listen(app.get('port'),app.get('ip'), function() {
 		console.log("Node app is running at " + app.get('ip') + ":" + app.get('port'));

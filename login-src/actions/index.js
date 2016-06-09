@@ -37,8 +37,21 @@ export function loginTry(url,loginValues) {
 		
 		dispatch(loginSubmit());
 		
-		return fetch(url, {method:'POST', body:{user:loginValues.user,pass:loginValues.pass}})
-			.then(response => response.json())
+		return fetch(url, {
+			method: 'POST',
+			credentials:'include',
+			headers: {
+				'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+				'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+			},
+			body: JSON.stringify({
+				'user': loginValues.user,
+				'pass': loginValues.pass
+			})})
+			.then(response => {
+				console.log(response.headers.has("Set-Cookie"));
+				return response.json()
+			})
 			.then(json => {
 				if(json.message === 'Login success') {
 					location.reload();
