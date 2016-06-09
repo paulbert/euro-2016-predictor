@@ -4,16 +4,28 @@
   "description": "A web app for a Euro 2016 predictor game.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "start": "webpack-dev-server --content-base builds"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.15.1",
+    "classnames": "^2.2.5",
+    "cookie-parser": "^1.4.3",
+    "crypto": "0.0.3",
+    "es6-promise": "^3.2.1",
+    "express": "^4.13.4",
+    "isomorphic-fetch": "^2.2.1",
     "jquery": "^2.2.3",
+    "mongodb": "^2.1.18",
+    "path": "^0.12.7",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
-    "redux": "^3.5.2"
+    "redux": "^3.5.2",
+    "redux-logger": "^2.6.1",
+    "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.9.1",
@@ -24,9 +36,5 @@
     "json-loader": "^0.5.4",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1"
-  },
-  "scripts": {
-    "build":"webpack",
-    "start":"webpack-dev-server --content-base builds"
   }
 }
