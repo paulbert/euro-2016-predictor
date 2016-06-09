@@ -60,7 +60,7 @@
 
 	var _euroApp2 = _interopRequireDefault(_euroApp);
 
-	var _App = __webpack_require__(197);
+	var _App = __webpack_require__(201);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -72,7 +72,7 @@
 		_reactRedux.Provider,
 		{ store: store },
 		_react2.default.createElement(_App2.default, null)
-	));
+	), document.getElementById('root'));
 
 /***/ },
 /* 1 */
@@ -22058,25 +22058,106 @@
 
 	var _teams2 = _interopRequireDefault(_teams);
 
-	var _fixtures = __webpack_require__(196);
+	var _fixtures = __webpack_require__(199);
 
 	var _fixtures2 = _interopRequireDefault(_fixtures);
 
+	var _predictions = __webpack_require__(200);
+
+	var _predictions2 = _interopRequireDefault(_predictions);
+
+	var _redux = __webpack_require__(175);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var initialState = { teams: _teams2.default.teams, fixtures: _fixtures2.default.fixtures };
-
-	var euroApp = function euroApp() {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-		var action = arguments[1];
-
-		return state;
-	};
+	var euroApp = (0, _redux.combineReducers)({
+		teams: _teams2.default,
+		fixtures: _fixtures2.default,
+		predictions: _predictions2.default
+	});
 
 	exports.default = euroApp;
 
 /***/ },
 /* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _initStateCalcs = __webpack_require__(196);
+
+	var teams = function teams() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initTeams : arguments[0];
+		var action = arguments[1];
+
+		return state;
+	};
+
+	exports.default = teams;
+
+/***/ },
+/* 196 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.initPredictions = exports.initFixtures = exports.initTeams = undefined;
+
+	var _teams = __webpack_require__(197);
+
+	var _teams2 = _interopRequireDefault(_teams);
+
+	var _fixtures = __webpack_require__(198);
+
+	var _fixtures2 = _interopRequireDefault(_fixtures);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Creates an id that will be unique to the two strings and date but independent of order.
+	var makeId = function makeId(stringOne, stringTwo, dateString) {
+
+		var sortedStrings = [stringOne, stringTwo].sort().reduce(function (previous, current) {
+			return previous + current;
+		});
+
+		return sortedStrings + '|' + dateString.substr(0, 10);
+	};
+
+	var fixtureId = function fixtureId(fixture) {
+		return Object.assign({}, fixture, { f_id: makeId(fixture.homeTeamName, fixture.awayTeamName, fixture.date) });
+	};
+
+	var makeBlankPrediction = function makeBlankPrediction(fixtures) {
+		return fixtures.map(function (fixture) {
+			var prediction = {};
+			prediction[fixture.homeTeamName] = 1;
+			prediction[fixture.awayTeamName] = 0;
+			return {
+				prediction: prediction,
+				p_id: fixture.f_id
+			};
+		});
+	};
+
+	var fixturesWithId = _fixtures2.default.fixtures.map(function (fixture) {
+		return fixtureId(fixture);
+	});
+
+	var initialState = { teams: _teams2.default.teams, fixtures: fixturesWithId, predictions: makeBlankPrediction(fixturesWithId) };
+
+	var initTeams = exports.initTeams = _teams2.default.teams;
+	var initFixtures = exports.initFixtures = fixturesWithId;
+	var initPredictions = exports.initPredictions = makeBlankPrediction(fixturesWithId);
+
+/***/ },
+/* 197 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -22526,7 +22607,7 @@
 	};
 
 /***/ },
-/* 196 */
+/* 198 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -23444,7 +23525,70 @@
 	};
 
 /***/ },
-/* 197 */
+/* 199 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _initStateCalcs = __webpack_require__(196);
+
+	var fixtures = function fixtures() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initFixtures : arguments[0];
+		var action = arguments[1];
+
+		return state;
+	};
+
+	exports.default = fixtures;
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _initStateCalcs = __webpack_require__(196);
+
+	var prediction = function prediction(state, action) {
+		switch (action.type) {
+			case 'CHANGE_PREDICTION':
+				if (state.p_id !== action.id) {
+					return state;
+				}
+				var newScore = Object.assign({}, state);
+				newScore.prediction[action.team] = action.score;
+				return newScore;
+			default:
+				return state;
+		}
+	};
+
+	var predictions = function predictions() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initPredictions : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'CHANGE_PREDICTION':
+				return state.map(function (p) {
+					return prediction(p, action);
+				});
+			default:
+				return state;
+		}
+	};
+
+	exports.default = predictions;
+
+/***/ },
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23457,9 +23601,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FixtureList = __webpack_require__(198);
+	var _FixtureContain = __webpack_require__(202);
 
-	var _FixtureList2 = _interopRequireDefault(_FixtureList);
+	var _FixtureContain2 = _interopRequireDefault(_FixtureContain);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23467,14 +23611,53 @@
 		return _react2.default.createElement(
 			'div',
 			null,
-			_react2.default.createElement(_FixtureList2.default, null)
+			_react2.default.createElement(_FixtureContain2.default, null)
 		);
 	};
 
 	exports.default = App;
 
 /***/ },
-/* 198 */
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _FixtureList = __webpack_require__(203);
+
+	var _FixtureList2 = _interopRequireDefault(_FixtureList);
+
+	var _actions = __webpack_require__(207);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			fixtures: state.fixtures,
+			predictions: state.predictions
+		};
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onScoreChange: function onScoreChange(id, team, score) {
+				dispatch((0, _actions.changePrediction)(id, team, score));
+			}
+		};
+	};
+
+	var FixtureContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_FixtureList2.default);
+
+	exports.default = FixtureContain;
+
+/***/ },
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23489,22 +23672,52 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Fixture = __webpack_require__(199);
+	var _Fixture = __webpack_require__(204);
 
 	var _Fixture2 = _interopRequireDefault(_Fixture);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var FixtureList = function FixtureList(_ref) {
-		var Fixtures = _ref.Fixtures;
+		var fixtures = _ref.fixtures;
+		var predictions = _ref.predictions;
+		var onScoreChange = _ref.onScoreChange;
 		return _react2.default.createElement(
 			'table',
 			null,
-			Fixtures.map(function (fixture) {
-				return _react2.default.createElement(_Fixture2.default, _extends({
-					links: 'fixture._links'
-				}, fixture));
-			})
+			_react2.default.createElement(
+				'thead',
+				null,
+				_react2.default.createElement(
+					'tr',
+					null,
+					_react2.default.createElement(
+						'td',
+						{ colSpan: '4' },
+						'Team 1'
+					),
+					_react2.default.createElement(
+						'td',
+						{ colSpan: '4' },
+						'Team 2'
+					)
+				)
+			),
+			_react2.default.createElement(
+				'tbody',
+				null,
+				fixtures.map(function (fixture) {
+					fixture.key = fixture.f_id;
+					var prediction = predictions.reduce(function (filtered, prediction, index) {
+						if (prediction.p_id === fixture.f_id) {
+							return Object.assign({}, filtered, prediction);
+						} else {
+							return Object.assign({}, filtered);
+						}
+					});
+					return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, prediction, { onScoreChange: onScoreChange }));
+				})
+			)
 		);
 	};
 
@@ -23518,7 +23731,7 @@
 			}),
 			date: _react.PropTypes.string,
 			status: _react.PropTypes.string,
-			matchday: _react.PropTypes.string,
+			matchday: _react.PropTypes.number,
 			homeTeamName: _react.PropTypes.string.isRequired,
 			awayTeamName: _react.PropTypes.string.isRequired,
 			result: _react.PropTypes.object
@@ -23528,7 +23741,7 @@
 	exports.default = FixtureList;
 
 /***/ },
-/* 199 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23541,6 +23754,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _TeamContain = __webpack_require__(205);
+
+	var _TeamContain2 = _interopRequireDefault(_TeamContain);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Fixture = function Fixture(_ref) {
@@ -23550,13 +23767,28 @@
 		var homeTeamName = _ref.homeTeamName;
 		var awayTeamName = _ref.awayTeamName;
 		var result = _ref.result;
+		var p_id = _ref.p_id;
+		var prediction = _ref.prediction;
+		var onScoreChange = _ref.onScoreChange;
 		return _react2.default.createElement(
 			'tr',
 			null,
 			_react2.default.createElement(
 				'td',
 				null,
+				_react2.default.createElement(_TeamContain2.default, { team: homeTeamName })
+			),
+			_react2.default.createElement(
+				'td',
+				null,
 				homeTeamName
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				_react2.default.createElement('input', { className: 'score-box', type: 'number', min: '0', step: '1', onChange: function onChange(e) {
+						return onScoreChange(p_id, homeTeamName, e.target.value);
+					} })
 			),
 			_react2.default.createElement(
 				'td',
@@ -23566,7 +23798,26 @@
 			_react2.default.createElement(
 				'td',
 				null,
+				_react2.default.createElement(_TeamContain2.default, { team: awayTeamName })
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				_react2.default.createElement('input', { className: 'score-box', type: 'number', min: '0', step: '1', onChange: function onChange(e) {
+						return onScoreChange(p_id, awayTeamName, e.target.value);
+					} })
+			),
+			_react2.default.createElement(
+				'td',
+				null,
 				awayTeamName
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				prediction[homeTeamName],
+				'-',
+				prediction[awayTeamName]
 			)
 		);
 	};
@@ -23574,13 +23825,90 @@
 	Fixture.propTypes = {
 		date: _react.PropTypes.string,
 		status: _react.PropTypes.string,
-		matchday: _react.PropTypes.string,
+		matchday: _react.PropTypes.number,
 		homeTeamName: _react.PropTypes.string.isRequired,
 		awayTeamName: _react.PropTypes.string.isRequired,
 		result: _react.PropTypes.object
 	};
 
 	exports.default = Fixture;
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _TeamFlag = __webpack_require__(206);
+
+	var _TeamFlag2 = _interopRequireDefault(_TeamFlag);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
+		return {
+			teams: state.teams,
+			thisTeam: ownProps.team
+		};
+	};
+
+	var TeamContain = (0, _reactRedux.connect)(mapStateToProps)(_TeamFlag2.default);
+
+	exports.default = TeamContain;
+
+/***/ },
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TeamFlag = function TeamFlag(_ref) {
+		var teams = _ref.teams;
+		var thisTeam = _ref.thisTeam;
+
+
+		var teamFlag = teams.filter(function (team) {
+			return team.name === thisTeam;
+		})[0].crestUrl;
+
+		return _react2.default.createElement("img", { src: teamFlag, width: "50" });
+	};
+
+	exports.default = TeamFlag;
+
+/***/ },
+/* 207 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var changePrediction = exports.changePrediction = function changePrediction(id, team, score) {
+		return {
+			type: 'CHANGE_PREDICTION',
+			id: id,
+			team: team,
+			score: score
+		};
+	};
 
 /***/ }
 /******/ ]);
