@@ -1,10 +1,13 @@
 var webpack = require('webpack');
 
 module.exports = {
-	entry: './src/index.js',
+	entry: {
+		'index':'./src/index.js',
+		'login':'./login-src/index.js'
+	},
 	output: {
 		path: 'builds',
-		filename: 'bundle.js',
+		filename: '[name].bundle.js',
 		sourceMapFilename: 'bundle.map'
 	},
 	plugins: [
@@ -19,5 +22,5 @@ module.exports = {
 			{ test: /\.json$/, loader: 'json' },
 			{ test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel', query:{presets:['es2015','react','stage-0']} }
 		]
-	}
+	}	
 };
