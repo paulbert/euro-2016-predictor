@@ -40,9 +40,18 @@ var compiler = webpack({
 	}	
 });
 
-MongoClient.connect('mongodb://localhost:27017/euros',function(err,db) {
+var db_name = 'euros';
 
-	app.set('port',process.env.PORT || 3000);
+mongodb_connection_string = 'mongodb://127.0.0.1:27017/' + db_name;
+
+if(process.env.OPENSHIFT_MONGODB_DB_URL){
+  mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_URL + db_name;
+}
+
+MongoClient.connect(mongodb_connection_string,function(err,db) {
+
+	app.set('port',process.env.OPENSHIFT_NODEJS_PORT || 3000);
+	app.set('ip',process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 
 	app.use(bodyParser.urlencoded({'extended':'false'}));
 	app.use(bodyParser.json());
@@ -70,8 +79,8 @@ MongoClient.connect('mongodb://localhost:27017/euros',function(err,db) {
 		res.cookie('user','paul',{expires: new Date(Date.now() + 900000),httpOnly:false,domain:'superdomain.com'}).send();
 	});
 
-	app.listen(app.get('port'), function() {
-		console.log("Node app is running at localhost:" + app.get('port'));
+	app.listen(app.get('port'),app.get('ip'), function() {
+		console.log("Node app is running at " + app.get('ip') + ":" + app.get('port'));
 	});
 	
 });
