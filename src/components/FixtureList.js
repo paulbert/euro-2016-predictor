@@ -1,26 +1,26 @@
 import React, { PropTypes } from 'react'
 import Fixture from './Fixture'
 
-const FixtureList = ({ fixtures, predictions }) => (
+const FixtureList = ({ fixtures, predictions, onScoreChange }) => (
 	<table>
 		<thead>
 			<tr>
-				<td colSpan="3">Team 1</td>
-				<td colSpan="2">Team 2</td>
+				<td colSpan="4">Team 1</td>
+				<td colSpan="4">Team 2</td>
 			</tr>
 		</thead>
 		<tbody>
 			{fixtures.map(fixture => {
-					fixture.key = fixture.id;
-					fixture.prediction = predictions.reduce((filtered,prediction) => { 
-						if(prediction.id === fixture.id) 
+					fixture.key = fixture.f_id;
+					let prediction = predictions.reduce((filtered,prediction,index) => { 
+						if(prediction.p_id === fixture.f_id) 
 						{ 
 							return Object.assign({},filtered,prediction);
 						} else {
 							return Object.assign({},filtered);
 						}
 					});
-					return <Fixture links="fixture._links" key="fixture.key" {...fixture}	/>;
+					return <Fixture links={fixture._links} key={fixture.key} {...fixture} {...prediction} onScoreChange={onScoreChange} />;
 				}
 			)}
 		</tbody>
