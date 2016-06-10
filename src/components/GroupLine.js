@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const GroupLine = ({ name,W,D,L,GF,GA,GD,Pts }) => {
+const GroupLine = ({ name,P,W,D,L,GF,GA,GD,Pts }) => {
 	
 	let formatGD = GD > 0 ? '+' + GD : GD;
 	
@@ -9,6 +9,7 @@ const GroupLine = ({ name,W,D,L,GF,GA,GD,Pts }) => {
 	
 			<tr>
 				<td className="col-xs-4">{name}</td>
+				<td className="col-xs-1">{P}</td>
 				<td className="col-xs-1">{W}</td>
 				<td className="col-xs-1">{D}</td>
 				<td className="col-xs-1">{L}</td>

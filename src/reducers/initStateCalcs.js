@@ -27,7 +27,7 @@ const formatGroups = groups => {
 	let newGroups = [];
 	for(var key in groups) {
 		let thisLetter = key;
-		newGroups = newGroups.concat(groups[key].map((val,ind,arr) => {return { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }}));
+		newGroups = newGroups.concat(groups[key].map((val,ind,arr) => {return { 'name': val,'P':0, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }}));
 	}
 	return newGroups;
 }

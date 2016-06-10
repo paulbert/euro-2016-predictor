@@ -64,7 +64,7 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(220);
+	var _reduxThunk = __webpack_require__(221);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -22170,7 +22170,7 @@
 		var _loop = function _loop() {
 			var thisLetter = key;
 			newGroups = newGroups.concat(groups[key].map(function (val, ind, arr) {
-				return { 'name': val, 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0, 'group': thisLetter };
+				return { 'name': val, 'P': 0, 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0, 'group': thisLetter };
 			}));
 		};
 
@@ -23735,19 +23735,53 @@
 
 	var _initStateCalcs = __webpack_require__(196);
 
+	var emptyTeam = { 'P': 0, 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0 };
+	// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+	// groups is a collection of teams with group information, so to keep naming from getting weird calling this team
+	var team = function team(state, action) {
+		switch (action.type) {
+			case 'RECEIVE_PREDICTION':
+				return action.predictions.reduce(function (previous, current) {
+					var scores = [-1, -1];
+					var activeGame = false;
+					var activeTeam = 'second';
+					var prediction = current.prediction;
+					for (var key in prediction) {
+						if (key === previous.name) {
+							activeGame = true;
+							activeTeam = scores[0] === -1 ? 'first' : 'second';
+						}
+						scores[0] = scores[0] === -1 ? parseInt(prediction[key]) : scores[0];
+						scores[1] = parseInt(prediction[key]);
+					}
+					if (activeGame) {
+						var result = scores[0] > scores[1] ? activeTeam === 'first' ? 'W' : 'L' : scores[1] > scores[0] ? activeTeam === 'first' ? 'L' : 'W' : 'D';
+						var GF = activeTeam === 'first' ? scores[0] : scores[1];
+						var GA = activeTeam === 'first' ? scores[1] : scores[0];
+						var newFields = { 'GF': previous.GF + GF, 'GA': previous.GA + GA };
+						newFields.GD = newFields.GF - newFields.GA;
+						newFields[result] = previous[result] + 1;
+						var tempState = Object.assign({}, previous, newFields);
+						newFields.Pts = tempState.W * 3 + tempState.D;
+						newFields.P = tempState.W + tempState.D + tempState.L;
+						return Object.assign({}, tempState, newFields);
+					}
+					return previous;
+				}, Object.assign({}, state, emptyTeam));
+			default:
+				return state;
+		}
+	};
+
 	var groups = function groups() {
 		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initGroups : arguments[0];
 		var action = arguments[1];
 
 		switch (action.type) {
 			case 'RECEIVE_PREDICTION':
-			/*action.predictions.reduce((previous,current) => {
-	  	if(state.p_id === current.p_id) {
-	  		return current;
-	  	}
-	  	return previous;
-	  },state);
-	  return newPrediction;*/
+				return state.map(function (g) {
+					return team(g, action);
+				});
 			default:
 				return state;
 		}
@@ -24831,7 +24865,8 @@
 
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
-			groups: state.groups
+			groups: state.groups,
+			savedPredictions: state.savedPredictions
 		};
 	};
 
@@ -24861,17 +24896,18 @@
 
 	var GroupList = function GroupList(_ref) {
 		var groups = _ref.groups;
+		var savedPredictions = _ref.savedPredictions;
 
 		//onLoad();
 		return _react2.default.createElement(
 			'div',
-			{ className: 'col-md-6 hidden-xs hidden-sm' },
-			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'A' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'B' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'C' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'D' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'E' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'F' })
+			{ className: 'col-md-6 hidden' },
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'A' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'B' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'C' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'D' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'E' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'F' })
 		);
 	};
 
@@ -24897,16 +24933,21 @@
 
 	var _GroupLine2 = _interopRequireDefault(_GroupLine);
 
+	var _rankCalcs = __webpack_require__(220);
+
+	var _rankCalcs2 = _interopRequireDefault(_rankCalcs);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Group = function Group(_ref) {
 		var groups = _ref.groups;
+		var savedPredictions = _ref.savedPredictions;
 		var groupLetter = _ref.groupLetter;
 
 
-		var groupTeams = groups.filter(function (val, ind, arr) {
+		var groupTeams = _rankCalcs2.default.fullSort(groups.filter(function (val, ind, arr) {
 			return val.group === groupLetter;
-		});
+		}), savedPredictions);
 
 		return _react2.default.createElement(
 			'table',
@@ -24922,6 +24963,11 @@
 						{ className: 'col-xs-4' },
 						'Group ',
 						groupLetter
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'P'
 					),
 					_react2.default.createElement(
 						'td',
@@ -24990,6 +25036,7 @@
 
 	var GroupLine = function GroupLine(_ref) {
 		var name = _ref.name;
+		var P = _ref.P;
 		var W = _ref.W;
 		var D = _ref.D;
 		var L = _ref.L;
@@ -25008,6 +25055,11 @@
 				'td',
 				{ className: 'col-xs-4' },
 				name
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				P
 			),
 			_react2.default.createElement(
 				'td',
@@ -25051,6 +25103,120 @@
 
 /***/ },
 /* 220 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var pointSort = function pointSort(a, b) {
+		return b.Pts - a.Pts;
+	};
+
+	var goalScoredSort = function goalScoredSort(a, b) {
+		return b.GF - a.GF;
+	};
+
+	var goalDiffSort = function goalDiffSort(a, b) {
+		return b.GD - a.GD;
+	};
+
+	var chunkTeams = function chunkTeams(group, field) {
+		var chunkedArray = [];
+		var previousValue = undefined;
+		var newChunk = [];
+		for (var i = 0; i < group.length; i++) {
+			if (previousValue !== group[i][field]) {
+				if (newChunk.length > 0) {
+					chunkedArray.push(newChunk);
+				}
+				newChunk = [];
+			}
+			newChunk.push(group[i]);
+			previousValue = group[i][field];
+		}
+		chunkedArray.push(newChunk);
+		return chunkedArray;
+	};
+
+	var fullSort = function fullSort(group, predictions) {
+		var groupByPoints = group.sort(pointSort);
+		var chunked = chunkTeams(groupByPoints, 'Pts');
+		sortStageMiniPts(chunked, predictions);
+		if (chunked.length === 4) {
+			return groupByPoints;
+		} else {
+			return groupByPoints;
+		}
+	};
+
+	var sortStageMiniPts = function sortStageMiniPts(chunks, predictions) {
+		chunks.map(function (chunk) {
+			var newRanks = chunk.map(function (team, ind, arr) {
+				return calcGroup(predictions, team, arr);
+			});
+			var superChunk = chunkTeams(newRanks, 'Pts');
+			if (superChunk.length === chunk.length) {
+				return newRanks;
+			}
+			return chunk;
+		});
+		var finalChunks = chunks.reduce(function (previous, current) {
+			return previous.concat(current);
+		}, []);
+		return finalChunks;
+	};
+
+	var rankCalcs = {
+		pointSort: pointSort,
+		goalScoredSort: goalScoredSort,
+		goalDiffSort: goalDiffSort,
+		fullSort: fullSort
+	};
+
+	var emptyTeam = { 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0 };
+	// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+	var calcGroup = function calcGroup(predictions, team, groupArray) {
+
+		return predictions.reduce(function (previous, current) {
+			var scores = [-1, -1];
+			var activeGame = false;
+			var activeTeam = 'second';
+			var prediction = current.prediction;
+			for (var key in prediction) {
+				if (key === previous.name) {
+					activeGame = true;
+					activeTeam = scores[0] === -1 ? 'first' : 'second';
+				}
+				if (groupArray) {
+					if (groupArray.indexOf(key) === -1) {
+						activeGame = false;
+					};
+				}
+				scores[0] = scores[0] === -1 ? parseInt(prediction[key]) : scores[0];
+				scores[1] = parseInt(prediction[key]);
+			}
+			if (activeGame) {
+				var result = scores[0] > scores[1] ? activeTeam === 'first' ? 'W' : 'L' : scores[1] > scores[0] ? activeTeam === 'first' ? 'L' : 'W' : 'D';
+				var GF = activeTeam === 'first' ? scores[0] : scores[1];
+				var GA = activeTeam === 'first' ? scores[1] : scores[0];
+				var newFields = { 'GF': previous.GF + GF, 'GA': previous.GA + GA };
+				newFields.GD = newFields.GF - newFields.GA;
+				newFields[result] = previous[result] + 1;
+				var tempState = Object.assign({}, previous, newFields);
+				newFields.Pts = tempState.W * 3 + tempState.D;
+				return Object.assign({}, tempState, newFields);
+			}
+			return previous;
+		}, Object.assign({}, team, emptyTeam));
+	};
+
+	exports.default = rankCalcs;
+
+/***/ },
+/* 221 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -3,7 +3,8 @@ import GroupList from '../components/GroupList'
 
 const mapStateToProps = (state) => {
 	return {
-		groups:state.groups
+		groups:state.groups,
+		savedPredictions:state.savedPredictions
 	}
 };
 

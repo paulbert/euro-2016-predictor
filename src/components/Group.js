@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
 import GroupLine from './GroupLine'
+import rankCalcs from '../rank-calculations/rankCalcs'
 
-const Group = ({ groups,groupLetter }) => {
+const Group = ({ groups,savedPredictions,groupLetter }) => {
 	
-	const groupTeams = groups.filter((val,ind,arr) => val.group === groupLetter);
+	const groupTeams = rankCalcs.fullSort(groups.filter((val,ind,arr) => val.group === groupLetter),savedPredictions);
 	
 	return (
 	
@@ -11,6 +12,7 @@ const Group = ({ groups,groupLetter }) => {
 		<thead>
 			<tr>
 				<td className="col-xs-4">Group {groupLetter}</td>
+				<td className="col-xs-1">P</td>
 				<td className="col-xs-1">W</td>
 				<td className="col-xs-1">D</td>
 				<td className="col-xs-1">L</td>
