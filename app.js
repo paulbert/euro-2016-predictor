@@ -60,7 +60,7 @@ MongoClient.connect(mongodb_connection_string,function(err,db) {
 	app.use(cookieParser());
 	app.use(express.static(path.join(__dirname,'builds')));
 
-	compiler.watch(compilerOptions,compilerFunction);
+	//compiler.watch(compilerOptions,compilerFunction);
 	
 	routes(app,db);
 

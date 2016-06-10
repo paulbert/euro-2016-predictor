@@ -38,7 +38,7 @@ module.exports = exports = function(app,db) {
 	
 	app.post('/signup', function(req,res) {
 		var user = req.body;
-		//console.log(user);
+		console.log(user);
 		users.insertUser(user,function(err,newUser) {
 			console.log('New User:');
 			console.log(newUser);
@@ -46,6 +46,7 @@ module.exports = exports = function(app,db) {
 				res.json({'message':err});
 			} else {
 				sessions.insertNewSession(newUser.ops[0],function(err,newCookie) {
+					console.log('Starting session...');
 					cookieCallback(err,newCookie.ops[0],res);
 				});
 			}

@@ -13,8 +13,10 @@ function usersDAO (db) {
 	function insert (user,callback) {
 		
 		var formattedUser = { _id:user.name, pass:crypto.createHash('sha256').update(user.pass).digest('hex'), teamName:user.teamName, topScorer:user.gbPred,predictions:[] };
+		console.log('Start insert...');
 		
 		function checkUnique (err,items) {
+			console.log('Checking if user exists...');
 			if(typeof items === 'undefined' || items.length > 0) {
 				callback('Username already exists!',0);
 			} else {
@@ -23,7 +25,7 @@ function usersDAO (db) {
 		}
 		
 		function doInsert() {
-			//console.log(formattedUser);
+			console.log('Inserting new user...');
 			db.collection(collection).insert(formattedUser,finishInsert);
 		}
 		
@@ -33,6 +35,7 @@ function usersDAO (db) {
 		}
 		
 		function checkCode (err,result) {
+			console.log('Checking league code...');
 			if(result.code === user.leagueCode) {
 				get(formattedUser,checkUnique);
 			} else {
