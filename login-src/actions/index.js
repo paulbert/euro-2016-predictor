@@ -1,5 +1,6 @@
 
 import fetch from 'isomorphic-fetch'
+import $ from 'jquery'
 
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
 export const LOGIN_SWITCH = 'LOGIN_SWITCH';
@@ -41,14 +42,10 @@ export function loginTry(url,loginValues) {
 			return dispatch(loginReject('Passwords do not match'));
 		}
 		
-		return fetch(url, {
+		return $.ajax(url, {
 			method: 'POST',
-			credentials:'include',
-			headers: {
-				'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(loginValues)
+			contentType: 'application/json'
+			data: JSON.stringify(loginValues)
 		})
 		.then(response => {
 			return response.json()
