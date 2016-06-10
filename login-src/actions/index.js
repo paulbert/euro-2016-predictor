@@ -44,7 +44,7 @@ export function loginTry(url,loginValues) {
 		
 		return $.ajax(url, {
 			method: 'POST',
-			contentType: 'application/json'
+			contentType: 'application/json',
 			data: JSON.stringify(loginValues)
 		})
 		.then(response => {
