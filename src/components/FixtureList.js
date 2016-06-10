@@ -1,31 +1,43 @@
 import React, { PropTypes } from 'react'
 import Fixture from './Fixture'
 
-const FixtureList = ({ fixtures, predictions, onScoreChange }) => (
-	<table>
+const FixtureList = ({ fixtures, predictions, savedPredictions, onScoreChange, onLoad }) => {
+	onLoad();
+	return (
+	<div className="row">
+	<div className="col-md-6 col-xs-12">
+	<table className="table">
 		<thead>
 			<tr>
 				<td colSpan="4">Team 1</td>
-				<td colSpan="4">Team 2</td>
+				<td colSpan="3">Team 2</td>
+				<td colSpan="1" className="text-center">Your Saved Predictions</td>
 			</tr>
 		</thead>
 		<tbody>
 			{fixtures.map(fixture => {
 					fixture.key = fixture.f_id;
-					let prediction = predictions.reduce((filtered,prediction,index) => { 
-						if(prediction.p_id === fixture.f_id) 
+					let defaultPrediction = {};
+					defaultPrediction[fixture.homeTeamName] = null;
+					defaultPrediction[fixture.awayTeamName] = null;
+					const reduceToPrediction = (filtered,p,index) => { 
+						if(p.p_id === fixture.f_id) 
 						{ 
-							return Object.assign({},filtered,prediction);
+							return Object.assign({},filtered,p.prediction);
 						} else {
 							return Object.assign({},filtered);
 						}
-					});
-					return <Fixture links={fixture._links} key={fixture.key} {...fixture} {...prediction} onScoreChange={onScoreChange} />;
+					};
+					let prediction = predictions.reduce(reduceToPrediction,defaultPrediction);
+					let savedPrediction = savedPredictions.reduce(reduceToPrediction,defaultPrediction);
+					return <Fixture links={fixture._links} key={fixture.key} {...fixture} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} />;
 				}
 			)}
 		</tbody>
 	</table>
-)
+	</div>
+	</div>
+)}
 
 FixtureList.propTypes = {
 	fixtures: PropTypes.arrayOf(PropTypes.shape({

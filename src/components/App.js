@@ -1,8 +1,10 @@
 import React from 'react'
 import FixtureContain from '../containers/FixtureContain'
+import ButtonContain from '../containers/ButtonContain'
 
 const App = () => (
-	<div>
+	<div className="container-fluid">
+		<ButtonContain />
 		<FixtureContain />
 	</div>
 );
