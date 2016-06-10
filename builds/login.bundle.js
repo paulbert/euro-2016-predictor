@@ -56,19 +56,19 @@
 
 	var _redux = __webpack_require__(175);
 
-	var _index = __webpack_require__(215);
+	var _index = __webpack_require__(221);
 
 	var _index2 = _interopRequireDefault(_index);
 
-	var _App = __webpack_require__(218);
+	var _App = __webpack_require__(224);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(214);
+	var _reduxThunk = __webpack_require__(220);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-	var _reduxLogger = __webpack_require__(222);
+	var _reduxLogger = __webpack_require__(228);
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
@@ -22070,19 +22070,75 @@
 /* 206 */,
 /* 207 */,
 /* 208 */,
-/* 209 */
+/* 209 */,
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 211 */,
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(210);
+	__webpack_require__(213);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 210 */
+/* 213 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -22521,63 +22577,13 @@
 
 
 /***/ },
-/* 211 */,
-/* 212 */,
-/* 213 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames () {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg;
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
-
-/***/ },
-/* 214 */
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22605,7 +22611,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 215 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22616,7 +22622,7 @@
 
 	var _redux = __webpack_require__(175);
 
-	var _actions = __webpack_require__(216);
+	var _actions = __webpack_require__(222);
 
 	var initialState = {
 		loginStatus: '',
@@ -22671,7 +22677,7 @@
 	exports.default = loginApp;
 
 /***/ },
-/* 216 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22682,11 +22688,11 @@
 	exports.loginSwitch = exports.LOGIN_RESET = exports.LOGIN_REJECT = exports.LOGIN_SWITCH = exports.LOGIN_SUBMIT = undefined;
 	exports.loginTry = loginTry;
 
-	var _isomorphicFetch = __webpack_require__(209);
+	var _isomorphicFetch = __webpack_require__(212);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _jquery = __webpack_require__(217);
+	var _jquery = __webpack_require__(223);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -22757,7 +22763,7 @@
 	}
 
 /***/ },
-/* 217 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -32577,7 +32583,7 @@
 
 
 /***/ },
-/* 218 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32590,11 +32596,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Spinner = __webpack_require__(219);
+	var _Spinner = __webpack_require__(225);
 
 	var _Spinner2 = _interopRequireDefault(_Spinner);
 
-	var _LoginContain = __webpack_require__(220);
+	var _LoginContain = __webpack_require__(226);
 
 	var _LoginContain2 = _interopRequireDefault(_LoginContain);
 
@@ -32612,7 +32618,7 @@
 	exports.default = App;
 
 /***/ },
-/* 219 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32638,7 +32644,7 @@
 	exports.default = Spinner;
 
 /***/ },
-/* 220 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32649,11 +32655,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _LoginForm = __webpack_require__(221);
+	var _LoginForm = __webpack_require__(227);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
-	var _actions = __webpack_require__(216);
+	var _actions = __webpack_require__(222);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32681,7 +32687,7 @@
 	exports.default = LoginContain;
 
 /***/ },
-/* 221 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32696,9 +32702,9 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _actions = __webpack_require__(216);
+	var _actions = __webpack_require__(222);
 
-	var _classnames = __webpack_require__(213);
+	var _classnames = __webpack_require__(210);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -32898,7 +32904,7 @@
 	exports.default = LoginForm;
 
 /***/ },
-/* 222 */
+/* 228 */
 /***/ function(module, exports) {
 
 	"use strict";

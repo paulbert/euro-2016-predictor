@@ -4,7 +4,6 @@ import Fixture from './Fixture'
 const FixtureList = ({ fixtures, predictions, savedPredictions, onScoreChange, onLoad }) => {
 	//onLoad();
 	return (
-	<div className="row">
 	<div className="col-md-6 col-xs-12">
 	<table className="table">
 		<thead>
@@ -35,7 +34,6 @@ const FixtureList = ({ fixtures, predictions, savedPredictions, onScoreChange, o
 			)}
 		</tbody>
 	</table>
-	</div>
 	</div>
 )}
 

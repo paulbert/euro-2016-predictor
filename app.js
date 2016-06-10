@@ -50,7 +50,7 @@ if(process.env.MONGODB_URI){
   mongodb_connection_string = process.env.MONGODB_URI;
 }
 
-console.log(mongodb_connection_string);
+//console.log(mongodb_connection_string);
 
 MongoClient.connect(mongodb_connection_string,function(err,db) {
 	

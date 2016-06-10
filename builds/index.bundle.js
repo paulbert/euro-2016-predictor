@@ -60,11 +60,11 @@
 
 	var _euroApp2 = _interopRequireDefault(_euroApp);
 
-	var _App = __webpack_require__(202);
+	var _App = __webpack_require__(204);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(214);
+	var _reduxThunk = __webpack_require__(220);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -22062,17 +22062,21 @@
 
 	var _teams2 = _interopRequireDefault(_teams);
 
-	var _fixtures = __webpack_require__(199);
+	var _fixtures = __webpack_require__(200);
 
 	var _fixtures2 = _interopRequireDefault(_fixtures);
 
-	var _predictions = __webpack_require__(200);
+	var _predictions = __webpack_require__(201);
 
 	var _predictions2 = _interopRequireDefault(_predictions);
 
-	var _savedPredictions = __webpack_require__(201);
+	var _savedPredictions = __webpack_require__(202);
 
 	var _savedPredictions2 = _interopRequireDefault(_savedPredictions);
+
+	var _groups = __webpack_require__(203);
+
+	var _groups2 = _interopRequireDefault(_groups);
 
 	var _redux = __webpack_require__(175);
 
@@ -22082,7 +22086,8 @@
 		teams: _teams2.default,
 		fixtures: _fixtures2.default,
 		predictions: _predictions2.default,
-		savedPredictions: _savedPredictions2.default
+		savedPredictions: _savedPredictions2.default,
+		groups: _groups2.default
 	});
 
 	exports.default = euroApp;
@@ -22117,7 +22122,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.initPredictions = exports.initFixtures = exports.initTeams = undefined;
+	exports.initGroups = exports.initPredictions = exports.initFixtures = exports.initTeams = undefined;
 
 	var _teams = __webpack_require__(197);
 
@@ -22126,6 +22131,10 @@
 	var _fixtures = __webpack_require__(198);
 
 	var _fixtures2 = _interopRequireDefault(_fixtures);
+
+	var _groups = __webpack_require__(199);
+
+	var _groups2 = _interopRequireDefault(_groups);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22155,6 +22164,22 @@
 		});
 	};
 
+	var formatGroups = function formatGroups(groups) {
+		var newGroups = [];
+
+		var _loop = function _loop() {
+			var thisLetter = key;
+			newGroups = newGroups.concat(groups[key].map(function (val, ind, arr) {
+				return { 'name': val, 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0, 'group': thisLetter };
+			}));
+		};
+
+		for (var key in groups) {
+			_loop();
+		}
+		return newGroups;
+	};
+
 	var fixturesWithId = _fixtures2.default.fixtures.map(function (fixture) {
 		return fixtureId(fixture);
 	});
@@ -22164,6 +22189,9 @@
 	var initTeams = exports.initTeams = _teams2.default.teams;
 	var initFixtures = exports.initFixtures = fixturesWithId;
 	var initPredictions = exports.initPredictions = makeBlankPrediction(fixturesWithId);
+	var initGroups = exports.initGroups = formatGroups(_groups2.default);
+
+	console.log(initGroups);
 
 /***/ },
 /* 197 */
@@ -23535,6 +23563,49 @@
 
 /***/ },
 /* 199 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"A": [
+			"France",
+			"Romania",
+			"Albania",
+			"Switzerland"
+		],
+		"B": [
+			"England",
+			"Russia",
+			"Wales",
+			"Slovakia"
+		],
+		"C": [
+			"Germany",
+			"Ukraine",
+			"Poland",
+			"Northern Ireland"
+		],
+		"D": [
+			"Spain",
+			"Czech Republic",
+			"Turkey",
+			"Croatia"
+		],
+		"E": [
+			"Belgium",
+			"Italy",
+			"Republic of Ireland",
+			"Sweden"
+		],
+		"F": [
+			"Portugal",
+			"Iceland",
+			"Austria",
+			"Hungary"
+		]
+	};
+
+/***/ },
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23555,7 +23626,7 @@
 	exports.default = fixtures;
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23597,7 +23668,7 @@
 	exports.default = predictions;
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23653,7 +23724,39 @@
 	exports.default = savedPredictions;
 
 /***/ },
-/* 202 */
+/* 203 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _initStateCalcs = __webpack_require__(196);
+
+	var groups = function groups() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initGroups : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'RECEIVE_PREDICTION':
+			/*action.predictions.reduce((previous,current) => {
+	  	if(state.p_id === current.p_id) {
+	  		return current;
+	  	}
+	  	return previous;
+	  },state);
+	  return newPrediction;*/
+			default:
+				return state;
+		}
+	};
+
+	exports.default = groups;
+
+/***/ },
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23666,13 +23769,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FixtureContain = __webpack_require__(203);
+	var _FixtureContain = __webpack_require__(205);
 
 	var _FixtureContain2 = _interopRequireDefault(_FixtureContain);
 
-	var _ButtonContain = __webpack_require__(211);
+	var _ButtonContain = __webpack_require__(214);
 
 	var _ButtonContain2 = _interopRequireDefault(_ButtonContain);
+
+	var _GroupsContain = __webpack_require__(216);
+
+	var _GroupsContain2 = _interopRequireDefault(_GroupsContain);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23681,14 +23788,19 @@
 			'div',
 			{ className: 'container-fluid' },
 			_react2.default.createElement(_ButtonContain2.default, null),
-			_react2.default.createElement(_FixtureContain2.default, null)
+			_react2.default.createElement(
+				'div',
+				{ className: 'row' },
+				_react2.default.createElement(_FixtureContain2.default, null),
+				_react2.default.createElement(_GroupsContain2.default, null)
+			)
 		);
 	};
 
 	exports.default = App;
 
 /***/ },
-/* 203 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23699,11 +23811,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _FixtureList = __webpack_require__(204);
+	var _FixtureList = __webpack_require__(206);
 
 	var _FixtureList2 = _interopRequireDefault(_FixtureList);
 
-	var _actions = __webpack_require__(208);
+	var _actions = __webpack_require__(211);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23732,7 +23844,7 @@
 	exports.default = FixtureContain;
 
 /***/ },
-/* 204 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23747,7 +23859,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Fixture = __webpack_require__(205);
+	var _Fixture = __webpack_require__(207);
 
 	var _Fixture2 = _interopRequireDefault(_Fixture);
 
@@ -23763,56 +23875,52 @@
 		//onLoad();
 		return _react2.default.createElement(
 			'div',
-			{ className: 'row' },
+			{ className: 'col-md-6 col-xs-12' },
 			_react2.default.createElement(
-				'div',
-				{ className: 'col-md-6 col-xs-12' },
+				'table',
+				{ className: 'table' },
 				_react2.default.createElement(
-					'table',
-					{ className: 'table' },
+					'thead',
+					null,
 					_react2.default.createElement(
-						'thead',
+						'tr',
 						null,
 						_react2.default.createElement(
-							'tr',
-							null,
-							_react2.default.createElement(
-								'td',
-								{ colSpan: '4' },
-								'Team 1'
-							),
-							_react2.default.createElement(
-								'td',
-								{ colSpan: '3' },
-								'Team 2'
-							),
-							_react2.default.createElement(
-								'td',
-								{ colSpan: '1', className: 'text-center' },
-								'Your Saved Predictions'
-							)
+							'td',
+							{ colSpan: '4' },
+							'Team 1'
+						),
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '3' },
+							'Team 2'
+						),
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '1', className: 'text-center' },
+							'Your Saved Predictions'
 						)
-					),
-					_react2.default.createElement(
-						'tbody',
-						null,
-						fixtures.map(function (fixture) {
-							fixture.key = fixture.f_id;
-							var defaultPrediction = {};
-							defaultPrediction[fixture.homeTeamName] = null;
-							defaultPrediction[fixture.awayTeamName] = null;
-							var reduceToPrediction = function reduceToPrediction(filtered, p, index) {
-								if (p.p_id === fixture.f_id) {
-									return Object.assign({}, filtered, p.prediction);
-								} else {
-									return Object.assign({}, filtered);
-								}
-							};
-							var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
-							var savedPrediction = savedPredictions.reduce(reduceToPrediction, defaultPrediction);
-							return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange }));
-						})
 					)
+				),
+				_react2.default.createElement(
+					'tbody',
+					null,
+					fixtures.map(function (fixture) {
+						fixture.key = fixture.f_id;
+						var defaultPrediction = {};
+						defaultPrediction[fixture.homeTeamName] = null;
+						defaultPrediction[fixture.awayTeamName] = null;
+						var reduceToPrediction = function reduceToPrediction(filtered, p, index) {
+							if (p.p_id === fixture.f_id) {
+								return Object.assign({}, filtered, p.prediction);
+							} else {
+								return Object.assign({}, filtered);
+							}
+						};
+						var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
+						var savedPrediction = savedPredictions.reduce(reduceToPrediction, defaultPrediction);
+						return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange }));
+					})
 				)
 			)
 		);
@@ -23838,7 +23946,7 @@
 	exports.default = FixtureList;
 
 /***/ },
-/* 205 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23851,9 +23959,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TeamContain = __webpack_require__(206);
+	var _TeamContain = __webpack_require__(208);
 
 	var _TeamContain2 = _interopRequireDefault(_TeamContain);
+
+	var _classnames = __webpack_require__(210);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23872,6 +23984,14 @@
 
 		var reformatDate = new Date(date);
 		var dateString = reformatDate.getMonth() + 1 + '/' + reformatDate.getDate();
+
+		var today = new Date(Date.now());
+
+		today.setHours(today.getHours());
+
+		var inputClassObj = { 'score-box': true, 'hidden': false };
+		inputClassObj.hidden = today > reformatDate;
+		var inputClass = (0, _classnames2.default)(inputClassObj);
 
 		return _react2.default.createElement(
 			'tr',
@@ -23894,7 +24014,7 @@
 			_react2.default.createElement(
 				'td',
 				{ className: 'col-xs-1' },
-				_react2.default.createElement('input', { className: 'score-box', type: 'number', min: '0', step: '1', onChange: function onChange(e) {
+				_react2.default.createElement('input', { className: inputClass, type: 'number', min: '0', step: '1', onChange: function onChange(e) {
 						return onScoreChange(f_id, homeTeamName, e.target.value);
 					} })
 			),
@@ -23911,7 +24031,7 @@
 			_react2.default.createElement(
 				'td',
 				{ className: 'col-xs-1' },
-				_react2.default.createElement('input', { className: 'score-box', type: 'number', min: '0', step: '1', onChange: function onChange(e) {
+				_react2.default.createElement('input', { className: inputClass, type: 'number', min: '0', step: '1', onChange: function onChange(e) {
 						return onScoreChange(f_id, awayTeamName, e.target.value);
 					} })
 			),
@@ -23937,7 +24057,7 @@
 	exports.default = Fixture;
 
 /***/ },
-/* 206 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23948,7 +24068,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _TeamFlag = __webpack_require__(207);
+	var _TeamFlag = __webpack_require__(209);
 
 	var _TeamFlag2 = _interopRequireDefault(_TeamFlag);
 
@@ -23966,7 +24086,7 @@
 	exports.default = TeamContain;
 
 /***/ },
-/* 207 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23996,7 +24116,61 @@
 	exports.default = TeamFlag;
 
 /***/ },
-/* 208 */
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24008,7 +24182,7 @@
 	exports.savePredictions = savePredictions;
 	exports.getPredictions = getPredictions;
 
-	var _isomorphicFetch = __webpack_require__(209);
+	var _isomorphicFetch = __webpack_require__(212);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
@@ -24093,19 +24267,19 @@
 	//dispatch(getPredictions());
 
 /***/ },
-/* 209 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(210);
+	__webpack_require__(213);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 210 */
+/* 213 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -24544,7 +24718,7 @@
 
 
 /***/ },
-/* 211 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24555,11 +24729,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _PredictButton = __webpack_require__(212);
+	var _PredictButton = __webpack_require__(215);
 
 	var _PredictButton2 = _interopRequireDefault(_PredictButton);
 
-	var _actions = __webpack_require__(208);
+	var _actions = __webpack_require__(211);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24582,7 +24756,7 @@
 	exports.default = ButtonContain;
 
 /***/ },
-/* 212 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24595,7 +24769,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(213);
+	var _classnames = __webpack_require__(210);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -24638,61 +24812,245 @@
 	exports.default = PredictButton;
 
 /***/ },
-/* 213 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
+	'use strict';
 
-	(function () {
-		'use strict';
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
-		var hasOwn = {}.hasOwnProperty;
+	var _reactRedux = __webpack_require__(168);
 
-		function classNames () {
-			var classes = [];
+	var _GroupList = __webpack_require__(217);
 
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
+	var _GroupList2 = _interopRequireDefault(_GroupList);
 
-				var argType = typeof arg;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			groups: state.groups
+		};
+	};
 
-			return classes.join(' ');
-		}
+	var GroupContain = (0, _reactRedux.connect)(mapStateToProps)(_GroupList2.default);
 
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
+	exports.default = GroupContain;
 
 /***/ },
-/* 214 */
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Group = __webpack_require__(218);
+
+	var _Group2 = _interopRequireDefault(_Group);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GroupList = function GroupList(_ref) {
+		var groups = _ref.groups;
+
+		//onLoad();
+		return _react2.default.createElement(
+			'div',
+			{ className: 'col-md-6 hidden-xs hidden-sm' },
+			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'A' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'B' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'C' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'D' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'E' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, groupLetter: 'F' })
+		);
+	};
+
+	exports.default = GroupList;
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _GroupLine = __webpack_require__(219);
+
+	var _GroupLine2 = _interopRequireDefault(_GroupLine);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Group = function Group(_ref) {
+		var groups = _ref.groups;
+		var groupLetter = _ref.groupLetter;
+
+
+		var groupTeams = groups.filter(function (val, ind, arr) {
+			return val.group === groupLetter;
+		});
+
+		return _react2.default.createElement(
+			'table',
+			{ className: 'table' },
+			_react2.default.createElement(
+				'thead',
+				null,
+				_react2.default.createElement(
+					'tr',
+					null,
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-4' },
+						'Group ',
+						groupLetter
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'W'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'D'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'L'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'GF'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'GA'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'GD'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'Pts'
+					)
+				)
+			),
+			_react2.default.createElement(
+				'tbody',
+				null,
+				groupTeams.map(function (team) {
+					return _react2.default.createElement(_GroupLine2.default, _extends({ key: team.name, name: team.name }, team));
+				})
+			)
+		);
+	};
+
+	exports.default = Group;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GroupLine = function GroupLine(_ref) {
+		var name = _ref.name;
+		var W = _ref.W;
+		var D = _ref.D;
+		var L = _ref.L;
+		var GF = _ref.GF;
+		var GA = _ref.GA;
+		var GD = _ref.GD;
+		var Pts = _ref.Pts;
+
+
+		var formatGD = GD > 0 ? '+' + GD : GD;
+
+		return _react2.default.createElement(
+			'tr',
+			null,
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-4' },
+				name
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				W
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				D
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				L
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				GF
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				GA
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				GD
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				Pts
+			)
+		);
+	};
+
+	exports.default = GroupLine;
+
+/***/ },
+/* 220 */
 /***/ function(module, exports) {
 
 	'use strict';
