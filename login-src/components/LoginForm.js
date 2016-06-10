@@ -27,7 +27,7 @@ let LoginForm = ({loginView,loginStatus,invalidMessage,onSwitchClick,onSubmitCli
 	let thisMessage = loginView === 'signup' ? 'Already signed up?' : 'Need to sign up?';
 	let switchTo = loginView === 'signup' ? 'login' : 'signup';
 	let loginViews = {};
-	let loginValues = {name:'',pass:'',rptPass:'',teamName:'',leagueCode:''};
+	let loginValues = {name:'',pass:'',rptPass:'',teamName:'',gbPred:'',leagueCode:''};
 	let alertClasses = classnames({ 'alert': true, 'alert-danger': true, 'hidden':(invalidMessage === '') });
 	if(loginStatus === 'invalid') {
 		alertClasses.hidden = false;
@@ -72,6 +72,10 @@ let LoginForm = ({loginView,loginStatus,invalidMessage,onSwitchClick,onSubmitCli
 			<div className="form-group">
 				<label className="control-label">Team Name:</label>
 				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'teamName')} />
+			</div>
+			<div className="form-group">
+				<label className="control-label">Golden Boot Prediction:</label>
+				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'gbPred')} />
 			</div>
 			<div className="form-group">
 				<label className="control-label">League Code:</label>

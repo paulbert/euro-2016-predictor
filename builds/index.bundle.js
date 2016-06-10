@@ -23716,7 +23716,7 @@
 	};
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		//dispatch(getPredictions())
+		dispatch((0, _actions.getPredictions)());
 		return {
 			onScoreChange: function onScoreChange(id, team, score) {
 				dispatch((0, _actions.changePrediction)(id, team, score));
@@ -23760,7 +23760,7 @@
 		var onScoreChange = _ref.onScoreChange;
 		var onLoad = _ref.onLoad;
 
-		onLoad();
+		//onLoad();
 		return _react2.default.createElement(
 			'div',
 			{ className: 'row' },

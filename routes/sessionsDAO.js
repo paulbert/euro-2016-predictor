@@ -7,7 +7,7 @@ function sessionsDAO (db) {
 	
 	function getUserSessions(user,callback) {
 		var userId = user._id ? user._id : user.name;
-		console.log(user);
+		//console.log(user);
 		db.collection(collection).find({user_id:userId}).toArray(callback);
 	}
 	

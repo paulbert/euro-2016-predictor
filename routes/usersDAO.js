@@ -12,7 +12,7 @@ function usersDAO (db) {
 	
 	function insert (user,callback) {
 		
-		var formattedUser = { _id:user.name, pass:crypto.createHash('sha256').update(user.pass).digest('hex'), teamName:user.teamName, topScorer:'',predictions:[] };
+		var formattedUser = { _id:user.name, pass:crypto.createHash('sha256').update(user.pass).digest('hex'), teamName:user.teamName, topScorer:user.gbPred,predictions:[] };
 		
 		function checkUnique (err,items) {
 			if(typeof items === 'undefined' || items.length > 0) {
@@ -23,7 +23,7 @@ function usersDAO (db) {
 		}
 		
 		function doInsert() {
-			console.log(formattedUser);
+			//console.log(formattedUser);
 			db.collection(collection).insert(formattedUser,finishInsert);
 		}
 		

@@ -1,6 +1,6 @@
 
 import { combineReducers } from 'redux'
-import { LOGIN_SUBMIT, LOGIN_SWITCH, LOGIN_REJECT } from '../actions'
+import { LOGIN_SUBMIT, LOGIN_SWITCH, LOGIN_REJECT, LOGIN_RESET } from '../actions'
 
 const initialState = { 
 	loginStatus:'', 

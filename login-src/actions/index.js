@@ -4,6 +4,7 @@ import fetch from 'isomorphic-fetch'
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
 export const LOGIN_SWITCH = 'LOGIN_SWITCH';
 export const LOGIN_REJECT = 'LOGIN_REJECT';
+export const LOGIN_RESET = 'LOGIN_RESET';
 
 const loginSubmit = () => {
 	return {
@@ -24,6 +25,11 @@ const loginReject = (message) => {
 		message
 	}
 };
+const loginReset = () => {
+	return {
+		type:LOGIN_RESET
+	}
+}
 // loginValues = {name:'',pass:'',rptPass:'',teamName:'',leagueCode:''};
 export function loginTry(url,loginValues) {
 	
@@ -51,7 +57,8 @@ export function loginTry(url,loginValues) {
 			if(json.message === 'Success') {
 				location.reload();
 			}
-			return dispatch(loginReject(json.message));
+			dispatch(loginReject(json.message));
+			return setTimeout(()=>dispatch(loginReset()),5000);
 		});
 			
 	}

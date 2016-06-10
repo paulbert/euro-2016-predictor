@@ -38,7 +38,7 @@ module.exports = exports = function(app,db) {
 	}
 	
 	function cookieCallback (err,newCookie,res) {
-		console.log(newCookie);
+		//console.log(newCookie);
 		if(err) {
 			res.json({'message':err});
 		} else {
@@ -49,12 +49,14 @@ module.exports = exports = function(app,db) {
 	
 	app.post('/signup', function(req,res) {
 		var user = parseReq(req);
-		console.log(user);
+		//console.log(user);
 		users.insertUser(user,function(err,newUser) {
+			console.log('New User:');
+			console.log(newUser);
 			if(err) {
 				res.json({'message':err});
 			} else {
-				sessions.insertNewSession(newUser,function(err,newCookie) {
+				sessions.insertNewSession(newUser.ops[0],function(err,newCookie) {
 					cookieCallback(err,newCookie.ops[0],res);
 				});
 			}
@@ -77,12 +79,12 @@ module.exports = exports = function(app,db) {
 	app.post('/savePrediction', function(req,res) {
 		var predictions = req.body;
 		var user = req.cookies.user;
-		console.log(user);
+		//console.log(user);
 		users.updatePrediction(predictions,user,function(err,result) {
 			if(err) {
 				res.json({'message':'Error'});
 			} else {
-				console.log(result);
+				//console.log(result);
 				res.json(result);
 			}
 		});
@@ -94,7 +96,7 @@ module.exports = exports = function(app,db) {
 			if(err) {
 				res.json({'message':'Error'});
 			} else {
-				console.log(result);
+				//console.log(result);
 				res.json(result);
 			}
 		});

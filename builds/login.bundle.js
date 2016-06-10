@@ -22679,7 +22679,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.loginSwitch = exports.LOGIN_REJECT = exports.LOGIN_SWITCH = exports.LOGIN_SUBMIT = undefined;
+	exports.loginSwitch = exports.LOGIN_RESET = exports.LOGIN_REJECT = exports.LOGIN_SWITCH = exports.LOGIN_SUBMIT = undefined;
 	exports.loginTry = loginTry;
 
 	var _isomorphicFetch = __webpack_require__(209);
@@ -22691,6 +22691,7 @@
 	var LOGIN_SUBMIT = exports.LOGIN_SUBMIT = 'LOGIN_SUBMIT';
 	var LOGIN_SWITCH = exports.LOGIN_SWITCH = 'LOGIN_SWITCH';
 	var LOGIN_REJECT = exports.LOGIN_REJECT = 'LOGIN_REJECT';
+	var LOGIN_RESET = exports.LOGIN_RESET = 'LOGIN_RESET';
 
 	var loginSubmit = function loginSubmit() {
 		return {
@@ -22709,6 +22710,11 @@
 		return {
 			type: LOGIN_REJECT,
 			message: message
+		};
+	};
+	var loginReset = function loginReset() {
+		return {
+			type: LOGIN_RESET
 		};
 	};
 	// loginValues = {name:'',pass:'',rptPass:'',teamName:'',leagueCode:''};
@@ -22736,7 +22742,10 @@
 				if (json.message === 'Success') {
 					location.reload();
 				}
-				return dispatch(loginReject(json.message));
+				dispatch(loginReject(json.message));
+				return setTimeout(function () {
+					return dispatch(loginReset());
+				}, 5000);
 			});
 		};
 	}
@@ -22898,7 +22907,7 @@
 		var thisMessage = loginView === 'signup' ? 'Already signed up?' : 'Need to sign up?';
 		var switchTo = loginView === 'signup' ? 'login' : 'signup';
 		var loginViews = {};
-		var loginValues = { name: '', pass: '', rptPass: '', teamName: '', leagueCode: '' };
+		var loginValues = { name: '', pass: '', rptPass: '', teamName: '', gbPred: '', leagueCode: '' };
 		var alertClasses = (0, _classnames2.default)({ 'alert': true, 'alert-danger': true, 'hidden': invalidMessage === '' });
 		if (loginStatus === 'invalid') {
 			alertClasses.hidden = false;
@@ -23004,6 +23013,18 @@
 					),
 					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
 							return loginValues = loginChange(e.target.value, 'teamName');
+						} })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'Golden Boot Prediction:'
+					),
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'gbPred');
 						} })
 				),
 				_react2.default.createElement(

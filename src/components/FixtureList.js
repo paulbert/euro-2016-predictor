@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import Fixture from './Fixture'
 
 const FixtureList = ({ fixtures, predictions, savedPredictions, onScoreChange, onLoad }) => {
-	onLoad();
+	//onLoad();
 	return (
 	<div className="row">
 	<div className="col-md-6 col-xs-12">

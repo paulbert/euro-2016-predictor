@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-	//dispatch(getPredictions())
+	dispatch(getPredictions())
 	return {
 		onScoreChange: (id,team,score) => {
 			dispatch(changePrediction(id,team,score));
