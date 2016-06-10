@@ -7,7 +7,9 @@ import App from './components/App'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 
-let store = createStore(loginApp,applyMiddleware(thunkMiddleware,createLogger));
+const loggerMiddleware = createLogger();
+
+let store = createStore(loginApp,applyMiddleware(thunkMiddleware));
 
 render(
 	<Provider store={store}>

@@ -1,23 +1,46 @@
 
+import { combineReducers } from 'redux'
+import { LOGIN_SUBMIT, LOGIN_SWITCH, LOGIN_REJECT } from '../actions'
+
 const initialState = { 
-	waiting: false, 
-	invalid: false, 
+	loginStatus:'', 
 	invalidMessage: '',
 	loginView: 'login'
 };
 
-const loginApp = (state = initialState, action) => {
+function loginStatus (state = '', action) {
 	switch(action.type) {
-		case 'LOGIN_SWITCH':
-			return Object.assign({},state,{ loginView: action.switchTo });
 		case 'LOGIN_SUBMIT':
-			return Object.assign({},state,{ waiting: true });
+			return action.type;
 		case 'LOGIN_REJECT':
-			return Object.assign({},state,{ waiting: false,invalid:true, invalidMessage:action.message });
-			return state;
+			return action.type;
+		case 'LOGIN_SWITCH':
 		default:
 			return state;
 	}
-};
+}
+
+function invalidMessage (state = '', action) {
+	switch(action.type) {
+		case 'LOGIN_REJECT':
+			return action.message;
+		case 'LOGIN_SWITCH':
+		case 'LOGIN_SUBMIT':
+		default:
+			return '';
+	}
+}
+
+function loginView (state = 'login',action) {
+	switch(action.type) {
+		case 'LOGIN_SWITCH':
+			return action.switchTo;
+		case 'LOGIN_SUBMIT':
+		case 'LOGIN_REJECT':
+		default:
+			return state;
+	}
+}
+const loginApp = combineReducers({loginStatus,invalidMessage,loginView});
 
 export default loginApp;

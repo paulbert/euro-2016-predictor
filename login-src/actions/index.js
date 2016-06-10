@@ -2,40 +2,38 @@
 import fetch from 'isomorphic-fetch'
 
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
+export const LOGIN_SWITCH = 'LOGIN_SWITCH';
+export const LOGIN_REJECT = 'LOGIN_REJECT';
+
 const loginSubmit = () => {
 	return {
-		type:'LOGIN_SUBMIT'
+		type:LOGIN_SUBMIT
 	}
 };
 
 export const loginSwitch = (switchTo) => {
 	return {
-		type:'LOGIN_SWITCH',
+		type:LOGIN_SWITCH,
 		switchTo
 	}
 };
 
-export const loginChange = (changeTo,prop) => {
-	return {
-		type:'LOGIN_CHANGE',
-		changeTo,
-		prop
-	}
-};
-
-export const LOGIN_REJECT = 'LOGIN_REJECT';
 const loginReject = (message) => {
 	return {
-		type:'LOGIN_REJECT',
+		type:LOGIN_REJECT,
 		message
 	}
 };
-
+// loginValues = {name:'',pass:'',rptPass:'',teamName:'',leagueCode:''};
 export function loginTry(url,loginValues) {
 	
 	return function(dispatch) {
 		
 		dispatch(loginSubmit());
+		
+		if(url === '/signup' && loginValues.pass !== loginValues.rptPass) {
+			return dispatch(loginReject('Passwords do not match'));
+		}
 		
 		return fetch(url, {
 			method: 'POST',
@@ -44,20 +42,17 @@ export function loginTry(url,loginValues) {
 				'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
 				'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
 			},
-			body: JSON.stringify({
-				'user': loginValues.user,
-				'pass': loginValues.pass
-			})})
-			.then(response => {
-				console.log(response.headers.has("Set-Cookie"));
-				return response.json()
-			})
-			.then(json => {
-				if(json.message === 'Login success') {
-					location.reload();
-				}
-				return dispatch(loginReject(json.message));
-			});
+			body: JSON.stringify(loginValues)
+		})
+		.then(response => {
+			return response.json()
+		})
+		.then(json => {
+			if(json.message === 'Success') {
+				location.reload();
+			}
+			return dispatch(loginReject(json.message));
+		});
 			
 	}
 	

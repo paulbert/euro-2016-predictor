@@ -7,7 +7,8 @@ import classnames from 'classnames'
 const mapStateToProps = (state) => {
 	return {
 		loginView:state.loginView,
-		loginInfo:state.loginInfo
+		loginStatus:state.loginStatus,
+		invalidMessage:state.invalidMessage
 	}
 };
 
@@ -22,27 +23,29 @@ const mapDispatchToProps = (dispatch) => {
 	}
 };
 
-let LoginForm = ({loginView,invalid,invalidMessage,onSwitchClick,onSubmitClick}) => {
+let LoginForm = ({loginView,loginStatus,invalidMessage,onSwitchClick,onSubmitClick}) => {
 	let thisMessage = loginView === 'signup' ? 'Already signed up?' : 'Need to sign up?';
 	let switchTo = loginView === 'signup' ? 'login' : 'signup';
 	let loginViews = {};
-	let loginValues = {user:'',pass:'',rptPass:'',teamName:'',leagueCode:''};
-	let alertMessage = '';
-	let alertClasses = classnames({ 'alert': true, 'alert-danger': true, 'hidden':true });
+	let loginValues = {name:'',pass:'',rptPass:'',teamName:'',leagueCode:''};
+	let alertClasses = classnames({ 'alert': true, 'alert-danger': true, 'hidden':(invalidMessage === '') });
+	if(loginStatus === 'invalid') {
+		alertClasses.hidden = false;
+	}
 	const loginChange = (val,prop) => {
 		let newValue = {};
 		newValue[prop] = val;
 		return Object.assign({},loginValues,newValue);
 	};
 	const Alert = () => (
-		<div className="alert alert-danger hidden" role="alert">{alertMessage}</div>
+		<div className={alertClasses} role="alert">{invalidMessage}</div>
 	);
 	loginViews.login = () => (
 	
 		<form onSubmit={(e) => { e.preventDefault(); return onSubmitClick('/login',loginValues);}}>
 			<div className="form-group">
 				<label className="control-label">Username:</label>
-				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'user')} />
+				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'name')} />
 			</div>
 			<div className="form-group">
 				<label className="control-label">Password:</label>
@@ -56,7 +59,7 @@ let LoginForm = ({loginView,invalid,invalidMessage,onSwitchClick,onSubmitClick})
 		<form onSubmit={(e) => { e.preventDefault(); return onSubmitClick('/signup',loginValues);}}>
 			<div className="form-group">
 				<label className="control-label">Username:</label>
-				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'user')} />
+				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'name')} />
 			</div>
 			<div className="form-group">
 				<label className="control-label">Password:</label>
@@ -92,6 +95,6 @@ let LoginForm = ({loginView,invalid,invalidMessage,onSwitchClick,onSubmitClick})
 	);
 };
 
-LoginForm = connect()(LoginForm)
+LoginForm = connect()(LoginForm);
 
 export default LoginForm;
