@@ -46,7 +46,7 @@ export function loginTry(url,loginValues) {
 			credentials:'include',
 			headers: {
 				'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-				'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(loginValues)
 		})

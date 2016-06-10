@@ -26,17 +26,6 @@ module.exports = exports = function(app,db) {
 		res.set('Access-Control-Allow-Credentials','true');
 	}
 	
-	function parseReq(req) {
-		// Just in case bodyparser starts working correctly
-		if(typeof req.body === 'object') {
-			for(key in req.body) {
-				//console.log(key);
-				return JSON.parse(key);
-			}
-		}
-		return JSON.parse(key);
-	}
-	
 	function cookieCallback (err,newCookie,res) {
 		//console.log(newCookie);
 		if(err) {
@@ -48,7 +37,7 @@ module.exports = exports = function(app,db) {
 	}
 	
 	app.post('/signup', function(req,res) {
-		var user = parseReq(req);
+		var user = req.body;
 		//console.log(user);
 		users.insertUser(user,function(err,newUser) {
 			console.log('New User:');
@@ -64,7 +53,7 @@ module.exports = exports = function(app,db) {
 	});
 	
 	app.post('/login', function(req,res) {
-		var user = parseReq(req);
+		var user = req.body;
 		users.checkPassword(user,function(err,passed) {
 			if(passed) {
 				sessions.insertNewSession(user,function(err,newCookie) {
