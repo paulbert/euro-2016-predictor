@@ -22728,6 +22728,14 @@
 
 			dispatch(loginSubmit());
 
+			if (loginValues.name === '' || !loginValues.name) {
+				return dispatch(loginReject('Username required'));
+			}
+
+			if (loginValues.pass === '' || !loginValues.pass) {
+				return dispatch(loginReject('Password required'));
+			}
+
 			if (url === '/signup' && loginValues.pass !== loginValues.rptPass) {
 				return dispatch(loginReject('Passwords do not match'));
 			}
@@ -22736,8 +22744,6 @@
 				method: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify(loginValues)
-			}).then(function (response) {
-				return response.json();
 			}).then(function (json) {
 				if (json.message === 'Success') {
 					location.reload();
