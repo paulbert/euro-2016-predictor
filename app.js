@@ -46,26 +46,27 @@ var mongodb_connection_string = 'mongodb://127.0.0.1:27017/' + db_name;
 
 var routes = require('./routes/index.js');
 
-if(process.env.OPENSHIFT_MONGODB_DB_URL){
-  mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_URL + db_name;
+if(process.env.PROD_MONGODB){
+  mongodb_connection_string = process.env.PROD_MONGODB;
 }
+
+console.log(mongodb_connection_string);
 
 MongoClient.connect(mongodb_connection_string,function(err,db) {
 
-	app.set('port',process.env.OPENSHIFT_NODEJS_PORT || 3000);
-	app.set('ip',process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
+	app.set('port',process.env.PORT || 3000);
 
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({'extended':'true'}));
 	app.use(cookieParser());
 	app.use(express.static(path.join(__dirname,'builds')));
 
-	//compiler.watch(compilerOptions,compilerFunction);
+	compiler.watch(compilerOptions,compilerFunction);
 	
 	routes(app,db);
 
 	app.listen(app.get('port'),app.get('ip'), function() {
-		console.log("Node app is running at " + app.get('ip') + ":" + app.get('port'));
+		console.log("Node app is running at localhost:" + app.get('port'));
 	});
 	
 });
