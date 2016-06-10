@@ -56,25 +56,27 @@
 
 	var _redux = __webpack_require__(175);
 
-	var _index = __webpack_require__(208);
+	var _index = __webpack_require__(215);
 
 	var _index2 = _interopRequireDefault(_index);
 
-	var _App = __webpack_require__(209);
+	var _App = __webpack_require__(217);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(217);
+	var _reduxThunk = __webpack_require__(214);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-	var _reduxLogger = __webpack_require__(218);
+	var _reduxLogger = __webpack_require__(221);
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var store = (0, _redux.createStore)(_index2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default, _reduxLogger2.default));
+	var loggerMiddleware = (0, _reduxLogger2.default)();
+
+	var store = (0, _redux.createStore)(_index2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	(0, _reactDom.render)(_react2.default.createElement(
 		_reactRedux.Provider,
@@ -22067,437 +22069,20 @@
 /* 205 */,
 /* 206 */,
 /* 207 */,
-/* 208 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var initialState = {
-		waiting: false,
-		invalid: false,
-		invalidMessage: '',
-		loginView: 'login'
-	};
-
-	var loginApp = function loginApp() {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-		var action = arguments[1];
-
-		switch (action.type) {
-			case 'LOGIN_SWITCH':
-				return Object.assign({}, state, { loginView: action.switchTo });
-			case 'LOGIN_SUBMIT':
-				return Object.assign({}, state, { waiting: true });
-			case 'LOGIN_REJECT':
-				return Object.assign({}, state, { waiting: false, invalid: true, invalidMessage: action.message });
-				return state;
-			default:
-				return state;
-		}
-	};
-
-	exports.default = loginApp;
-
-/***/ },
+/* 208 */,
 /* 209 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Spinner = __webpack_require__(210);
-
-	var _Spinner2 = _interopRequireDefault(_Spinner);
-
-	var _LoginContain = __webpack_require__(211);
-
-	var _LoginContain2 = _interopRequireDefault(_LoginContain);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var App = function App() {
-		return _react2.default.createElement(
-			'div',
-			null,
-			_react2.default.createElement(_Spinner2.default, null),
-			_react2.default.createElement(_LoginContain2.default, null)
-		);
-	};
-
-	exports.default = App;
-
-/***/ },
-/* 210 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Spinner = function Spinner() {
-		return _react2.default.createElement(
-			"div",
-			{ className: "hidden" },
-			_react2.default.createElement("i", { className: "fa fa-spinner fa-pulse" })
-		);
-	};
-
-	exports.default = Spinner;
-
-/***/ },
-/* 211 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _reactRedux = __webpack_require__(168);
-
-	var _LoginForm = __webpack_require__(212);
-
-	var _LoginForm2 = _interopRequireDefault(_LoginForm);
-
-	var _actions = __webpack_require__(213);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToProps = function mapStateToProps(state) {
-		return {
-			loginView: state.loginView,
-			invalid: state.invalid,
-			invalidMessage: state.invalidMessage
-		};
-	};
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		return {
-			onSwitchClick: function onSwitchClick(switchTo) {
-				dispatch((0, _actions.loginSwitch)(switchTo));
-			},
-			onSubmitClick: function onSubmitClick(url, loginValues) {
-				dispatch((0, _actions.loginTry)(url, loginValues));
-			}
-		};
-	};
-
-	var LoginContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_LoginForm2.default);
-
-	exports.default = LoginContain;
-
-/***/ },
-/* 212 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(168);
-
-	var _actions = __webpack_require__(213);
-
-	var _classnames = __webpack_require__(216);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToProps = function mapStateToProps(state) {
-		return {
-			loginView: state.loginView,
-			loginInfo: state.loginInfo
-		};
-	};
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		return {
-			onSwitchClick: function onSwitchClick(switchTo) {
-				dispatch((0, _actions.loginSwitch)(switchTo));
-			},
-			onSubmitClick: function onSubmitClick(user, pass) {
-				dispatch((0, _actions.loginSubmit)(user, pass));
-			}
-		};
-	};
-
-	var LoginForm = function LoginForm(_ref) {
-		var loginView = _ref.loginView;
-		var invalid = _ref.invalid;
-		var invalidMessage = _ref.invalidMessage;
-		var onSwitchClick = _ref.onSwitchClick;
-		var onSubmitClick = _ref.onSubmitClick;
-
-		var thisMessage = loginView === 'signup' ? 'Already signed up?' : 'Need to sign up?';
-		var switchTo = loginView === 'signup' ? 'login' : 'signup';
-		var loginViews = {};
-		var loginValues = { user: '', pass: '', rptPass: '', teamName: '', leagueCode: '' };
-		var alertMessage = '';
-		var alertClasses = (0, _classnames2.default)({ 'alert': true, 'alert-danger': true, 'hidden': true });
-		var loginChange = function loginChange(val, prop) {
-			var newValue = {};
-			newValue[prop] = val;
-			return Object.assign({}, loginValues, newValue);
-		};
-		var Alert = function Alert() {
-			return _react2.default.createElement(
-				'div',
-				{ className: 'alert alert-danger hidden', role: 'alert' },
-				alertMessage
-			);
-		};
-		loginViews.login = function () {
-			return _react2.default.createElement(
-				'form',
-				{ onSubmit: function onSubmit(e) {
-						e.preventDefault();return onSubmitClick('/login', loginValues);
-					} },
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Username:'
-					),
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'user');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Password:'
-					),
-					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'pass');
-						} })
-				),
-				_react2.default.createElement(
-					'button',
-					{ type: 'submit', className: 'btn btn-default' },
-					'Login'
-				)
-			);
-		};
-		loginViews.signup = function () {
-			return _react2.default.createElement(
-				'form',
-				{ onSubmit: function onSubmit(e) {
-						e.preventDefault();return onSubmitClick('/signup', loginValues);
-					} },
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Username:'
-					),
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'user');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Password:'
-					),
-					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'pass');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Repeat Password:'
-					),
-					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'rptPass');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Team Name:'
-					),
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'teamName');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'League Code:'
-					),
-					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'leagueCode');
-						} })
-				),
-				_react2.default.createElement(
-					'button',
-					{ type: 'submit', className: 'btn btn-default' },
-					'Login'
-				)
-			);
-		};
-		var ThisView = loginViews[loginView];
-		return _react2.default.createElement(
-			'div',
-			null,
-			_react2.default.createElement(Alert, null),
-			_react2.default.createElement(ThisView, null),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					'a',
-					{ href: '', onClick: function onClick(e) {
-							e.preventDefault();
-							return onSwitchClick(switchTo);
-						} },
-					thisMessage
-				)
-			)
-		);
-	};
-
-	LoginForm = (0, _reactRedux.connect)()(LoginForm);
-
-	exports.default = LoginForm;
-
-/***/ },
-/* 213 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.LOGIN_REJECT = exports.loginChange = exports.loginSwitch = exports.LOGIN_SUBMIT = undefined;
-	exports.loginTry = loginTry;
-
-	var _isomorphicFetch = __webpack_require__(214);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var LOGIN_SUBMIT = exports.LOGIN_SUBMIT = 'LOGIN_SUBMIT';
-	var loginSubmit = function loginSubmit() {
-		return {
-			type: 'LOGIN_SUBMIT'
-		};
-	};
-
-	var loginSwitch = exports.loginSwitch = function loginSwitch(switchTo) {
-		return {
-			type: 'LOGIN_SWITCH',
-			switchTo: switchTo
-		};
-	};
-
-	var loginChange = exports.loginChange = function loginChange(changeTo, prop) {
-		return {
-			type: 'LOGIN_CHANGE',
-			changeTo: changeTo,
-			prop: prop
-		};
-	};
-
-	var LOGIN_REJECT = exports.LOGIN_REJECT = 'LOGIN_REJECT';
-	var loginReject = function loginReject(message) {
-		return {
-			type: 'LOGIN_REJECT',
-			message: message
-		};
-	};
-
-	function loginTry(url, loginValues) {
-
-		return function (dispatch) {
-
-			dispatch(loginSubmit());
-
-			return (0, _isomorphicFetch2.default)(url, {
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-					'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-				},
-				body: JSON.stringify({
-					'user': loginValues.user,
-					'pass': loginValues.pass
-				}) }).then(function (response) {
-				console.log(response.headers.has("Set-Cookie"));
-				return response.json();
-			}).then(function (json) {
-				if (json.message === 'Login success') {
-					location.reload();
-				}
-				return dispatch(loginReject(json.message));
-			});
-		};
-	}
-
-/***/ },
-/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(215);
+	__webpack_require__(210);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 215 */
+/* 210 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -22936,7 +22521,9 @@
 
 
 /***/ },
-/* 216 */
+/* 211 */,
+/* 212 */,
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22990,7 +22577,7 @@
 
 
 /***/ },
-/* 217 */
+/* 214 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23018,7 +22605,453 @@
 	exports['default'] = thunk;
 
 /***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _redux = __webpack_require__(175);
+
+	var _actions = __webpack_require__(216);
+
+	var initialState = {
+		loginStatus: '',
+		invalidMessage: '',
+		loginView: 'login'
+	};
+
+	function loginStatus() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'LOGIN_SUBMIT':
+				return action.type;
+			case 'LOGIN_REJECT':
+				return action.type;
+			case 'LOGIN_SWITCH':
+			default:
+				return state;
+		}
+	}
+
+	function invalidMessage() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'LOGIN_REJECT':
+				return action.message;
+			case 'LOGIN_SWITCH':
+			case 'LOGIN_SUBMIT':
+			default:
+				return '';
+		}
+	}
+
+	function loginView() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? 'login' : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'LOGIN_SWITCH':
+				return action.switchTo;
+			case 'LOGIN_SUBMIT':
+			case 'LOGIN_REJECT':
+			default:
+				return state;
+		}
+	}
+	var loginApp = (0, _redux.combineReducers)({ loginStatus: loginStatus, invalidMessage: invalidMessage, loginView: loginView });
+
+	exports.default = loginApp;
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.loginSwitch = exports.LOGIN_REJECT = exports.LOGIN_SWITCH = exports.LOGIN_SUBMIT = undefined;
+	exports.loginTry = loginTry;
+
+	var _isomorphicFetch = __webpack_require__(209);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var LOGIN_SUBMIT = exports.LOGIN_SUBMIT = 'LOGIN_SUBMIT';
+	var LOGIN_SWITCH = exports.LOGIN_SWITCH = 'LOGIN_SWITCH';
+	var LOGIN_REJECT = exports.LOGIN_REJECT = 'LOGIN_REJECT';
+
+	var loginSubmit = function loginSubmit() {
+		return {
+			type: LOGIN_SUBMIT
+		};
+	};
+
+	var loginSwitch = exports.loginSwitch = function loginSwitch(switchTo) {
+		return {
+			type: LOGIN_SWITCH,
+			switchTo: switchTo
+		};
+	};
+
+	var loginReject = function loginReject(message) {
+		return {
+			type: LOGIN_REJECT,
+			message: message
+		};
+	};
+	// loginValues = {name:'',pass:'',rptPass:'',teamName:'',leagueCode:''};
+	function loginTry(url, loginValues) {
+
+		return function (dispatch) {
+
+			dispatch(loginSubmit());
+
+			if (url === '/signup' && loginValues.pass !== loginValues.rptPass) {
+				return dispatch(loginReject('Passwords do not match'));
+			}
+
+			return (0, _isomorphicFetch2.default)(url, {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+					'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+				},
+				body: JSON.stringify(loginValues)
+			}).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				if (json.message === 'Success') {
+					location.reload();
+				}
+				return dispatch(loginReject(json.message));
+			});
+		};
+	}
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Spinner = __webpack_require__(218);
+
+	var _Spinner2 = _interopRequireDefault(_Spinner);
+
+	var _LoginContain = __webpack_require__(219);
+
+	var _LoginContain2 = _interopRequireDefault(_LoginContain);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var App = function App() {
+		return _react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(_Spinner2.default, null),
+			_react2.default.createElement(_LoginContain2.default, null)
+		);
+	};
+
+	exports.default = App;
+
+/***/ },
 /* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Spinner = function Spinner() {
+		return _react2.default.createElement(
+			"div",
+			{ className: "hidden" },
+			_react2.default.createElement("i", { className: "fa fa-spinner fa-pulse" })
+		);
+	};
+
+	exports.default = Spinner;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _LoginForm = __webpack_require__(220);
+
+	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+
+	var _actions = __webpack_require__(216);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			loginView: state.loginView,
+			invalid: state.invalid,
+			invalidMessage: state.invalidMessage
+		};
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onSwitchClick: function onSwitchClick(switchTo) {
+				dispatch((0, _actions.loginSwitch)(switchTo));
+			},
+			onSubmitClick: function onSubmitClick(url, loginValues) {
+				dispatch((0, _actions.loginTry)(url, loginValues));
+			}
+		};
+	};
+
+	var LoginContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_LoginForm2.default);
+
+	exports.default = LoginContain;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _actions = __webpack_require__(216);
+
+	var _classnames = __webpack_require__(213);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			loginView: state.loginView,
+			loginStatus: state.loginStatus,
+			invalidMessage: state.invalidMessage
+		};
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onSwitchClick: function onSwitchClick(switchTo) {
+				dispatch((0, _actions.loginSwitch)(switchTo));
+			},
+			onSubmitClick: function onSubmitClick(user, pass) {
+				dispatch((0, _actions.loginSubmit)(user, pass));
+			}
+		};
+	};
+
+	var LoginForm = function LoginForm(_ref) {
+		var loginView = _ref.loginView;
+		var loginStatus = _ref.loginStatus;
+		var invalidMessage = _ref.invalidMessage;
+		var onSwitchClick = _ref.onSwitchClick;
+		var onSubmitClick = _ref.onSubmitClick;
+
+		var thisMessage = loginView === 'signup' ? 'Already signed up?' : 'Need to sign up?';
+		var switchTo = loginView === 'signup' ? 'login' : 'signup';
+		var loginViews = {};
+		var loginValues = { name: '', pass: '', rptPass: '', teamName: '', leagueCode: '' };
+		var alertClasses = (0, _classnames2.default)({ 'alert': true, 'alert-danger': true, 'hidden': invalidMessage === '' });
+		if (loginStatus === 'invalid') {
+			alertClasses.hidden = false;
+		}
+		var loginChange = function loginChange(val, prop) {
+			var newValue = {};
+			newValue[prop] = val;
+			return Object.assign({}, loginValues, newValue);
+		};
+		var Alert = function Alert() {
+			return _react2.default.createElement(
+				'div',
+				{ className: alertClasses, role: 'alert' },
+				invalidMessage
+			);
+		};
+		loginViews.login = function () {
+			return _react2.default.createElement(
+				'form',
+				{ onSubmit: function onSubmit(e) {
+						e.preventDefault();return onSubmitClick('/login', loginValues);
+					} },
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'Username:'
+					),
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'name');
+						} })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'Password:'
+					),
+					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'pass');
+						} })
+				),
+				_react2.default.createElement(
+					'button',
+					{ type: 'submit', className: 'btn btn-default' },
+					'Login'
+				)
+			);
+		};
+		loginViews.signup = function () {
+			return _react2.default.createElement(
+				'form',
+				{ onSubmit: function onSubmit(e) {
+						e.preventDefault();return onSubmitClick('/signup', loginValues);
+					} },
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'Username:'
+					),
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'name');
+						} })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'Password:'
+					),
+					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'pass');
+						} })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'Repeat Password:'
+					),
+					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'rptPass');
+						} })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'Team Name:'
+					),
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'teamName');
+						} })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'label',
+						{ className: 'control-label' },
+						'League Code:'
+					),
+					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
+							return loginValues = loginChange(e.target.value, 'leagueCode');
+						} })
+				),
+				_react2.default.createElement(
+					'button',
+					{ type: 'submit', className: 'btn btn-default' },
+					'Login'
+				)
+			);
+		};
+		var ThisView = loginViews[loginView];
+		return _react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(Alert, null),
+			_react2.default.createElement(ThisView, null),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ href: '', onClick: function onClick(e) {
+							e.preventDefault();
+							return onSwitchClick(switchTo);
+						} },
+					thisMessage
+				)
+			)
+		);
+	};
+
+	LoginForm = (0, _reactRedux.connect)()(LoginForm);
+
+	exports.default = LoginForm;
+
+/***/ },
+/* 221 */
 /***/ function(module, exports) {
 
 	"use strict";

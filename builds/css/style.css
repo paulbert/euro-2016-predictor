@@ -1,0 +1,17 @@
+.score-box {
+	width:100%;
+	min-width:50px;
+}
+
+body {
+	margin:10px 0 10px 0;
+}
+
+.span-spacing {
+	margin-left:1em;
+	font-size:1.25em;
+}
+
+.span-spacing span {
+	margin-left:0.5em;
+}
