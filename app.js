@@ -46,27 +46,29 @@ var mongodb_connection_string = 'mongodb://127.0.0.1:27017/' + db_name;
 
 var routes = require('./routes/index.js');
 
-if(process.env.PROD_MONGODB){
-  mongodb_connection_string = process.env.PROD_MONGODB;
+if(process.env.MONGODB_URI){
+  mongodb_connection_string = process.env.MONGODB_URI;
 }
 
 console.log(mongodb_connection_string);
 
 MongoClient.connect(mongodb_connection_string,function(err,db) {
-
-	app.set('port',process.env.PORT || 3000);
-
-	app.use(bodyParser.json());
-	app.use(bodyParser.urlencoded({'extended':'true'}));
-	app.use(cookieParser());
-	app.use(express.static(path.join(__dirname,'builds')));
-
-	compiler.watch(compilerOptions,compilerFunction);
 	
-	routes(app,db);
+	if(!err) {
+		app.set('port',process.env.PORT || 3000);
 
-	app.listen(app.get('port'),app.get('ip'), function() {
-		console.log("Node app is running at localhost:" + app.get('port'));
-	});
+		app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({'extended':'true'}));
+		app.use(cookieParser());
+		app.use(express.static(path.join(__dirname,'builds')));
+
+		compiler.watch(compilerOptions,compilerFunction);
+	
+		routes(app,db);
+
+		app.listen(app.get('port'),app.get('ip'), function() {
+			console.log("Node app is running at localhost:" + app.get('port'));
+		});
+	}
 	
 });
