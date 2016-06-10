@@ -1,44 +1,103 @@
 
 var usersDAO = require('./usersDAO'),
-	path = require('path');
+	path = require('path'),
+	sessionsDAO = require('./sessionsDAO');
 	
 module.exports = exports = function(app,db) {
 	
-	var users = usersDAO(db);
+	var users = usersDAO(db),
+		sessions = sessionsDAO(db);
 	
 	app.get('/', function(req,res) { 
-		if(req.cookies.user == 'joe') {
-			console.log(req.cookies);
-			res.sendFile(path.join(__dirname + '/builds/templates/index.html'));
-		} else {
-			console.log(req.cookies);
-			res.sendFile(path.join(__dirname + '/builds/templates/login.html'));
-		}
+		sessions.checkCookie(req.cookies,function(foundCookie) {
+			if(foundCookie) {
+				app.set('username',req.cookies.user);
+				res.sendFile(path.join(__dirname + '/../builds/templates/index.html'));
+			} else {
+				res.sendFile(path.join(__dirname + '/../builds/templates/login.html'));
+			}
+		});
 	});
 	
 	function addResponseCookie(res,user,passcode) {
-		res.cookie('user',user,{expire: new Date(2016,8,1),httpOnly:true});
-		res.cookie('user',user,{expire: new Date(2016,8,1),httpOnly:true});
+		res.cookie('user',user,{expires: new Date(2016,8,1),httpOnly:false});
+		res.cookie('passcode',passcode,{expires: new Date(2016,8,1),httpOnly:false});
 		res.set('Access-Control-Allow-Origin','*');
 		res.set('Access-Control-Allow-Credentials','true');
 	}
 	
+	function parseReq(req) {
+		// Just in case bodyparser starts working correctly
+		if(typeof req.body === 'object') {
+			for(key in req.body) {
+				//console.log(key);
+				return JSON.parse(key);
+			}
+		}
+		return JSON.parse(key);
+	}
+	
+	function cookieCallback (err,newCookie,res) {
+		console.log(newCookie);
+		if(err) {
+			res.json({'message':err});
+		} else {
+			addResponseCookie(res,newCookie.user_id,newCookie.passcode);
+			res.json({'message':'Success'});
+		}
+	}
+	
 	app.post('/signup', function(req,res) {
-		users.insertUser(req.body,function(err,result) {
+		var user = parseReq(req);
+		console.log(user);
+		users.insertUser(user,function(err,newUser) {
 			if(err) {
 				res.json({'message':err});
 			} else {
-				
+				sessions.insertNewSession(newUser,function(err,newCookie) {
+					cookieCallback(err,newCookie.ops[0],res);
+				});
 			}
-		}
+		});
 	});
 	
 	app.post('/login', function(req,res) {
-		console.log(req.body);
-		res.cookie('user','joe',{maxAge: 9000000,httpOnly:false});
-		res.set('Access-Control-Allow-Origin','*');
-		res.set('Access-Control-Allow-Credentials','true');
-		res.json({'message':'Login success'});
+		var user = parseReq(req);
+		users.checkPassword(user,function(err,passed) {
+			if(passed) {
+				sessions.insertNewSession(user,function(err,newCookie) {
+					cookieCallback(err,newCookie.ops[0],res);
+				});
+			} else {
+				res.json({'message':'Username or password do not match'});
+			}
+		});	
+	});
+	
+	app.post('/savePrediction', function(req,res) {
+		var predictions = req.body;
+		var user = req.cookies.user;
+		console.log(user);
+		users.updatePrediction(predictions,user,function(err,result) {
+			if(err) {
+				res.json({'message':'Error'});
+			} else {
+				console.log(result);
+				res.json(result);
+			}
+		});
+	});
+	
+	app.get('/getPrediction', function(req,res) {
+		var user = req.cookies.user;
+		users.getUser({_id:user},function(err,result) {
+			if(err) {
+				res.json({'message':'Error'});
+			} else {
+				console.log(result);
+				res.json(result);
+			}
+		});
 	});
 	
 }
