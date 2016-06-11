@@ -17,7 +17,8 @@ function fixturesDAO (db) {
 	}
 	
 	function formatBulkUpdateFixture(bulk,fixture) {
-		bulk.find({'_id':fixture._id}).upsert().updateOne(fixture);
+		bulk.find({'_id':fixture.f_id}).updateOne({"$set":fixture});
+		bulk.find({'_id':fixture.f_id}).upsert().update({"$setOnInsert":fixture});
 		return bulk;
 	}
 	
@@ -27,7 +28,7 @@ function fixturesDAO (db) {
 	
 	function formatFixture(fixture,ind,fixtures) {
 		var newId = makeId(fixture.homeTeamName,fixture.awayTeamName,fixture.date);
-		return Object.assign({},fixture,{'_id':newId,'f_id':newId});
+		return Object.assign({},fixture,{'f_id':newId});
 	}
 	
 	function makeId (stringOne, stringTwo, dateString) {
@@ -44,7 +45,18 @@ function fixturesDAO (db) {
 				fixtures = formatFixtures(data.fixtures);
 				var bulk = collectionObj.initializeOrderedBulkOp();
 				bulkUpsert = fixtures.reduce(formatBulkUpdateFixture,bulk);
-				bulkUpsert.execute({},getFixtures(callback));
+				bulkUpsert.execute({},function(err,result) {
+					if(err) { 
+						//console.log(err); 
+					}
+					else { 
+						console.log('nMatched: ' + result.nMatched);
+						console.log('nInserted: ' + result.nInserted);
+						console.log('nUpserted: ' + result.nUpserted);
+						console.log('hasWriteErrors: ' + result.hasWriteErrors());
+					}
+					getFixtures(callback);
+				});
 			} else {
 				getFixtures(callback);
 			}
@@ -64,7 +76,7 @@ function fixturesDAO (db) {
 		}
 		
 		function checkFixtures(err,results) {
-			console.log(results);
+			//console.log(results);
 			var shouldUpdate = results.length === 0 || results.reduce(checkFixture,false);
 			if(shouldUpdate) {
 				getNewFixtures();

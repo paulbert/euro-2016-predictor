@@ -5,7 +5,7 @@ export const CHANGE_PREDICTION = 'CHANGE_PREDICTION';
 export const SEND_PREDICTION = 'SEND_PREDICTION';
 export const RECEIVE_PREDICTION = 'RECEIVE_PREDICTION';
 export const GETTING_PREDICTION = 'GETTING_PREDICTION';
-export const RECEIVE_FIXTURES = 'RECEIVE_PREDICTION';
+export const RECEIVE_FIXTURES = 'RECEIVE_FIXTURES';
 export const GETTING_FIXTURES = 'GETTING_FIXTURES';
 
 export const changePrediction = (id,team,score) => {
