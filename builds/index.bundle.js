@@ -25489,7 +25489,7 @@
 
 		return _react2.default.createElement(
 			'div',
-			{ className: 'col-md-6' },
+			{ className: 'col-md-6 hidden' },
 			_react2.default.createElement(
 				'table',
 				{ className: 'table' },
