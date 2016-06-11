@@ -60,11 +60,11 @@
 
 	var _euroApp2 = _interopRequireDefault(_euroApp);
 
-	var _App = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/App\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _App = __webpack_require__(205);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(221);
+	var _reduxThunk = __webpack_require__(225);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -22078,6 +22078,10 @@
 
 	var _groups2 = _interopRequireDefault(_groups);
 
+	var _users = __webpack_require__(204);
+
+	var _users2 = _interopRequireDefault(_users);
+
 	var _redux = __webpack_require__(175);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22087,7 +22091,8 @@
 		fixtures: _fixtures2.default,
 		predictions: _predictions2.default,
 		savedPredictions: _savedPredictions2.default,
-		groups: _groups2.default
+		groups: _groups2.default,
+		users: _users2.default
 	});
 
 	exports.default = euroApp;
@@ -23795,24 +23800,1711 @@
 	exports.default = groups;
 
 /***/ },
-/* 204 */,
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */,
-/* 220 */,
+/* 204 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var users = function users() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'RECEIVE_USERS':
+				return action.users;
+			default:
+				return state;
+		}
+	};
+
+	exports.default = users;
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FixtureContain = __webpack_require__(206);
+
+	var _FixtureContain2 = _interopRequireDefault(_FixtureContain);
+
+	var _ButtonContain = __webpack_require__(215);
+
+	var _ButtonContain2 = _interopRequireDefault(_ButtonContain);
+
+	var _GroupsContain = __webpack_require__(217);
+
+	var _GroupsContain2 = _interopRequireDefault(_GroupsContain);
+
+	var _UserContain = __webpack_require__(222);
+
+	var _UserContain2 = _interopRequireDefault(_UserContain);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var App = function App() {
+		return _react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(
+				'nav',
+				{ className: 'navbar navbar-default navbar-static-top navbar-background' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'collapse navbar-collapse' },
+					_react2.default.createElement(
+						'ul',
+						{ className: 'nav navbar-nav' },
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'a',
+								null,
+								'Your Predictions'
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'a',
+								null,
+								'Table'
+							)
+						)
+					)
+				)
+			),
+			_react2.default.createElement(
+				'main',
+				{ className: 'container-fluid' },
+				_react2.default.createElement(_ButtonContain2.default, null),
+				_react2.default.createElement(
+					'div',
+					{ className: 'row' },
+					_react2.default.createElement(_FixtureContain2.default, null),
+					_react2.default.createElement(_UserContain2.default, null)
+				)
+			)
+		);
+	};
+
+	exports.default = App;
+
+/***/ },
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _FixtureList = __webpack_require__(207);
+
+	var _FixtureList2 = _interopRequireDefault(_FixtureList);
+
+	var _actions = __webpack_require__(212);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			fixtures: state.fixtures,
+			predictions: state.predictions,
+			savedPredictions: state.savedPredictions
+		};
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		dispatch((0, _actions.initData)());
+		return {
+			onScoreChange: function onScoreChange(id, team, score) {
+				dispatch((0, _actions.changePrediction)(id, team, score));
+			},
+			onLoad: function onLoad() {
+				dispatch(getPredictions());
+			}
+		};
+	};
+
+	var FixtureContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_FixtureList2.default);
+
+	exports.default = FixtureContain;
+
+/***/ },
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Fixture = __webpack_require__(208);
+
+	var _Fixture2 = _interopRequireDefault(_Fixture);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var FixtureList = function FixtureList(_ref) {
+		var fixtures = _ref.fixtures;
+		var predictions = _ref.predictions;
+		var savedPredictions = _ref.savedPredictions;
+		var onScoreChange = _ref.onScoreChange;
+		var onLoad = _ref.onLoad;
+
+		//onLoad();
+		return _react2.default.createElement(
+			'div',
+			{ className: 'col-md-6 col-xs-12' },
+			_react2.default.createElement(
+				'table',
+				{ className: 'table' },
+				_react2.default.createElement(
+					'thead',
+					null,
+					_react2.default.createElement(
+						'tr',
+						null,
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '4' },
+							'Team 1'
+						),
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '3' },
+							'Team 2'
+						),
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '1', className: 'text-center' },
+							'Predictions'
+						),
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '1', className: 'text-center' },
+							'Actual'
+						)
+					)
+				),
+				_react2.default.createElement(
+					'tbody',
+					null,
+					fixtures.map(function (fixture) {
+						fixture.key = fixture.f_id;
+						var defaultPrediction = {};
+						defaultPrediction[fixture.homeTeamName] = null;
+						defaultPrediction[fixture.awayTeamName] = null;
+						var reduceToPrediction = function reduceToPrediction(filtered, p, index) {
+							if (p.p_id === fixture.f_id) {
+								return Object.assign({}, filtered, p.prediction);
+							} else {
+								return Object.assign({}, filtered);
+							}
+						};
+						var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
+						var savedPrediction = savedPredictions.reduce(reduceToPrediction, defaultPrediction);
+						return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange }));
+					})
+				)
+			)
+		);
+	};
+
+	FixtureList.propTypes = {
+		fixtures: _react.PropTypes.arrayOf(_react.PropTypes.shape({
+			_links: _react.PropTypes.shape({
+				self: _react.PropTypes.object,
+				soccerseason: _react.PropTypes.object,
+				hometeam: _react.PropTypes.object,
+				awayTeam: _react.PropTypes.object
+			}),
+			date: _react.PropTypes.string,
+			status: _react.PropTypes.string,
+			matchday: _react.PropTypes.number,
+			homeTeamName: _react.PropTypes.string.isRequired,
+			awayTeamName: _react.PropTypes.string.isRequired,
+			result: _react.PropTypes.object
+		}).isRequired).isRequired
+	};
+
+	exports.default = FixtureList;
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TeamContain = __webpack_require__(209);
+
+	var _TeamContain2 = _interopRequireDefault(_TeamContain);
+
+	var _classnames = __webpack_require__(211);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Fixture = function Fixture(_ref) {
+		var _links = _ref._links;
+		var f_id = _ref.f_id;
+		var date = _ref.date;
+		var status = _ref.status;
+		var matchday = _ref.matchday;
+		var homeTeamName = _ref.homeTeamName;
+		var awayTeamName = _ref.awayTeamName;
+		var result = _ref.result;
+		var prediction = _ref.prediction;
+		var savedPrediction = _ref.savedPrediction;
+		var onScoreChange = _ref.onScoreChange;
+
+		var reformatDate = new Date(date);
+		var dateString = reformatDate.getMonth() + 1 + '/' + reformatDate.getDate();
+
+		var today = new Date(Date.now());
+
+		today.setHours(today.getHours());
+
+		var inputClassObj = { 'score-box': true, 'hidden': false };
+		//inputClassObj.hidden = today > reformatDate;
+		var inputClass = (0, _classnames2.default)(inputClassObj);
+
+		return _react2.default.createElement(
+			'tr',
+			null,
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				dateString
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				_react2.default.createElement(_TeamContain2.default, { team: homeTeamName })
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-2' },
+				homeTeamName
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				_react2.default.createElement('input', { className: inputClass, type: 'number', min: '0', step: '1', onChange: function onChange(e) {
+						return onScoreChange(f_id, homeTeamName, e.target.value);
+					} })
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				_react2.default.createElement(_TeamContain2.default, { team: awayTeamName })
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-2' },
+				awayTeamName
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				_react2.default.createElement('input', { className: inputClass, type: 'number', min: '0', step: '1', onChange: function onChange(e) {
+						return onScoreChange(f_id, awayTeamName, e.target.value);
+					} })
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1 text-center' },
+				savedPrediction[homeTeamName],
+				'-',
+				savedPrediction[awayTeamName]
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1 text-center' },
+				result.goalsHomeTeam,
+				'-',
+				result.goalsAwayTeam
+			)
+		);
+	};
+
+	Fixture.propTypes = {
+		date: _react.PropTypes.string,
+		status: _react.PropTypes.string,
+		matchday: _react.PropTypes.number,
+		homeTeamName: _react.PropTypes.string.isRequired,
+		awayTeamName: _react.PropTypes.string.isRequired,
+		result: _react.PropTypes.object
+	};
+
+	exports.default = Fixture;
+
+/***/ },
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _TeamFlag = __webpack_require__(210);
+
+	var _TeamFlag2 = _interopRequireDefault(_TeamFlag);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
+		return {
+			teams: state.teams,
+			thisTeam: ownProps.team
+		};
+	};
+
+	var TeamContain = (0, _reactRedux.connect)(mapStateToProps)(_TeamFlag2.default);
+
+	exports.default = TeamContain;
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TeamFlag = function TeamFlag(_ref) {
+		var teams = _ref.teams;
+		var thisTeam = _ref.thisTeam;
+
+
+		var teamFlag = teams.filter(function (team) {
+			return team.name === thisTeam;
+		})[0].crestUrl;
+
+		return _react2.default.createElement("img", { src: teamFlag, width: "50" });
+	};
+
+	exports.default = TeamFlag;
+
+/***/ },
+/* 211 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.changePrediction = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
+	exports.savePredictions = savePredictions;
+	exports.getPredictions = getPredictions;
+	exports.getFixtures = getFixtures;
+	exports.getUsers = getUsers;
+	exports.initData = initData;
+
+	var _isomorphicFetch = __webpack_require__(213);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CHANGE_PREDICTION = exports.CHANGE_PREDICTION = 'CHANGE_PREDICTION';
+	var SEND_PREDICTION = exports.SEND_PREDICTION = 'SEND_PREDICTION';
+	var RECEIVE_PREDICTION = exports.RECEIVE_PREDICTION = 'RECEIVE_PREDICTION';
+	var GETTING_PREDICTION = exports.GETTING_PREDICTION = 'GETTING_PREDICTION';
+	var RECEIVE_FIXTURES = exports.RECEIVE_FIXTURES = 'RECEIVE_FIXTURES';
+	var GETTING_FIXTURES = exports.GETTING_FIXTURES = 'GETTING_FIXTURES';
+	var RECEIVE_USERS = exports.RECEIVE_USERS = 'RECEIVE_USERS';
+	var GETTING_USERS = exports.GETTING_USERS = 'GETTING_USERS';
+
+	var changePrediction = exports.changePrediction = function changePrediction(id, team, score) {
+		return {
+			type: CHANGE_PREDICTION,
+			id: id,
+			team: team,
+			score: score
+		};
+	};
+
+	var sendPrediction = function sendPrediction() {
+		return {
+			type: SEND_PREDICTION
+		};
+	};
+
+	var gettingPrediction = function gettingPrediction() {
+		return {
+			type: GETTING_PREDICTION
+		};
+	};
+
+	var receivePrediction = function receivePrediction(predictions) {
+		return {
+			type: RECEIVE_PREDICTION,
+			predictions: predictions
+		};
+	};
+
+	var gettingFixtures = function gettingFixtures() {
+		return {
+			type: GETTING_FIXTURES
+		};
+	};
+
+	var receiveFixtures = function receiveFixtures(fixtures) {
+		return {
+			type: RECEIVE_FIXTURES,
+			fixtures: fixtures
+		};
+	};
+
+	var gettingUsers = function gettingUsers() {
+		return {
+			type: GETTING_USERS
+		};
+	};
+
+	var receiveUsers = function receiveUsers(users) {
+		return {
+			type: RECEIVE_USERS,
+			users: users
+		};
+	};
+
+	function savePredictions(predictions) {
+
+		return function (dispatch) {
+
+			dispatch(sendPrediction());
+
+			return (0, _isomorphicFetch2.default)('/savePrediction', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(predictions)
+			}).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(receivePrediction(json[0].predictions));
+			});
+		};
+	}
+
+	function fetchQuick(url) {
+		return (0, _isomorphicFetch2.default)(url, {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+				'Content-Type': 'application/json'
+			}
+		}).then(function (response) {
+			return response.json();
+		});
+	}
+
+	function getPredictions() {
+
+		return function (dispatch) {
+
+			dispatch(gettingPrediction());
+
+			return fetchQuick('/getPrediction').then(function (json) {
+				dispatch(receivePrediction(json[0].predictions));
+			});
+		};
+	}
+
+	function getFixtures() {
+		return function (dispatch) {
+
+			dispatch(gettingFixtures());
+
+			return fetchQuick('/getFixtures').then(function (json) {
+				dispatch(receiveFixtures(json));
+				dispatch(getUsers());
+			});
+		};
+	}
+
+	function getUsers() {
+		return function (dispatch) {
+			dispatch(gettingUsers());
+			return fetchQuick('/getUsers').then(function (json) {
+				dispatch(receiveUsers(json));
+			});
+		};
+	}
+
+	function initData() {
+		return function (dispatch) {
+			dispatch(getPredictions());
+			dispatch(getFixtures());
+		};
+	}
+	//dispatch(getPredictions());
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// the whatwg-fetch polyfill installs the fetch() function
+	// on the global object (window or self)
+	//
+	// Return that as the export for use in Webpack, Browserify etc.
+	__webpack_require__(214);
+	module.exports = self.fetch.bind(self);
+
+
+/***/ },
+/* 214 */
+/***/ function(module, exports) {
+
+	(function(self) {
+	  'use strict';
+
+	  if (self.fetch) {
+	    return
+	  }
+
+	  var support = {
+	    searchParams: 'URLSearchParams' in self,
+	    iterable: 'Symbol' in self && 'iterator' in Symbol,
+	    blob: 'FileReader' in self && 'Blob' in self && (function() {
+	      try {
+	        new Blob()
+	        return true
+	      } catch(e) {
+	        return false
+	      }
+	    })(),
+	    formData: 'FormData' in self,
+	    arrayBuffer: 'ArrayBuffer' in self
+	  }
+
+	  function normalizeName(name) {
+	    if (typeof name !== 'string') {
+	      name = String(name)
+	    }
+	    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+	      throw new TypeError('Invalid character in header field name')
+	    }
+	    return name.toLowerCase()
+	  }
+
+	  function normalizeValue(value) {
+	    if (typeof value !== 'string') {
+	      value = String(value)
+	    }
+	    return value
+	  }
+
+	  // Build a destructive iterator for the value list
+	  function iteratorFor(items) {
+	    var iterator = {
+	      next: function() {
+	        var value = items.shift()
+	        return {done: value === undefined, value: value}
+	      }
+	    }
+
+	    if (support.iterable) {
+	      iterator[Symbol.iterator] = function() {
+	        return iterator
+	      }
+	    }
+
+	    return iterator
+	  }
+
+	  function Headers(headers) {
+	    this.map = {}
+
+	    if (headers instanceof Headers) {
+	      headers.forEach(function(value, name) {
+	        this.append(name, value)
+	      }, this)
+
+	    } else if (headers) {
+	      Object.getOwnPropertyNames(headers).forEach(function(name) {
+	        this.append(name, headers[name])
+	      }, this)
+	    }
+	  }
+
+	  Headers.prototype.append = function(name, value) {
+	    name = normalizeName(name)
+	    value = normalizeValue(value)
+	    var list = this.map[name]
+	    if (!list) {
+	      list = []
+	      this.map[name] = list
+	    }
+	    list.push(value)
+	  }
+
+	  Headers.prototype['delete'] = function(name) {
+	    delete this.map[normalizeName(name)]
+	  }
+
+	  Headers.prototype.get = function(name) {
+	    var values = this.map[normalizeName(name)]
+	    return values ? values[0] : null
+	  }
+
+	  Headers.prototype.getAll = function(name) {
+	    return this.map[normalizeName(name)] || []
+	  }
+
+	  Headers.prototype.has = function(name) {
+	    return this.map.hasOwnProperty(normalizeName(name))
+	  }
+
+	  Headers.prototype.set = function(name, value) {
+	    this.map[normalizeName(name)] = [normalizeValue(value)]
+	  }
+
+	  Headers.prototype.forEach = function(callback, thisArg) {
+	    Object.getOwnPropertyNames(this.map).forEach(function(name) {
+	      this.map[name].forEach(function(value) {
+	        callback.call(thisArg, value, name, this)
+	      }, this)
+	    }, this)
+	  }
+
+	  Headers.prototype.keys = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push(name) })
+	    return iteratorFor(items)
+	  }
+
+	  Headers.prototype.values = function() {
+	    var items = []
+	    this.forEach(function(value) { items.push(value) })
+	    return iteratorFor(items)
+	  }
+
+	  Headers.prototype.entries = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push([name, value]) })
+	    return iteratorFor(items)
+	  }
+
+	  if (support.iterable) {
+	    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
+	  }
+
+	  function consumed(body) {
+	    if (body.bodyUsed) {
+	      return Promise.reject(new TypeError('Already read'))
+	    }
+	    body.bodyUsed = true
+	  }
+
+	  function fileReaderReady(reader) {
+	    return new Promise(function(resolve, reject) {
+	      reader.onload = function() {
+	        resolve(reader.result)
+	      }
+	      reader.onerror = function() {
+	        reject(reader.error)
+	      }
+	    })
+	  }
+
+	  function readBlobAsArrayBuffer(blob) {
+	    var reader = new FileReader()
+	    reader.readAsArrayBuffer(blob)
+	    return fileReaderReady(reader)
+	  }
+
+	  function readBlobAsText(blob) {
+	    var reader = new FileReader()
+	    reader.readAsText(blob)
+	    return fileReaderReady(reader)
+	  }
+
+	  function Body() {
+	    this.bodyUsed = false
+
+	    this._initBody = function(body) {
+	      this._bodyInit = body
+	      if (typeof body === 'string') {
+	        this._bodyText = body
+	      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+	        this._bodyBlob = body
+	      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+	        this._bodyFormData = body
+	      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	        this._bodyText = body.toString()
+	      } else if (!body) {
+	        this._bodyText = ''
+	      } else if (support.arrayBuffer && ArrayBuffer.prototype.isPrototypeOf(body)) {
+	        // Only support ArrayBuffers for POST method.
+	        // Receiving ArrayBuffers happens via Blobs, instead.
+	      } else {
+	        throw new Error('unsupported BodyInit type')
+	      }
+
+	      if (!this.headers.get('content-type')) {
+	        if (typeof body === 'string') {
+	          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+	        } else if (this._bodyBlob && this._bodyBlob.type) {
+	          this.headers.set('content-type', this._bodyBlob.type)
+	        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+	        }
+	      }
+	    }
+
+	    if (support.blob) {
+	      this.blob = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+
+	        if (this._bodyBlob) {
+	          return Promise.resolve(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as blob')
+	        } else {
+	          return Promise.resolve(new Blob([this._bodyText]))
+	        }
+	      }
+
+	      this.arrayBuffer = function() {
+	        return this.blob().then(readBlobAsArrayBuffer)
+	      }
+
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+
+	        if (this._bodyBlob) {
+	          return readBlobAsText(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as text')
+	        } else {
+	          return Promise.resolve(this._bodyText)
+	        }
+	      }
+	    } else {
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        return rejected ? rejected : Promise.resolve(this._bodyText)
+	      }
+	    }
+
+	    if (support.formData) {
+	      this.formData = function() {
+	        return this.text().then(decode)
+	      }
+	    }
+
+	    this.json = function() {
+	      return this.text().then(JSON.parse)
+	    }
+
+	    return this
+	  }
+
+	  // HTTP methods whose capitalization should be normalized
+	  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+
+	  function normalizeMethod(method) {
+	    var upcased = method.toUpperCase()
+	    return (methods.indexOf(upcased) > -1) ? upcased : method
+	  }
+
+	  function Request(input, options) {
+	    options = options || {}
+	    var body = options.body
+	    if (Request.prototype.isPrototypeOf(input)) {
+	      if (input.bodyUsed) {
+	        throw new TypeError('Already read')
+	      }
+	      this.url = input.url
+	      this.credentials = input.credentials
+	      if (!options.headers) {
+	        this.headers = new Headers(input.headers)
+	      }
+	      this.method = input.method
+	      this.mode = input.mode
+	      if (!body) {
+	        body = input._bodyInit
+	        input.bodyUsed = true
+	      }
+	    } else {
+	      this.url = input
+	    }
+
+	    this.credentials = options.credentials || this.credentials || 'omit'
+	    if (options.headers || !this.headers) {
+	      this.headers = new Headers(options.headers)
+	    }
+	    this.method = normalizeMethod(options.method || this.method || 'GET')
+	    this.mode = options.mode || this.mode || null
+	    this.referrer = null
+
+	    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+	      throw new TypeError('Body not allowed for GET or HEAD requests')
+	    }
+	    this._initBody(body)
+	  }
+
+	  Request.prototype.clone = function() {
+	    return new Request(this)
+	  }
+
+	  function decode(body) {
+	    var form = new FormData()
+	    body.trim().split('&').forEach(function(bytes) {
+	      if (bytes) {
+	        var split = bytes.split('=')
+	        var name = split.shift().replace(/\+/g, ' ')
+	        var value = split.join('=').replace(/\+/g, ' ')
+	        form.append(decodeURIComponent(name), decodeURIComponent(value))
+	      }
+	    })
+	    return form
+	  }
+
+	  function headers(xhr) {
+	    var head = new Headers()
+	    var pairs = (xhr.getAllResponseHeaders() || '').trim().split('\n')
+	    pairs.forEach(function(header) {
+	      var split = header.trim().split(':')
+	      var key = split.shift().trim()
+	      var value = split.join(':').trim()
+	      head.append(key, value)
+	    })
+	    return head
+	  }
+
+	  Body.call(Request.prototype)
+
+	  function Response(bodyInit, options) {
+	    if (!options) {
+	      options = {}
+	    }
+
+	    this.type = 'default'
+	    this.status = options.status
+	    this.ok = this.status >= 200 && this.status < 300
+	    this.statusText = options.statusText
+	    this.headers = options.headers instanceof Headers ? options.headers : new Headers(options.headers)
+	    this.url = options.url || ''
+	    this._initBody(bodyInit)
+	  }
+
+	  Body.call(Response.prototype)
+
+	  Response.prototype.clone = function() {
+	    return new Response(this._bodyInit, {
+	      status: this.status,
+	      statusText: this.statusText,
+	      headers: new Headers(this.headers),
+	      url: this.url
+	    })
+	  }
+
+	  Response.error = function() {
+	    var response = new Response(null, {status: 0, statusText: ''})
+	    response.type = 'error'
+	    return response
+	  }
+
+	  var redirectStatuses = [301, 302, 303, 307, 308]
+
+	  Response.redirect = function(url, status) {
+	    if (redirectStatuses.indexOf(status) === -1) {
+	      throw new RangeError('Invalid status code')
+	    }
+
+	    return new Response(null, {status: status, headers: {location: url}})
+	  }
+
+	  self.Headers = Headers
+	  self.Request = Request
+	  self.Response = Response
+
+	  self.fetch = function(input, init) {
+	    return new Promise(function(resolve, reject) {
+	      var request
+	      if (Request.prototype.isPrototypeOf(input) && !init) {
+	        request = input
+	      } else {
+	        request = new Request(input, init)
+	      }
+
+	      var xhr = new XMLHttpRequest()
+
+	      function responseURL() {
+	        if ('responseURL' in xhr) {
+	          return xhr.responseURL
+	        }
+
+	        // Avoid security warnings on getResponseHeader when not allowed by CORS
+	        if (/^X-Request-URL:/m.test(xhr.getAllResponseHeaders())) {
+	          return xhr.getResponseHeader('X-Request-URL')
+	        }
+
+	        return
+	      }
+
+	      xhr.onload = function() {
+	        var options = {
+	          status: xhr.status,
+	          statusText: xhr.statusText,
+	          headers: headers(xhr),
+	          url: responseURL()
+	        }
+	        var body = 'response' in xhr ? xhr.response : xhr.responseText
+	        resolve(new Response(body, options))
+	      }
+
+	      xhr.onerror = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+
+	      xhr.ontimeout = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+
+	      xhr.open(request.method, request.url, true)
+
+	      if (request.credentials === 'include') {
+	        xhr.withCredentials = true
+	      }
+
+	      if ('responseType' in xhr && support.blob) {
+	        xhr.responseType = 'blob'
+	      }
+
+	      request.headers.forEach(function(value, name) {
+	        xhr.setRequestHeader(name, value)
+	      })
+
+	      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+	    })
+	  }
+	  self.fetch.polyfill = true
+	})(typeof self !== 'undefined' ? self : this);
+
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _PredictButton = __webpack_require__(216);
+
+	var _PredictButton2 = _interopRequireDefault(_PredictButton);
+
+	var _actions = __webpack_require__(212);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			predictions: state.predictions
+		};
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onPredictClick: function onPredictClick(predictions) {
+				dispatch((0, _actions.savePredictions)(predictions));
+			}
+		};
+	};
+
+	var ButtonContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PredictButton2.default);
+
+	exports.default = ButtonContain;
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(211);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PredictButton = function PredictButton(_ref) {
+		var predictions = _ref.predictions;
+		var onPredictClick = _ref.onPredictClick;
+
+
+		var alertClasses = (0, _classnames2.default)({ 'text-success': true, 'text-danger': true, 'hidden': true, 'span-spacing': true });
+
+		return _react2.default.createElement(
+			'div',
+			{ className: 'row' },
+			_react2.default.createElement(
+				'div',
+				{ className: 'col-xs-12' },
+				_react2.default.createElement(
+					'button',
+					{ className: 'btn btn-euros btn-primary btn-large', onClick: function onClick() {
+							return onPredictClick(predictions);
+						} },
+					'Save Predictions!'
+				),
+				_react2.default.createElement(
+					'span',
+					{ className: alertClasses },
+					_react2.default.createElement('span', { className: 'glyphicon glyphicon-check', 'aria-hidden': 'true' }),
+					_react2.default.createElement(
+						'span',
+						null,
+						'Success'
+					)
+				)
+			)
+		);
+	};
+
+	exports.default = PredictButton;
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _GroupList = __webpack_require__(218);
+
+	var _GroupList2 = _interopRequireDefault(_GroupList);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			groups: state.groups,
+			savedPredictions: state.savedPredictions
+		};
+	};
+
+	var GroupContain = (0, _reactRedux.connect)(mapStateToProps)(_GroupList2.default);
+
+	exports.default = GroupContain;
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Group = __webpack_require__(219);
+
+	var _Group2 = _interopRequireDefault(_Group);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GroupList = function GroupList(_ref) {
+		var groups = _ref.groups;
+		var savedPredictions = _ref.savedPredictions;
+
+		//onLoad();
+		return _react2.default.createElement(
+			'div',
+			{ className: 'col-md-6 hidden' },
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'A' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'B' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'C' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'D' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'E' }),
+			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'F' })
+		);
+	};
+
+	exports.default = GroupList;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _GroupLine = __webpack_require__(220);
+
+	var _GroupLine2 = _interopRequireDefault(_GroupLine);
+
+	var _rankCalcs = __webpack_require__(221);
+
+	var _rankCalcs2 = _interopRequireDefault(_rankCalcs);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Group = function Group(_ref) {
+		var groups = _ref.groups;
+		var savedPredictions = _ref.savedPredictions;
+		var groupLetter = _ref.groupLetter;
+
+
+		var groupTeams = _rankCalcs2.default.fullSort(groups.filter(function (val, ind, arr) {
+			return val.group === groupLetter;
+		}), savedPredictions);
+
+		return _react2.default.createElement(
+			'table',
+			{ className: 'table' },
+			_react2.default.createElement(
+				'thead',
+				null,
+				_react2.default.createElement(
+					'tr',
+					null,
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-4' },
+						'Group ',
+						groupLetter
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'P'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'W'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'D'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'L'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'GF'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'GA'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'GD'
+					),
+					_react2.default.createElement(
+						'td',
+						{ className: 'col-xs-1' },
+						'Pts'
+					)
+				)
+			),
+			_react2.default.createElement(
+				'tbody',
+				null,
+				groupTeams.map(function (team) {
+					return _react2.default.createElement(_GroupLine2.default, _extends({ key: team.name, name: team.name }, team));
+				})
+			)
+		);
+	};
+
+	exports.default = Group;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GroupLine = function GroupLine(_ref) {
+		var name = _ref.name;
+		var P = _ref.P;
+		var W = _ref.W;
+		var D = _ref.D;
+		var L = _ref.L;
+		var GF = _ref.GF;
+		var GA = _ref.GA;
+		var GD = _ref.GD;
+		var Pts = _ref.Pts;
+
+
+		var formatGD = GD > 0 ? '+' + GD : GD;
+
+		return _react2.default.createElement(
+			'tr',
+			null,
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-4' },
+				name
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				P
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				W
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				D
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				L
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				GF
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				GA
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				GD
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1' },
+				Pts
+			)
+		);
+	};
+
+	exports.default = GroupLine;
+
+/***/ },
 /* 221 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var pointSort = function pointSort(a, b) {
+		return b.Pts - a.Pts;
+	};
+
+	var goalScoredSort = function goalScoredSort(a, b) {
+		return b.GF - a.GF;
+	};
+
+	var goalDiffSort = function goalDiffSort(a, b) {
+		return b.GD - a.GD;
+	};
+
+	var chunkTeams = function chunkTeams(group, field) {
+		var chunkedArray = [];
+		var previousValue = undefined;
+		var newChunk = [];
+		for (var i = 0; i < group.length; i++) {
+			if (previousValue !== group[i][field]) {
+				if (newChunk.length > 0) {
+					chunkedArray.push(newChunk);
+				}
+				newChunk = [];
+			}
+			newChunk.push(group[i]);
+			previousValue = group[i][field];
+		}
+		chunkedArray.push(newChunk);
+		return chunkedArray;
+	};
+
+	var fullSort = function fullSort(group, predictions) {
+		var groupByPoints = group.sort(pointSort);
+		var chunked = chunkTeams(groupByPoints, 'Pts');
+		sortStageMiniPts(chunked, predictions);
+		if (chunked.length === 4) {
+			return groupByPoints;
+		} else {
+			return groupByPoints;
+		}
+	};
+
+	var sortStageMiniPts = function sortStageMiniPts(chunks, predictions) {
+		chunks.map(function (chunk) {
+			var newRanks = chunk.map(function (team, ind, arr) {
+				return calcGroup(predictions, team, arr);
+			});
+			var superChunk = chunkTeams(newRanks, 'Pts');
+			if (superChunk.length === chunk.length) {
+				return newRanks;
+			}
+			return chunk;
+		});
+		var finalChunks = chunks.reduce(function (previous, current) {
+			return previous.concat(current);
+		}, []);
+		return finalChunks;
+	};
+
+	var rankCalcs = {
+		pointSort: pointSort,
+		goalScoredSort: goalScoredSort,
+		goalDiffSort: goalDiffSort,
+		fullSort: fullSort
+	};
+
+	var emptyTeam = { 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0 };
+	// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+	var calcGroup = function calcGroup(predictions, team, groupArray) {
+
+		return predictions.reduce(function (previous, current) {
+			var scores = [-1, -1];
+			var activeGame = false;
+			var activeTeam = 'second';
+			var prediction = current.prediction;
+			for (var key in prediction) {
+				if (key === previous.name) {
+					activeGame = true;
+					activeTeam = scores[0] === -1 ? 'first' : 'second';
+				}
+				if (groupArray) {
+					if (groupArray.indexOf(key) === -1) {
+						activeGame = false;
+					};
+				}
+				scores[0] = scores[0] === -1 ? parseInt(prediction[key]) : scores[0];
+				scores[1] = parseInt(prediction[key]);
+			}
+			if (activeGame) {
+				var result = scores[0] > scores[1] ? activeTeam === 'first' ? 'W' : 'L' : scores[1] > scores[0] ? activeTeam === 'first' ? 'L' : 'W' : 'D';
+				var GF = activeTeam === 'first' ? scores[0] : scores[1];
+				var GA = activeTeam === 'first' ? scores[1] : scores[0];
+				var newFields = { 'GF': previous.GF + GF, 'GA': previous.GA + GA };
+				newFields.GD = newFields.GF - newFields.GA;
+				newFields[result] = previous[result] + 1;
+				var tempState = Object.assign({}, previous, newFields);
+				newFields.Pts = tempState.W * 3 + tempState.D;
+				return Object.assign({}, tempState, newFields);
+			}
+			return previous;
+		}, Object.assign({}, team, emptyTeam));
+	};
+
+	exports.default = rankCalcs;
+
+/***/ },
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _UserList = __webpack_require__(223);
+
+	var _UserList2 = _interopRequireDefault(_UserList);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			users: state.users
+		};
+	};
+
+	var UserContain = (0, _reactRedux.connect)(mapStateToProps)(_UserList2.default);
+
+	exports.default = UserContain;
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _User = __webpack_require__(224);
+
+	var _User2 = _interopRequireDefault(_User);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UserList = function UserList(_ref) {
+		var users = _ref.users;
+
+		return _react2.default.createElement(
+			'div',
+			{ className: 'col-md-6' },
+			_react2.default.createElement(
+				'table',
+				{ className: 'table' },
+				_react2.default.createElement(
+					'thead',
+					null,
+					_react2.default.createElement(
+						'tr',
+						null,
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '6' },
+							'Name'
+						),
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '4' },
+							'Top Scorer Pick'
+						),
+						_react2.default.createElement(
+							'td',
+							{ colSpan: '2', className: 'text-center' },
+							'Score'
+						)
+					)
+				),
+				_react2.default.createElement(
+					'tbody',
+					null,
+					users.map(function (user) {
+						return _react2.default.createElement(_User2.default, _extends({ key: user._id }, user));
+					})
+				)
+			)
+		);
+	};
+
+	exports.default = UserList;
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var User = function User(_ref) {
+		var teamName = _ref.teamName;
+		var topScorer = _ref.topScorer;
+		var predictions = _ref.predictions;
+		var totalScore = _ref.totalScore;
+
+		return _react2.default.createElement(
+			"tr",
+			null,
+			_react2.default.createElement(
+				"td",
+				{ colSpan: "6" },
+				teamName
+			),
+			_react2.default.createElement(
+				"td",
+				{ colSpan: "4" },
+				topScorer
+			),
+			_react2.default.createElement(
+				"td",
+				{ colSpan: "2", className: "text-center" },
+				totalScore
+			)
+		);
+	};
+
+	exports.default = User;
+
+/***/ },
+/* 225 */
 /***/ function(module, exports) {
 
 	'use strict';

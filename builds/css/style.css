@@ -4,7 +4,6 @@
 }
 
 body {
-	margin:10px 0 10px 0;
 	font-family:'Lato',sans-serif;
 }
 
@@ -17,8 +16,38 @@ body {
 	margin-left:0.5em;
 }
 
+main {
+	margin:0 0 80px 0;
+}
+
 .navbar-background {
-	background:url(../image/bg.png) #00568f repeat-x center bottom;
-	background-repeat:repeat-x;
-	background-attachment:fixed;
+	background:url(../images/bg.png) #00568f;
+	background-repeat:repeat;
+}
+
+.navbar-background * {
+	height:75px;
+	text-align:center;
+}
+
+.navbar-background .nav li a {
+	width:150px;
+	color:#FFFFFF;
+	cursor:pointer;
+}
+
+.navbar-background .nav li a:hover {
+	color:#FFFFFF;
+	background-color:rgba(0,0,0,0.4)
+}
+
+@media (min-width: 768px) {
+	.navbar-background li a {
+		padding-top:29px;
+		padding-bottom:29px;
+	}
+}
+
+.btn-euros {
+	background-color:#00568f;
 }
