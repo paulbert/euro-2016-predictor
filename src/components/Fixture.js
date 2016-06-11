@@ -23,7 +23,8 @@ const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamN
 			<td className="col-xs-1"><TeamContain team={awayTeamName} /></td>
 			<td className="col-xs-2">{awayTeamName}</td>
 			<td className="col-xs-1"><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,awayTeamName,e.target.value)}/></td>
-			<td className="col-xs-3 text-center">{savedPrediction[homeTeamName]}-{savedPrediction[awayTeamName]}</td>
+			<td className="col-xs-1 text-center">{savedPrediction[homeTeamName]}-{savedPrediction[awayTeamName]}</td>
+			<td className="col-xs-1 text-center">{result.goalsHomeTeam}-{result.goalsAwayTeam}</td>
 		</tr>
 	)
 }

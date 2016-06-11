@@ -23620,7 +23620,12 @@
 		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initFixtures : arguments[0];
 		var action = arguments[1];
 
-		return state;
+		switch (action.type) {
+			case 'RECEIVE_FIXTURES':
+				return action.fixtures;
+			default:
+				return state;
+		}
 	};
 
 	exports.default = fixtures;
@@ -23862,13 +23867,13 @@
 	};
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		dispatch((0, _actions.getPredictions)());
+		dispatch((0, _actions.initData)());
 		return {
 			onScoreChange: function onScoreChange(id, team, score) {
 				dispatch((0, _actions.changePrediction)(id, team, score));
 			},
 			onLoad: function onLoad() {
-				dispatch((0, _actions.getPredictions)());
+				dispatch(getPredictions());
 			}
 		};
 	};
@@ -24071,10 +24076,17 @@
 			),
 			_react2.default.createElement(
 				'td',
-				{ className: 'col-xs-3 text-center' },
+				{ className: 'col-xs-1 text-center' },
 				savedPrediction[homeTeamName],
 				'-',
 				savedPrediction[awayTeamName]
+			),
+			_react2.default.createElement(
+				'td',
+				{ className: 'col-xs-1 text-center' },
+				result.goalsHomeTeam,
+				'-',
+				result.goalsAwayTeam
 			)
 		);
 	};
@@ -24212,9 +24224,11 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.changePrediction = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
+	exports.changePrediction = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
 	exports.savePredictions = savePredictions;
 	exports.getPredictions = getPredictions;
+	exports.getFixtures = getFixtures;
+	exports.initData = initData;
 
 	var _isomorphicFetch = __webpack_require__(212);
 
@@ -24226,6 +24240,8 @@
 	var SEND_PREDICTION = exports.SEND_PREDICTION = 'SEND_PREDICTION';
 	var RECEIVE_PREDICTION = exports.RECEIVE_PREDICTION = 'RECEIVE_PREDICTION';
 	var GETTING_PREDICTION = exports.GETTING_PREDICTION = 'GETTING_PREDICTION';
+	var RECEIVE_FIXTURES = exports.RECEIVE_FIXTURES = 'RECEIVE_PREDICTION';
+	var GETTING_FIXTURES = exports.GETTING_FIXTURES = 'GETTING_FIXTURES';
 
 	var changePrediction = exports.changePrediction = function changePrediction(id, team, score) {
 		return {
@@ -24255,6 +24271,19 @@
 		};
 	};
 
+	var gettingFixtures = function gettingFixtures() {
+		return {
+			type: GETTING_FIXTURES
+		};
+	};
+
+	var receiveFixtures = function receiveFixtures(fixtures) {
+		return {
+			type: RECEIVE_FIXTURES,
+			fixtures: fixtures
+		};
+	};
+
 	function savePredictions(predictions) {
 
 		return function (dispatch) {
@@ -24277,7 +24306,7 @@
 		};
 	}
 
-	function getPredictions(predictions) {
+	function getPredictions() {
 
 		return function (dispatch) {
 
@@ -24298,6 +24327,32 @@
 		};
 	}
 
+	function getFixtures() {
+		return function (dispatch) {
+
+			dispatch(gettingFixtures());
+
+			return (0, _isomorphicFetch2.default)('/getFixtures', {
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+					'Content-Type': 'application/json'
+				}
+			}).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(receiveFixtures(json));
+			});
+		};
+	}
+
+	function initData() {
+		return function (dispatch) {
+			dispatch(getPredictions());
+			dispatch(getFixtures());
+		};
+	}
 	//dispatch(getPredictions());
 
 /***/ },

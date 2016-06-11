@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import FixtureList from '../components/FixtureList'
 import { changePrediction } from '../actions'
-import { getPredictions } from '../actions'
+import { initData } from '../actions'
 
 const mapStateToProps = (state) => {
 	return {
@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-	dispatch(getPredictions())
+	dispatch(initData())
 	return {
 		onScoreChange: (id,team,score) => {
 			dispatch(changePrediction(id,team,score));

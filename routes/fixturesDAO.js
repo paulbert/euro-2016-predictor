@@ -5,16 +5,16 @@ function fixturesDAO (db) {
 	
 	var collection = 'fixtures',
 		options = {
-			url:'http://api.football-data.org/v1/soccerseasons/424/fixtures'
+			url:'http://api.football-data.org/v1/soccerseasons/424/fixtures',
 			headers:{
 				'X-Auth-Token':'db4fcf37e65a456cb4116f32a54bb299'
 			}
-		};
+		},
+		collectionObj = db.collection(collection);
 	
 	function getFixtures(callback) {
-		db.collection(collection).find({}).toArray(callback);
+		collectionObj.find({}).toArray(callback);
 	}
-	
 	
 	function formatBulkUpdateFixture(bulk,fixture) {
 		return bulk.find({'_id':fixture._id}).upsert().updateOne(fixture);
@@ -34,27 +34,24 @@ function fixturesDAO (db) {
 		return sortedStrings + '|' + dateString.substr(0,10);
 	}
 	
-	function upsertCallback(error,result) {
-		if(error) {
-			console.log('There was an error writing new fixture data.');
-			console.log(error);
-		}
-		
-	}
-	
 	function sendFixtures(callback) {
 		
 		function upsertFixtures(error,response,body) {
+			console.log('New fixtures received!');
+			var data = JSON.parse(body);
 			if(!error && response.statusCode == 200) {
-				fixtures = formatFixtures(response.fixtures);
-				var bulk = col.initializeOrderedBulkOp();
-				bulkUpsert = fixtures.reduce(updateFixture,bulk);
+				fixtures = formatFixtures(data.fixtures);
+				var bulk = collectionObj.initializeOrderedBulkOp();
+				bulkUpsert = fixtures.reduce(formatBulkUpdateFixture,bulk);
 				bulkUpsert.execute({},getFixtures(callback));
+			} else {
+				getFixtures(callback);
 			}
 		}
 		
 		function getNewFixtures() {
-			request(options,upsertNewFixtures);
+			console.log('Getting new fixtures from api...');
+			request(options,upsertFixtures);
 		}
 		
 		function checkFixture(shouldUpdate,fixture) {
@@ -66,7 +63,8 @@ function fixturesDAO (db) {
 		}
 		
 		function checkFixtures(err,results) {
-			var shouldUpdate = results.reduce(checkFixture,false);
+			console.log(results);
+			var shouldUpdate = results.length === 0 || results.reduce(checkFixture,false);
 			if(shouldUpdate) {
 				getNewFixtures();
 			} else {
@@ -84,4 +82,4 @@ function fixturesDAO (db) {
 	
 }
 
-module.exports = sessionsDAO;
+module.exports = fixturesDAO;

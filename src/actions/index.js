@@ -73,7 +73,7 @@ export function savePredictions(predictions) {
 	}	
 }
 
-export function getPredictions(predictions) {
+export function getPredictions() {
 	
 	return function(dispatch) {
 		
@@ -96,7 +96,7 @@ export function getPredictions(predictions) {
 	}	
 }
 
-export function getFixtures(fixtures) {
+export function getFixtures() {
 	return function(dispatch) {
 		
 		dispatch(gettingFixtures());
@@ -115,6 +115,13 @@ export function getFixtures(fixtures) {
 		.then(json => {
 			dispatch(receiveFixtures(json));
 		});
+	}
+}
+
+export function initData() {
+	return function(dispatch) {
+		dispatch(getPredictions());
+		dispatch(getFixtures());
 	}
 }
 //dispatch(getPredictions());

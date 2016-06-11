@@ -7,7 +7,8 @@ var usersDAO = require('./usersDAO'),
 module.exports = exports = function(app,db) {
 	
 	var users = usersDAO(db),
-		sessions = sessionsDAO(db);
+		sessions = sessionsDAO(db),
+		fixtures = fixturesDAO(db);
 	
 	app.get('/', function(req,res) { 
 		sessions.checkCookie(req.cookies,function(foundCookie) {
