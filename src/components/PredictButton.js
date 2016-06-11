@@ -8,7 +8,7 @@ const PredictButton = ({ predictions, onPredictClick }) => {
 	return (
 		<div className="row">
 			<div className="col-xs-12">
-				<button className="btn btn-success btn-large" onClick={() => onPredictClick(predictions)}>Save Predictions!</button>
+				<button className="btn btn-euros btn-primary btn-large" onClick={() => onPredictClick(predictions)}>Save Predictions!</button>
 				<span className={alertClasses}><span className="glyphicon glyphicon-check" aria-hidden="true"></span><span>Success</span></span>
 			</div>
 		</div>

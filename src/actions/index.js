@@ -7,6 +7,8 @@ export const RECEIVE_PREDICTION = 'RECEIVE_PREDICTION';
 export const GETTING_PREDICTION = 'GETTING_PREDICTION';
 export const RECEIVE_FIXTURES = 'RECEIVE_FIXTURES';
 export const GETTING_FIXTURES = 'GETTING_FIXTURES';
+export const RECEIVE_USERS = 'RECEIVE_USERS';
+export const GETTING_USERS = 'GETTING_USERS';
 
 export const changePrediction = (id,team,score) => {
 	return {
@@ -49,6 +51,19 @@ const receiveFixtures = (fixtures) => {
 	}
 };
 
+const gettingUsers = () => {
+	return {
+		type:GETTING_USERS,
+	}
+};
+
+const receiveUsers = (users) => {
+	return {
+		type:RECEIVE_USERS,
+		users
+	}
+};
+
 export function savePredictions(predictions) {
 	
 	return function(dispatch) {
@@ -73,23 +88,27 @@ export function savePredictions(predictions) {
 	}	
 }
 
+function fetchQuick(url) {
+	return fetch(url, {
+		method: 'GET',
+		credentials:'include',
+		headers: {
+			'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+			'Content-Type': 'application/json'
+		}
+	})
+	.then(response => {
+		return response.json()
+	})
+}
+
 export function getPredictions() {
 	
 	return function(dispatch) {
 		
 		dispatch(gettingPrediction());
 		
-		return fetch('/getPrediction', {
-			method: 'GET',
-			credentials:'include',
-			headers: {
-				'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-				'Content-Type': 'application/json'
-			}
-		})
-		.then(response => {
-			return response.json()
-		})
+		return fetchQuick('/getPrediction')
 		.then(json => {
 			dispatch(receivePrediction(json[0].predictions));
 		});
@@ -101,19 +120,20 @@ export function getFixtures() {
 		
 		dispatch(gettingFixtures());
 		
-		return fetch('/getFixtures', {
-			method: 'GET',
-			credentials:'include',
-			headers: {
-				'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-				'Content-Type': 'application/json'
-			}
-		})
-		.then(response => {
-			return response.json()
-		})
+		return fetchQuick('/getFixtures')
 		.then(json => {
 			dispatch(receiveFixtures(json));
+			dispatch(getUsers());
+		});
+	}
+}
+
+export function getUsers() {
+	return function(dispatch) {
+		dispatch(gettingUsers());
+		return fetchQuick('/getUsers')
+		.then(json => {
+			dispatch(receiveUsers(json));
 		});
 	}
 }

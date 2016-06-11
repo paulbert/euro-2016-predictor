@@ -56,6 +56,7 @@ MongoClient.connect(mongodb_connection_string,function(err,db) {
 	
 	if(!err) {
 		app.set('port',process.env.PORT || 3000);
+		app.set('nextAPI',(new Date(Date.now())).getTime());
 
 		app.use(bodyParser.json());
 		app.use(bodyParser.urlencoded({'extended':'true'}));

@@ -10,7 +10,8 @@ const FixtureList = ({ fixtures, predictions, savedPredictions, onScoreChange, o
 			<tr>
 				<td colSpan="4">Team 1</td>
 				<td colSpan="3">Team 2</td>
-				<td colSpan="1" className="text-center">Your Saved Predictions</td>
+				<td colSpan="1" className="text-center">Predictions</td>
+				<td colSpan="1" className="text-center">Actual</td>
 			</tr>
 		</thead>
 		<tbody>

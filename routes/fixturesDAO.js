@@ -1,7 +1,7 @@
 
 var request = require('request');
 
-function fixturesDAO (db) {
+function fixturesDAO (db,app) {
 	
 	var collection = 'fixtures',
 		options = {
@@ -42,18 +42,22 @@ function fixturesDAO (db) {
 			console.log('New fixtures received!');
 			var data = JSON.parse(body);
 			if(!error && response.statusCode == 200) {
+				nextAPI = new Date(Date.now());
+				nextAPI = nextAPI.getTime() + 60000;
+				app.set('nextAPI', nextAPI);
+				console.log(app.get('nextAPI'));
 				fixtures = formatFixtures(data.fixtures);
 				var bulk = collectionObj.initializeOrderedBulkOp();
 				bulkUpsert = fixtures.reduce(formatBulkUpdateFixture,bulk);
 				bulkUpsert.execute({},function(err,result) {
 					if(err) { 
-						//console.log(err); 
+						console.log(err); 
 					}
 					else { 
-						console.log('nMatched: ' + result.nMatched);
-						console.log('nInserted: ' + result.nInserted);
-						console.log('nUpserted: ' + result.nUpserted);
-						console.log('hasWriteErrors: ' + result.hasWriteErrors());
+						//console.log('nMatched: ' + result.nMatched);
+						//console.log('nInserted: ' + result.nInserted);
+						//console.log('nUpserted: ' + result.nUpserted);
+						//console.log('hasWriteErrors: ' + result.hasWriteErrors());
 					}
 					getFixtures(callback);
 				});
@@ -77,7 +81,8 @@ function fixturesDAO (db) {
 		
 		function checkFixtures(err,results) {
 			//console.log(results);
-			var shouldUpdate = results.length === 0 || results.reduce(checkFixture,false);
+			console.log(app.get('nextAPI') + ' < ' + (new Date(Date.now())).getTime());
+			var shouldUpdate = (results.length === 0) || ( (app.get('nextAPI') < (new Date(Date.now())).getTime()) && results.reduce(checkFixture,false) );
 			if(shouldUpdate) {
 				getNewFixtures();
 			} else {
@@ -90,7 +95,8 @@ function fixturesDAO (db) {
 	}
 	
 	return {
-		sendFixtures:sendFixtures
+		sendFixtures:sendFixtures,
+		getFixtures:getFixtures
 	}
 	
 }

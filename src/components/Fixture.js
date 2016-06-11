@@ -11,7 +11,7 @@ const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamN
 	today.setHours( today.getHours() );
 	
 	let inputClassObj = { 'score-box':true, 'hidden': false }
-	inputClassObj.hidden = today > reformatDate;
+	//inputClassObj.hidden = today > reformatDate;
 	let inputClass = classnames(inputClassObj);
 	
 	return (

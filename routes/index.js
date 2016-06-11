@@ -8,7 +8,7 @@ module.exports = exports = function(app,db) {
 	
 	var users = usersDAO(db),
 		sessions = sessionsDAO(db),
-		fixtures = fixturesDAO(db);
+		fixtures = fixturesDAO(db,app);
 	
 	app.get('/', function(req,res) { 
 		sessions.checkCookie(req.cookies,function(foundCookie) {
@@ -101,6 +101,19 @@ module.exports = exports = function(app,db) {
 			} else {
 				res.json(result);
 			}
+		});
+		
+	});
+	
+	app.get('/getUsers', function(req,res) {
+		fixtures.getFixtures(function(err,fixtures) {
+			users.scoreAndGetUsers(fixtures,function(err,result) {
+				if(err) {
+					res.json({'message':'Error'});
+				} else {
+					res.json(result);
+				}
+			});
 		});
 		
 	});

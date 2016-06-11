@@ -3,6 +3,7 @@ import fixtures from '../reducers/fixtures.js'
 import predictions from '../reducers/predictions.js'
 import savedPredictions from '../reducers/savedPredictions.js'
 import groups from '../reducers/groups.js'
+import users from '../reducers/users.js'
 import { combineReducers } from 'redux'
 
 const euroApp = combineReducers({
@@ -10,7 +11,8 @@ const euroApp = combineReducers({
 	fixtures,
 	predictions,
 	savedPredictions,
-	groups
+	groups,
+	users
 });
 
 export default euroApp;

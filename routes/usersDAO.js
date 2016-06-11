@@ -1,5 +1,6 @@
 
 var crypto = require('crypto');
+var _ = require('underscore');
 
 function usersDAO (db) {
 	
@@ -8,6 +9,10 @@ function usersDAO (db) {
 	function get(user,callback) {
 		var id = user._id ? user._id : user.name;
 		db.collection(collection).find({_id:id}).toArray(callback);
+	}
+	
+	function getAll(callback) {
+		db.collection(collection).find({},{'pass':0}).toArray(callback);
 	}
 	
 	function insert (user,callback) {
@@ -129,12 +134,77 @@ function usersDAO (db) {
 		
 	}
 	
+	function scoreAndGetUsers(fixtures,callback) {
+		
+		var breakDates = [new Date(2016,5,23),new Date(2016,5,27),new Date(2016,6,4),new Date(2016,6,8)];
+		var pointsArray = [2,4,8,12];
+		
+		function reformatFixtureResult(fixture) {
+			var newResult = {};
+			newResult[fixture.homeTeamName] = fixture.result.goalsHomeTeam.toString();
+			newResult[fixture.awayTeamName] = fixture.result.goalsAwayTeam.toString();
+			return newResult;
+		}
+		
+		function getWinner(result) {
+			var firstScore = -1,
+				winner = '';
+			for(var key in result) {
+				winner = result[key] > firstScore ? key : (result[key] < firstScore ? winner : 'draw');
+				firstScore = result[key];
+			}
+			return winner;
+		}
+		
+		function scoreUser(user) {
+			function scorePrediction(prediction) {
+				var fixtureFilter = fixtures.filter(function (fixture) {return fixture.f_id === prediction.p_id});
+				function getValue(points,date,ind) {
+					if(date < fixture.date) {
+						return pointsArray[ind]
+					}
+					return points
+				}
+				if(fixtureFilter.length === 1) {
+					var fixture = fixtureFilter[0];
+					if(fixture.status === 'FINISHED') {
+						var fixtureValue = breakDates.reduce(getValue,1),
+							fixtureResult = reformatFixtureResult(fixture);
+						var realWinner = getWinner(fixtureResult),
+							predictWinner = getWinner(prediction.prediction);
+						
+						var points = realWinner === predictWinner ? fixtureValue : 0;
+						points = _.isEqual(fixtureResult,prediction.prediction) ? points * 2 : points;
+						
+						return Object.assign({},prediction,{points:points});
+					}
+				}
+				return prediction;
+			}
+			var scoredPredictions = user.predictions.map(scorePrediction);
+			var totalScore = scoredPredictions.reduce(function(points,prediction) { return points + prediction.points }, 0);
+			return Object.assign({},user,{predictions:scoredPredictions,totalScore:totalScore})
+		}
+		
+		function scoreUsers(err,users) {
+			if(err) {
+				callback(err,0);
+			} else {
+				callback(err,users.map(scoreUser));
+			}
+		}
+		
+		getAll(scoreUsers);
+		
+	}
+	
 	return {
 		insertUser:insert,
 		updatePrediction:addPredictions,
 		updateUser:update,
 		getUser:get,
-		checkPassword:checkPassword
+		checkPassword:checkPassword,
+		scoreAndGetUsers:scoreAndGetUsers
 	}
 	
 }
