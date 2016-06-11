@@ -2,7 +2,12 @@
 import { initFixtures } from '../reducers/initStateCalcs.js'
 
 const fixtures = (state = initFixtures,action) => {
-	return state;
+	switch(action.type) {
+		case 'RECEIVE_FIXTURES':
+			return action.fixtures;
+		default:
+			return state;
+	}
 };
 
 export default fixtures;
