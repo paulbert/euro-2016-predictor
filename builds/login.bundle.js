@@ -56,19 +56,19 @@
 
 	var _redux = __webpack_require__(175);
 
-	var _index = __webpack_require__(226);
+	var _index = __webpack_require__(227);
 
 	var _index2 = _interopRequireDefault(_index);
 
-	var _App = __webpack_require__(229);
+	var _App = __webpack_require__(230);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(225);
+	var _reduxThunk = __webpack_require__(226);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-	var _reduxLogger = __webpack_require__(233);
+	var _reduxLogger = __webpack_require__(234);
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
@@ -22072,7 +22072,8 @@
 /* 208 */,
 /* 209 */,
 /* 210 */,
-/* 211 */
+/* 211 */,
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22126,20 +22127,20 @@
 
 
 /***/ },
-/* 212 */,
-/* 213 */
+/* 213 */,
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(214);
+	__webpack_require__(215);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -22578,7 +22579,6 @@
 
 
 /***/ },
-/* 215 */,
 /* 216 */,
 /* 217 */,
 /* 218 */,
@@ -22588,7 +22588,8 @@
 /* 222 */,
 /* 223 */,
 /* 224 */,
-/* 225 */
+/* 225 */,
+/* 226 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22616,7 +22617,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22627,7 +22628,7 @@
 
 	var _redux = __webpack_require__(175);
 
-	var _actions = __webpack_require__(227);
+	var _actions = __webpack_require__(228);
 
 	var initialState = {
 		loginStatus: '',
@@ -22682,7 +22683,7 @@
 	exports.default = loginApp;
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22693,11 +22694,11 @@
 	exports.loginSwitch = exports.LOGIN_RESET = exports.LOGIN_REJECT = exports.LOGIN_SWITCH = exports.LOGIN_SUBMIT = undefined;
 	exports.loginTry = loginTry;
 
-	var _isomorphicFetch = __webpack_require__(213);
+	var _isomorphicFetch = __webpack_require__(214);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _jquery = __webpack_require__(228);
+	var _jquery = __webpack_require__(229);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -22768,7 +22769,7 @@
 	}
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -32588,7 +32589,7 @@
 
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32601,11 +32602,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Spinner = __webpack_require__(230);
+	var _Spinner = __webpack_require__(231);
 
 	var _Spinner2 = _interopRequireDefault(_Spinner);
 
-	var _LoginContain = __webpack_require__(231);
+	var _LoginContain = __webpack_require__(232);
 
 	var _LoginContain2 = _interopRequireDefault(_LoginContain);
 
@@ -32623,7 +32624,7 @@
 	exports.default = App;
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32649,7 +32650,7 @@
 	exports.default = Spinner;
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32660,11 +32661,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _LoginForm = __webpack_require__(232);
+	var _LoginForm = __webpack_require__(233);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
-	var _actions = __webpack_require__(227);
+	var _actions = __webpack_require__(228);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32692,7 +32693,7 @@
 	exports.default = LoginContain;
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32707,9 +32708,9 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _actions = __webpack_require__(227);
+	var _actions = __webpack_require__(228);
 
-	var _classnames = __webpack_require__(211);
+	var _classnames = __webpack_require__(212);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -32909,7 +32910,7 @@
 	exports.default = LoginForm;
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports) {
 
 	"use strict";

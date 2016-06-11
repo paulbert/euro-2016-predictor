@@ -60,11 +60,11 @@
 
 	var _euroApp2 = _interopRequireDefault(_euroApp);
 
-	var _App = __webpack_require__(205);
+	var _App = __webpack_require__(206);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(225);
+	var _reduxThunk = __webpack_require__(226);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -22082,6 +22082,10 @@
 
 	var _users2 = _interopRequireDefault(_users);
 
+	var _user = __webpack_require__(205);
+
+	var _user2 = _interopRequireDefault(_user);
+
 	var _redux = __webpack_require__(175);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22092,7 +22096,9 @@
 		predictions: _predictions2.default,
 		savedPredictions: _savedPredictions2.default,
 		groups: _groups2.default,
-		users: _users2.default
+		users: _users2.default,
+		thisUser: _user2.default,
+		activeUserView: _user2.default
 	});
 
 	exports.default = euroApp;
@@ -23825,6 +23831,52 @@
 
 /***/ },
 /* 205 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var getCurrentUser = function getCurrentUser() {
+		var cookieArray = document.cookie.split("; ");
+		return cookieArray.reduce(function (previous, cookie) {
+			var keyValueAsArray = cookie.split('=');
+			if (keyValueAsArray[0] === 'user') {
+				return keyValueAsArray[1];
+			}
+			return previous;
+		}, '');
+	};
+
+	var thisUser = function thisUser() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			default:
+				return getCurrentUser();
+		}
+	};
+
+	var activeUserView = function activeUserView() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'SWITCH_USERS':
+				return action.user;
+			default:
+				return getCurrentUser();
+		}
+	};
+
+	exports.default = thisUser;
+	exports.default = activeUserView;
+
+/***/ },
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23837,19 +23889,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FixtureContain = __webpack_require__(206);
+	var _FixtureContain = __webpack_require__(207);
 
 	var _FixtureContain2 = _interopRequireDefault(_FixtureContain);
 
-	var _ButtonContain = __webpack_require__(215);
+	var _ButtonContain = __webpack_require__(216);
 
 	var _ButtonContain2 = _interopRequireDefault(_ButtonContain);
 
-	var _GroupsContain = __webpack_require__(217);
+	var _GroupsContain = __webpack_require__(218);
 
 	var _GroupsContain2 = _interopRequireDefault(_GroupsContain);
 
-	var _UserContain = __webpack_require__(222);
+	var _UserContain = __webpack_require__(223);
 
 	var _UserContain2 = _interopRequireDefault(_UserContain);
 
@@ -23861,7 +23913,7 @@
 			null,
 			_react2.default.createElement(
 				'nav',
-				{ className: 'navbar navbar-default navbar-static-top navbar-background' },
+				{ className: 'navbar navbar-default navbar-static-top navbar-background hidden' },
 				_react2.default.createElement(
 					'div',
 					{ className: 'collapse navbar-collapse' },
@@ -23906,7 +23958,7 @@
 	exports.default = App;
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23917,11 +23969,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _FixtureList = __webpack_require__(207);
+	var _FixtureList = __webpack_require__(208);
 
 	var _FixtureList2 = _interopRequireDefault(_FixtureList);
 
-	var _actions = __webpack_require__(212);
+	var _actions = __webpack_require__(213);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23929,7 +23981,9 @@
 		return {
 			fixtures: state.fixtures,
 			predictions: state.predictions,
-			savedPredictions: state.savedPredictions
+			user: state.users.filter(function (user) {
+				return user._id === state.activeUserView;
+			})[0]
 		};
 	};
 
@@ -23950,7 +24004,7 @@
 	exports.default = FixtureContain;
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23965,7 +24019,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Fixture = __webpack_require__(208);
+	var _Fixture = __webpack_require__(209);
 
 	var _Fixture2 = _interopRequireDefault(_Fixture);
 
@@ -23974,11 +24028,12 @@
 	var FixtureList = function FixtureList(_ref) {
 		var fixtures = _ref.fixtures;
 		var predictions = _ref.predictions;
-		var savedPredictions = _ref.savedPredictions;
+		var user = _ref.user;
 		var onScoreChange = _ref.onScoreChange;
 		var onLoad = _ref.onLoad;
 
 		//onLoad();
+
 		return _react2.default.createElement(
 			'div',
 			{ className: 'col-md-6 col-xs-12' },
@@ -24023,13 +24078,13 @@
 						defaultPrediction[fixture.awayTeamName] = null;
 						var reduceToPrediction = function reduceToPrediction(filtered, p, index) {
 							if (p.p_id === fixture.f_id) {
-								return Object.assign({}, filtered, p.prediction);
+								return Object.assign({}, filtered, p.prediction, typeof p.points !== 'undefined' ? { points: p.points, bonus: p.bonus } : {});
 							} else {
 								return Object.assign({}, filtered);
 							}
 						};
 						var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
-						var savedPrediction = savedPredictions.reduce(reduceToPrediction, defaultPrediction);
+						var savedPrediction = user ? user.predictions.reduce(reduceToPrediction, defaultPrediction) : {};
 						return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange }));
 					})
 				)
@@ -24057,7 +24112,7 @@
 	exports.default = FixtureList;
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24070,11 +24125,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TeamContain = __webpack_require__(209);
+	var _TeamContain = __webpack_require__(210);
 
 	var _TeamContain2 = _interopRequireDefault(_TeamContain);
 
-	var _classnames = __webpack_require__(211);
+	var _classnames = __webpack_require__(212);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -24103,6 +24158,21 @@
 		var inputClassObj = { 'score-box': true, 'hidden': false };
 		//inputClassObj.hidden = today > reformatDate;
 		var inputClass = (0, _classnames2.default)(inputClassObj);
+
+		var iconClassObj = { 'glyphicon': true, 'glyphicon-ok': false, 'glyphicon-remove': false, 'glyphicon-star': false, 'hidden': true };
+		if (typeof savedPrediction.points !== 'undefined') {
+			iconClassObj.hidden = false;
+			if (savedPrediction.points > 0) {
+				iconClassObj['glyphicon-ok'] = true;
+				if (savedPrediction.bonus) {
+					iconClassObj['glyphicon-ok'] = false;
+					iconClassObj['glyphicon-star'] = true;
+				}
+			} else {
+				iconClassObj['glyphicon-remove'] = true;
+			}
+		}
+		var iconClass = (0, _classnames2.default)(iconClassObj);
 
 		return _react2.default.createElement(
 			'tr',
@@ -24148,10 +24218,11 @@
 			),
 			_react2.default.createElement(
 				'td',
-				{ className: 'col-xs-1 text-center' },
+				{ className: 'col-xs-2 text-center' },
 				savedPrediction[homeTeamName],
 				'-',
-				savedPrediction[awayTeamName]
+				savedPrediction[awayTeamName],
+				_react2.default.createElement('span', { className: iconClass, 'aria-hidden': 'true' })
 			),
 			_react2.default.createElement(
 				'td',
@@ -24175,7 +24246,7 @@
 	exports.default = Fixture;
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24186,7 +24257,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _TeamFlag = __webpack_require__(210);
+	var _TeamFlag = __webpack_require__(211);
 
 	var _TeamFlag2 = _interopRequireDefault(_TeamFlag);
 
@@ -24204,7 +24275,7 @@
 	exports.default = TeamContain;
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -24234,7 +24305,7 @@
 	exports.default = TeamFlag;
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -24288,7 +24359,7 @@
 
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24303,7 +24374,7 @@
 	exports.getUsers = getUsers;
 	exports.initData = initData;
 
-	var _isomorphicFetch = __webpack_require__(213);
+	var _isomorphicFetch = __webpack_require__(214);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
@@ -24449,19 +24520,19 @@
 	//dispatch(getPredictions());
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(214);
+	__webpack_require__(215);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -24900,7 +24971,7 @@
 
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24911,11 +24982,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _PredictButton = __webpack_require__(216);
+	var _PredictButton = __webpack_require__(217);
 
 	var _PredictButton2 = _interopRequireDefault(_PredictButton);
 
-	var _actions = __webpack_require__(212);
+	var _actions = __webpack_require__(213);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24938,7 +25009,7 @@
 	exports.default = ButtonContain;
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24951,7 +25022,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(211);
+	var _classnames = __webpack_require__(212);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -24994,7 +25065,7 @@
 	exports.default = PredictButton;
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25005,7 +25076,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _GroupList = __webpack_require__(218);
+	var _GroupList = __webpack_require__(219);
 
 	var _GroupList2 = _interopRequireDefault(_GroupList);
 
@@ -25023,7 +25094,7 @@
 	exports.default = GroupContain;
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25036,7 +25107,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Group = __webpack_require__(219);
+	var _Group = __webpack_require__(220);
 
 	var _Group2 = _interopRequireDefault(_Group);
 
@@ -25062,7 +25133,7 @@
 	exports.default = GroupList;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25077,11 +25148,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _GroupLine = __webpack_require__(220);
+	var _GroupLine = __webpack_require__(221);
 
 	var _GroupLine2 = _interopRequireDefault(_GroupLine);
 
-	var _rankCalcs = __webpack_require__(221);
+	var _rankCalcs = __webpack_require__(222);
 
 	var _rankCalcs2 = _interopRequireDefault(_rankCalcs);
 
@@ -25167,7 +25238,7 @@
 	exports.default = Group;
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25250,7 +25321,7 @@
 	exports.default = GroupLine;
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -25364,7 +25435,7 @@
 	exports.default = rankCalcs;
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25375,7 +25446,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _UserList = __webpack_require__(223);
+	var _UserList = __webpack_require__(224);
 
 	var _UserList2 = _interopRequireDefault(_UserList);
 
@@ -25392,7 +25463,7 @@
 	exports.default = UserContain;
 
 /***/ },
-/* 223 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25407,7 +25478,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _User = __webpack_require__(224);
+	var _User = __webpack_require__(225);
 
 	var _User2 = _interopRequireDefault(_User);
 
@@ -25459,7 +25530,7 @@
 	exports.default = UserList;
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25504,7 +25575,7 @@
 	exports.default = User;
 
 /***/ },
-/* 225 */
+/* 226 */
 /***/ function(module, exports) {
 
 	'use strict';

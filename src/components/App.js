@@ -6,7 +6,7 @@ import UserContain from '../containers/UserContain'
 
 const App = () => (
 	<div>
-	<nav className="navbar navbar-default navbar-static-top navbar-background">
+	<nav className="navbar navbar-default navbar-static-top navbar-background hidden">
 		<div className="collapse navbar-collapse">
 			<ul className="nav navbar-nav">
 				<li><a>Your Predictions</a></li>

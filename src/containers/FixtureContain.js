@@ -7,7 +7,9 @@ const mapStateToProps = (state) => {
 	return {
 		fixtures:state.fixtures,
 		predictions:state.predictions,
-		savedPredictions:state.savedPredictions
+		user:state.users.filter((user) => {
+			return user._id === state.activeUserView
+		})[0]
 	}
 };
 

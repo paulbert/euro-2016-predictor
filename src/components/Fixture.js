@@ -14,6 +14,21 @@ const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamN
 	//inputClassObj.hidden = today > reformatDate;
 	let inputClass = classnames(inputClassObj);
 	
+	let iconClassObj = { 'glyphicon':true,'glyphicon-ok':false,'glyphicon-remove':false,'glyphicon-star':false,'hidden':true }
+	if(typeof savedPrediction.points !== 'undefined') {
+		iconClassObj.hidden = false;
+		if(savedPrediction.points > 0) {
+			iconClassObj['glyphicon-ok'] = true;
+			if(savedPrediction.bonus) {
+				iconClassObj['glyphicon-ok'] = false;
+				iconClassObj['glyphicon-star'] = true;
+			}
+		} else {
+			iconClassObj['glyphicon-remove'] = true;
+		}
+	}
+	let iconClass = classnames(iconClassObj);
+	
 	return (
 		<tr>
 			<td className="col-xs-1">{dateString}</td>
@@ -23,7 +38,10 @@ const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamN
 			<td className="col-xs-1"><TeamContain team={awayTeamName} /></td>
 			<td className="col-xs-2">{awayTeamName}</td>
 			<td className="col-xs-1"><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,awayTeamName,e.target.value)}/></td>
-			<td className="col-xs-1 text-center">{savedPrediction[homeTeamName]}-{savedPrediction[awayTeamName]}</td>
+			<td className="col-xs-2 text-center">
+				{savedPrediction[homeTeamName]}-{savedPrediction[awayTeamName]}
+				<span className={iconClass} aria-hidden="true"></span>
+			</td>
 			<td className="col-xs-1 text-center">{result.goalsHomeTeam}-{result.goalsAwayTeam}</td>
 		</tr>
 	)

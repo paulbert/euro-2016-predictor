@@ -174,9 +174,10 @@ function usersDAO (db) {
 							predictWinner = getWinner(prediction.prediction);
 						
 						var points = realWinner === predictWinner ? fixtureValue : 0;
-						points = _.isEqual(fixtureResult,prediction.prediction) ? points * 2 : points;
+						var bonus = _.isEqual(fixtureResult,prediction.prediction);
+						points = bonus ? points * 2 : points;
 						
-						return Object.assign({},prediction,{points:points});
+						return Object.assign({},prediction,{points:points,bonus:bonus});
 					}
 				}
 				return prediction;

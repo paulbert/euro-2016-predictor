@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
 import Fixture from './Fixture'
 
-const FixtureList = ({ fixtures, predictions, savedPredictions, onScoreChange, onLoad }) => {
+const FixtureList = ({ fixtures, predictions, user, onScoreChange, onLoad }) => {
 	//onLoad();
+	
 	return (
 	<div className="col-md-6 col-xs-12">
 	<table className="table">
@@ -23,13 +24,13 @@ const FixtureList = ({ fixtures, predictions, savedPredictions, onScoreChange, o
 					const reduceToPrediction = (filtered,p,index) => { 
 						if(p.p_id === fixture.f_id) 
 						{ 
-							return Object.assign({},filtered,p.prediction);
+							return Object.assign({},filtered,p.prediction,(typeof p.points !== 'undefined' ? {points:p.points,bonus:p.bonus}:{}));
 						} else {
 							return Object.assign({},filtered);
 						}
 					};
 					let prediction = predictions.reduce(reduceToPrediction,defaultPrediction);
-					let savedPrediction = savedPredictions.reduce(reduceToPrediction,defaultPrediction);
+					let savedPrediction = user ? user.predictions.reduce(reduceToPrediction,defaultPrediction) : {};
 					return <Fixture links={fixture._links} key={fixture.key} {...fixture} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} />;
 				}
 			)}
