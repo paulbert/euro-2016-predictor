@@ -17,7 +17,8 @@ function fixturesDAO (db) {
 	}
 	
 	function formatBulkUpdateFixture(bulk,fixture) {
-		return bulk.find({'_id':fixture._id}).upsert().updateOne(fixture);
+		bulk.find({'_id':fixture._id}).upsert().updateOne(fixture);
+		return bulk;
 	}
 	
 	function formatFixtures (fixtures) {
