@@ -183,7 +183,8 @@ function usersDAO (db) {
 				return prediction;
 			}
 			var scoredPredictions = user.predictions.map(scorePrediction);
-			var totalScore = scoredPredictions.reduce(function(points,prediction) { return points + prediction.points }, 0);
+			var totalScore = scoredPredictions.reduce(function(points,prediction) { return points + (prediction.points > 0 ? prediction.points : 0) }, 0);
+			console.log(totalScore);
 			return Object.assign({},user,{predictions:scoredPredictions,totalScore:totalScore})
 		}
 		
