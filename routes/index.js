@@ -1,7 +1,8 @@
 
 var usersDAO = require('./usersDAO'),
 	path = require('path'),
-	sessionsDAO = require('./sessionsDAO');
+	sessionsDAO = require('./sessionsDAO'),
+	fixturesDAO = require('./fixturesDAO');
 	
 module.exports = exports = function(app,db) {
 	
@@ -90,6 +91,17 @@ module.exports = exports = function(app,db) {
 				res.json(result);
 			}
 		});
+	});
+	
+	app.get('/getFixtures', function(req,res) {
+		fixtures.sendFixtures(function(err,result) {
+			if(err) {
+				res.json({'message':'Error'});
+			} else {
+				res.json(result);
+			}
+		});
+		
 	});
 	
 }
