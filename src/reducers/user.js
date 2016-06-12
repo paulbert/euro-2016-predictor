@@ -11,19 +11,19 @@ const getCurrentUser = () => {
 }
 
 
-const thisUser = (state = [],action) => {
+const thisUser = (state = getCurrentUser(),action) => {
 	switch(action.type) {
 		default:
-			return getCurrentUser();
+			return state;
 	}
 };
 
-const activeUserView = (state = [],action) => {
+const activeUserView = (state = getCurrentUser(),action) => {
 	switch(action.type) {
 		case 'SWITCH_USERS':
 			return action.user;
 		default:
-			return getCurrentUser();
+			return state;
 	}
 };
 

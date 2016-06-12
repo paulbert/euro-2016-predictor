@@ -3,7 +3,7 @@ import User from './User'
 
 const UserList = ({ users }) => {
 	return (
-	<div className="col-md-6 hidden">
+	<div className="col-md-6">
 	<table className="table">
 		<thead>
 			<tr>

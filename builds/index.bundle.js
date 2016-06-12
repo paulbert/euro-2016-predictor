@@ -23851,24 +23851,24 @@
 	};
 
 	var thisUser = function thisUser() {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+		var state = arguments.length <= 0 || arguments[0] === undefined ? getCurrentUser() : arguments[0];
 		var action = arguments[1];
 
 		switch (action.type) {
 			default:
-				return getCurrentUser();
+				return state;
 		}
 	};
 
 	var activeUserView = function activeUserView() {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+		var state = arguments.length <= 0 || arguments[0] === undefined ? getCurrentUser() : arguments[0];
 		var action = arguments[1];
 
 		switch (action.type) {
 			case 'SWITCH_USERS':
 				return action.user;
 			default:
-				return getCurrentUser();
+				return state;
 		}
 	};
 
@@ -25489,7 +25489,7 @@
 
 		return _react2.default.createElement(
 			'div',
-			{ className: 'col-md-6 hidden' },
+			{ className: 'col-md-6' },
 			_react2.default.createElement(
 				'table',
 				{ className: 'table' },
@@ -25550,6 +25550,7 @@
 		var topScorer = _ref.topScorer;
 		var predictions = _ref.predictions;
 		var totalScore = _ref.totalScore;
+
 
 		return _react2.default.createElement(
 			"tr",

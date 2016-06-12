@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react'
 
 const User = ({ teamName,topScorer,predictions,totalScore}) => {
+	
+	
+	
 	return (
 	
 	<tr>
