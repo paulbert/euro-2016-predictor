@@ -24156,7 +24156,7 @@
 		today.setHours(today.getHours());
 
 		var inputClassObj = { 'score-box': true, 'hidden': false };
-		//inputClassObj.hidden = today > reformatDate;
+		inputClassObj.hidden = today > reformatDate;
 		var inputClass = (0, _classnames2.default)(inputClassObj);
 
 		var iconClassObj = { 'glyphicon': true, 'glyphicon-ok': false, 'glyphicon-remove': false, 'glyphicon-star': false, 'hidden': true };
