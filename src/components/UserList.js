@@ -13,7 +13,7 @@ const UserList = ({ users }) => {
 			</tr>
 		</thead>
 		<tbody>
-			{users.map(user => <User key={user._id} {...user} />)}
+			{users.sort((a,b) => b.totalScore - a.totalScore).map(user => <User key={user._id} {...user} />)}
 		</tbody>
 	</table>
 	</div>

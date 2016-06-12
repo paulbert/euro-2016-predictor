@@ -25519,7 +25519,9 @@
 				_react2.default.createElement(
 					'tbody',
 					null,
-					users.map(function (user) {
+					users.sort(function (a, b) {
+						return b.totalScore - a.totalScore;
+					}).map(function (user) {
 						return _react2.default.createElement(_User2.default, _extends({ key: user._id }, user));
 					})
 				)
