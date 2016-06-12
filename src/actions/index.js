@@ -9,6 +9,7 @@ export const RECEIVE_FIXTURES = 'RECEIVE_FIXTURES';
 export const GETTING_FIXTURES = 'GETTING_FIXTURES';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const GETTING_USERS = 'GETTING_USERS';
+export const SWITCH_USERS = 'SWITCH_USERS';
 
 export const changePrediction = (id,team,score) => {
 	return {
@@ -16,6 +17,13 @@ export const changePrediction = (id,team,score) => {
 		id,
 		team,
 		score
+	}
+};
+
+export const switchUsers = (userId) => {
+	return {
+		type:SWITCH_USERS,
+		userId
 	}
 };
 
@@ -63,6 +71,7 @@ const receiveUsers = (users) => {
 		users
 	}
 };
+
 
 export function savePredictions(predictions) {
 	

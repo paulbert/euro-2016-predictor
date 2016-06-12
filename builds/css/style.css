@@ -51,3 +51,7 @@ main {
 .btn-euros {
 	background-color:#00568f;
 }
+
+.user-row {
+	cursor:pointer;
+}

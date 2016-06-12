@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import TeamContain from '../containers/TeamContain'
 import classnames from 'classnames'
 
-const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamName, result, prediction, savedPrediction, onScoreChange}) => {
+const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamName, result, prediction, savedPrediction, onScoreChange, isCurrent}) => {
 	let reformatDate = new Date(date);
 	let dateString = (reformatDate.getMonth() + 1) + '/' + reformatDate.getDate();
 	
@@ -11,7 +11,7 @@ const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamN
 	today.setHours( today.getHours() );
 	
 	let inputClassObj = { 'score-box':true, 'hidden': false }
-	inputClassObj.hidden = today > reformatDate;
+	inputClassObj.hidden = (!isCurrent || today > reformatDate);
 	let inputClass = classnames(inputClassObj);
 	
 	let iconClassObj = { 'glyphicon':true,'glyphicon-ok':false,'glyphicon-remove':false,'glyphicon-star':false,'hidden':true }

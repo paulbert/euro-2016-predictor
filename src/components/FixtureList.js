@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react'
 import Fixture from './Fixture'
 
-const FixtureList = ({ fixtures, predictions, user, onScoreChange, onLoad }) => {
+const FixtureList = ({ fixtures, predictions, user, isCurrent, onScoreChange, onLoad }) => {
 	//onLoad();
 	
 	return (
+	
 	<div className="col-md-6 col-xs-12">
 	<table className="table">
 		<thead>
@@ -31,7 +32,7 @@ const FixtureList = ({ fixtures, predictions, user, onScoreChange, onLoad }) => 
 					};
 					let prediction = predictions.reduce(reduceToPrediction,defaultPrediction);
 					let savedPrediction = user ? user.predictions.reduce(reduceToPrediction,defaultPrediction) : {};
-					return <Fixture links={fixture._links} key={fixture.key} {...fixture} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} />;
+					return <Fixture links={fixture._links} key={fixture.key} {...fixture} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} isCurrent={isCurrent} />;
 				}
 			)}
 		</tbody>

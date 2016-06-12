@@ -4,8 +4,8 @@ import predictions from '../reducers/predictions.js'
 import savedPredictions from '../reducers/savedPredictions.js'
 import groups from '../reducers/groups.js'
 import users from '../reducers/users.js'
-import thisUser from '../reducers/user.js'
-import activeUserView from '../reducers/user.js'
+import { thisUser } from '../reducers/user.js'
+import { activeUserView } from '../reducers/user.js'
 import { combineReducers } from 'redux'
 
 const euroApp = combineReducers({

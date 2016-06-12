@@ -3,6 +3,7 @@ import FixtureContain from '../containers/FixtureContain'
 import ButtonContain from '../containers/ButtonContain'
 import GroupsContain from '../containers/GroupsContain'
 import UserContain from '../containers/UserContain'
+import PredictionHeaderContain from '../containers/PredictionHeaderContain'
 
 const App = () => (
 	<div>
@@ -17,6 +18,9 @@ const App = () => (
 
 	<main className="container-fluid">
 		<ButtonContain />
+		<div className="row">
+			<PredictionHeaderContain />
+		</div>
 		<div className="row">
 			<FixtureContain />
 			<UserContain />

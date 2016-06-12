@@ -64,7 +64,7 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(226);
+	var _reduxThunk = __webpack_require__(228);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -22084,8 +22084,6 @@
 
 	var _user = __webpack_require__(205);
 
-	var _user2 = _interopRequireDefault(_user);
-
 	var _redux = __webpack_require__(175);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22097,8 +22095,8 @@
 		savedPredictions: _savedPredictions2.default,
 		groups: _groups2.default,
 		users: _users2.default,
-		thisUser: _user2.default,
-		activeUserView: _user2.default
+		thisUser: _user.thisUser,
+		activeUserView: _user.activeUserView
 	});
 
 	exports.default = euroApp;
@@ -23866,14 +23864,14 @@
 
 		switch (action.type) {
 			case 'SWITCH_USERS':
-				return action.user;
+				return action.userId;
 			default:
 				return state;
 		}
 	};
 
-	exports.default = thisUser;
-	exports.default = activeUserView;
+	exports.thisUser = thisUser;
+	exports.activeUserView = activeUserView;
 
 /***/ },
 /* 206 */
@@ -23904,6 +23902,10 @@
 	var _UserContain = __webpack_require__(223);
 
 	var _UserContain2 = _interopRequireDefault(_UserContain);
+
+	var _PredictionHeaderContain = __webpack_require__(226);
+
+	var _PredictionHeaderContain2 = _interopRequireDefault(_PredictionHeaderContain);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23948,6 +23950,11 @@
 				_react2.default.createElement(
 					'div',
 					{ className: 'row' },
+					_react2.default.createElement(_PredictionHeaderContain2.default, null)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'row' },
 					_react2.default.createElement(_FixtureContain2.default, null),
 					_react2.default.createElement(_UserContain2.default, null)
 				)
@@ -23983,7 +23990,8 @@
 			predictions: state.predictions,
 			user: state.users.filter(function (user) {
 				return user._id === state.activeUserView;
-			})[0]
+			})[0],
+			isCurrent: state.activeUserView === state.thisUser
 		};
 	};
 
@@ -24029,6 +24037,7 @@
 		var fixtures = _ref.fixtures;
 		var predictions = _ref.predictions;
 		var user = _ref.user;
+		var isCurrent = _ref.isCurrent;
 		var onScoreChange = _ref.onScoreChange;
 		var onLoad = _ref.onLoad;
 
@@ -24085,7 +24094,7 @@
 						};
 						var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
 						var savedPrediction = user ? user.predictions.reduce(reduceToPrediction, defaultPrediction) : {};
-						return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange }));
+						return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange, isCurrent: isCurrent }));
 					})
 				)
 			)
@@ -24147,6 +24156,7 @@
 		var prediction = _ref.prediction;
 		var savedPrediction = _ref.savedPrediction;
 		var onScoreChange = _ref.onScoreChange;
+		var isCurrent = _ref.isCurrent;
 
 		var reformatDate = new Date(date);
 		var dateString = reformatDate.getMonth() + 1 + '/' + reformatDate.getDate();
@@ -24156,7 +24166,7 @@
 		today.setHours(today.getHours());
 
 		var inputClassObj = { 'score-box': true, 'hidden': false };
-		inputClassObj.hidden = today > reformatDate;
+		inputClassObj.hidden = !isCurrent || today > reformatDate;
 		var inputClass = (0, _classnames2.default)(inputClassObj);
 
 		var iconClassObj = { 'glyphicon': true, 'glyphicon-ok': false, 'glyphicon-remove': false, 'glyphicon-star': false, 'hidden': true };
@@ -24367,7 +24377,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.changePrediction = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
+	exports.switchUsers = exports.changePrediction = exports.SWITCH_USERS = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
 	exports.savePredictions = savePredictions;
 	exports.getPredictions = getPredictions;
 	exports.getFixtures = getFixtures;
@@ -24388,6 +24398,7 @@
 	var GETTING_FIXTURES = exports.GETTING_FIXTURES = 'GETTING_FIXTURES';
 	var RECEIVE_USERS = exports.RECEIVE_USERS = 'RECEIVE_USERS';
 	var GETTING_USERS = exports.GETTING_USERS = 'GETTING_USERS';
+	var SWITCH_USERS = exports.SWITCH_USERS = 'SWITCH_USERS';
 
 	var changePrediction = exports.changePrediction = function changePrediction(id, team, score) {
 		return {
@@ -24395,6 +24406,13 @@
 			id: id,
 			team: team,
 			score: score
+		};
+	};
+
+	var switchUsers = exports.switchUsers = function switchUsers(userId) {
+		return {
+			type: SWITCH_USERS,
+			userId: userId
 		};
 	};
 
@@ -25450,6 +25468,8 @@
 
 	var _UserList2 = _interopRequireDefault(_UserList);
 
+	var _actions = __webpack_require__(213);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var mapStateToProps = function mapStateToProps(state) {
@@ -25458,7 +25478,15 @@
 		};
 	};
 
-	var UserContain = (0, _reactRedux.connect)(mapStateToProps)(_UserList2.default);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onUserClick: function onUserClick(userId) {
+				dispatch((0, _actions.switchUsers)(userId));
+			}
+		};
+	};
+
+	var UserContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_UserList2.default);
 
 	exports.default = UserContain;
 
@@ -25486,13 +25514,14 @@
 
 	var UserList = function UserList(_ref) {
 		var users = _ref.users;
+		var onUserClick = _ref.onUserClick;
 
 		return _react2.default.createElement(
 			'div',
 			{ className: 'col-md-6' },
 			_react2.default.createElement(
 				'table',
-				{ className: 'table' },
+				{ className: 'table table-hover' },
 				_react2.default.createElement(
 					'thead',
 					null,
@@ -25522,7 +25551,7 @@
 					users.sort(function (a, b) {
 						return b.totalScore - a.totalScore;
 					}).map(function (user) {
-						return _react2.default.createElement(_User2.default, _extends({ key: user._id }, user));
+						return _react2.default.createElement(_User2.default, _extends({ key: user._id, id: user._id }, user, { onUserClick: onUserClick }));
 					})
 				)
 			)
@@ -25548,15 +25577,19 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var User = function User(_ref) {
+		var id = _ref.id;
 		var teamName = _ref.teamName;
 		var topScorer = _ref.topScorer;
 		var predictions = _ref.predictions;
 		var totalScore = _ref.totalScore;
+		var onUserClick = _ref.onUserClick;
 
 
 		return _react2.default.createElement(
 			"tr",
-			null,
+			{ className: "user-row", onClick: function onClick(e) {
+					return onUserClick(id);
+				} },
 			_react2.default.createElement(
 				"td",
 				{ colSpan: "6" },
@@ -25579,6 +25612,72 @@
 
 /***/ },
 /* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _PredictionHeader = __webpack_require__(227);
+
+	var _PredictionHeader2 = _interopRequireDefault(_PredictionHeader);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			user: state.users.filter(function (user) {
+				return user._id === state.activeUserView;
+			})[0],
+			isCurrent: state.activeUserView === state.thisUser
+		};
+	};
+
+	var PredictionHeaderContain = (0, _reactRedux.connect)(mapStateToProps)(_PredictionHeader2.default);
+
+	exports.default = PredictionHeaderContain;
+
+/***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PredictionHeader = function PredictionHeader(_ref) {
+		var user = _ref.user;
+		var isCurrent = _ref.isCurrent;
+
+		//onLoad();
+
+		return _react2.default.createElement(
+			'div',
+			{ className: 'col-xs-12' },
+			_react2.default.createElement(
+				'h3',
+				null,
+				isCurrent ? 'Your Predictions' : user.teamName
+			)
+		);
+	};
+
+	exports.default = PredictionHeader;
+
+/***/ },
+/* 228 */
 /***/ function(module, exports) {
 
 	'use strict';

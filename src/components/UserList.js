@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import User from './User'
 
-const UserList = ({ users }) => {
+const UserList = ({ users, onUserClick }) => {
 	return (
 	<div className="col-md-6">
-	<table className="table">
+	<table className="table table-hover">
 		<thead>
 			<tr>
 				<td colSpan="6">Name</td>
@@ -13,7 +13,7 @@ const UserList = ({ users }) => {
 			</tr>
 		</thead>
 		<tbody>
-			{users.sort((a,b) => b.totalScore - a.totalScore).map(user => <User key={user._id} {...user} />)}
+			{users.sort((a,b) => b.totalScore - a.totalScore).map(user => <User key={user._id} id={user._id} {...user} onUserClick={onUserClick} />)}
 		</tbody>
 	</table>
 	</div>

@@ -21,11 +21,11 @@ const thisUser = (state = getCurrentUser(),action) => {
 const activeUserView = (state = getCurrentUser(),action) => {
 	switch(action.type) {
 		case 'SWITCH_USERS':
-			return action.user;
+			return action.userId;
 		default:
 			return state;
 	}
 };
 
-export default thisUser;
-export default activeUserView;
+export { thisUser };
+export { activeUserView };
