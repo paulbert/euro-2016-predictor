@@ -8,10 +8,12 @@ const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamN
 	
 	let today = new Date(Date.now());
 	
-	today.setHours( today.getHours() );
+	//today.setHours( today.getHours() );
+	
+	//let today = new Date(2016,5,15,9,1);
 	
 	let inputClassObj = { 'score-box':true, 'hidden': false }
-	inputClassObj.hidden = (!isCurrent || today > reformatDate);
+	inputClassObj.hidden = (!isCurrent || today > reformatDate || today > Date.UTC(2016,5,15,13));
 	let inputClass = classnames(inputClassObj);
 	
 	let iconClassObj = { 'glyphicon':true,'glyphicon-ok':false,'glyphicon-remove':false,'glyphicon-star':false,'hidden':true }

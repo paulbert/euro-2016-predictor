@@ -60,11 +60,11 @@
 
 	var _euroApp2 = _interopRequireDefault(_euroApp);
 
-	var _App = __webpack_require__(206);
+	var _App = __webpack_require__(208);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(228);
+	var _reduxThunk = __webpack_require__(231);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -22078,13 +22078,17 @@
 
 	var _groups2 = _interopRequireDefault(_groups);
 
-	var _users = __webpack_require__(204);
+	var _users = __webpack_require__(205);
 
 	var _users2 = _interopRequireDefault(_users);
 
-	var _user = __webpack_require__(205);
+	var _user = __webpack_require__(206);
 
 	var _redux = __webpack_require__(175);
+
+	var _rightView = __webpack_require__(207);
+
+	var _rightView2 = _interopRequireDefault(_rightView);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22096,7 +22100,8 @@
 		groups: _groups2.default,
 		users: _users2.default,
 		thisUser: _user.thisUser,
-		activeUserView: _user.activeUserView
+		activeUserView: _user.activeUserView,
+		rightView: _rightView2.default
 	});
 
 	exports.default = euroApp;
@@ -23749,53 +23754,21 @@
 
 	var _initStateCalcs = __webpack_require__(196);
 
+	var _rankCalcs = __webpack_require__(204);
+
+	var _rankCalcs2 = _interopRequireDefault(_rankCalcs);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var emptyTeam = { 'P': 0, 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0 };
 	// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
 	// groups is a collection of teams with group information, so to keep naming from getting weird calling this team
-	var team = function team(state, action) {
-		switch (action.type) {
-			case 'RECEIVE_PREDICTION':
-				return action.predictions.reduce(function (previous, current) {
-					var scores = [-1, -1];
-					var activeGame = false;
-					var activeTeam = 'second';
-					var prediction = current.prediction;
-					for (var key in prediction) {
-						if (key === previous.name) {
-							activeGame = true;
-							activeTeam = scores[0] === -1 ? 'first' : 'second';
-						}
-						scores[0] = scores[0] === -1 ? parseInt(prediction[key]) : scores[0];
-						scores[1] = parseInt(prediction[key]);
-					}
-					if (activeGame) {
-						var result = scores[0] > scores[1] ? activeTeam === 'first' ? 'W' : 'L' : scores[1] > scores[0] ? activeTeam === 'first' ? 'L' : 'W' : 'D';
-						var GF = activeTeam === 'first' ? scores[0] : scores[1];
-						var GA = activeTeam === 'first' ? scores[1] : scores[0];
-						var newFields = { 'GF': previous.GF + GF, 'GA': previous.GA + GA };
-						newFields.GD = newFields.GF - newFields.GA;
-						newFields[result] = previous[result] + 1;
-						var tempState = Object.assign({}, previous, newFields);
-						newFields.Pts = tempState.W * 3 + tempState.D;
-						newFields.P = tempState.W + tempState.D + tempState.L;
-						return Object.assign({}, tempState, newFields);
-					}
-					return previous;
-				}, Object.assign({}, state, emptyTeam));
-			default:
-				return state;
-		}
-	};
 
 	var groups = function groups() {
 		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initGroups : arguments[0];
 		var action = arguments[1];
 
 		switch (action.type) {
-			case 'RECEIVE_PREDICTION':
-				return state.map(function (g) {
-					return team(g, action);
-				});
 			default:
 				return state;
 		}
@@ -23805,6 +23778,175 @@
 
 /***/ },
 /* 204 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+	var sortFuncs = {
+		'Pts': function Pts(a, b) {
+			return b.Pts - a.Pts;
+		},
+		'GF': function GF(a, b) {
+			return b.GF - a.GF;
+		},
+		'GD': function GD(a, b) {
+			return b.GD - a.GD;
+		},
+		'name': function name(a, b) {
+			return a.name > b.name ? 1 : -1;
+		}
+	};
+
+	var chunkTeams = function chunkTeams(group, field) {
+		var chunkedArray = [];
+		var previousValue = undefined;
+		var newChunk = [];
+
+		var addNew = function addNew() {
+			if (newChunk.length === 1) {
+				chunkedArray.push(newChunk[0]);
+			} else {
+				chunkedArray.push(newChunk);
+			}
+		};
+
+		for (var i = 0; i < group.length; i++) {
+			if (group[i].name === 'Wales') {
+				console.log(group[i].name);
+			}
+			if (previousValue !== group[i][field]) {
+				if (newChunk.length > 0) {
+					addNew();
+				}
+				newChunk = [];
+			}
+			newChunk.push(group[i]);
+			previousValue = group[i][field];
+		}
+		addNew();
+		return chunkedArray;
+	};
+
+	var sortOptionsOrder = [{ field: 'Pts', onlyAgainst: false }, { field: 'Pts', onlyAgainst: true }, { field: 'GD', onlyAgainst: true }, { field: 'GF', onlyAgainst: true }, { field: 'GD', onlyAgainst: false }, { field: 'GF', onlyAgainst: false }, { field: 'name', onlyAgainst: false }];
+
+	var reChunk = function reChunk(oldChunk, field) {
+		var newChunk = [];
+		for (var i = 0; i < oldChunk.length; i++) {
+			if (Array.isArray(oldChunk[i])) {
+				newChunk = [].concat(newChunk, chunkTeams(oldChunk[i], field));
+			} else {
+				newChunk = [].concat(newChunk, oldChunk[i]);
+			}
+		}
+		return newChunk;
+	};
+
+	var fullSort = function fullSort(teams, predictions, nextSort, numChunks, currentChunk) {
+		if (teams.length > 0) {
+			var numTeams = teams.length;
+			var field = sortOptionsOrder[nextSort].field;
+
+			if (!currentChunk) {
+				currentChunk = [teams];
+			}
+
+			// Sort steps 1 through 3 are to be repeated until teams cannot be split any further
+			// Set numChunks to the current chunk length to check against after step 3
+			if (nextSort === 1) {
+				numChunks = currentChunk.length;
+			}
+
+			var rankChunks = sortStage(currentChunk, predictions, sortOptionsOrder[nextSort]);
+			var chunked = reChunk(rankChunks, field);
+
+			if (chunked.length === teams.length) {
+				return chunked.map(function (team) {
+					return calcGroup(predictions, team);
+				});
+			} else {
+				// If steps 1 through 3 separated any teams, repeat steps 1 through 3
+				if (nextSort === 3 && chunked.length !== numChunks) {
+					return fullSort(teams, predictions, 1, numChunks, chunked);
+				}
+				return fullSort(teams, predictions, nextSort + 1, numChunks, chunked);
+			}
+		} else {
+			return teams;
+		}
+	};
+
+	var sortStage = function sortStage(chunks, predictions, options) {
+		var rerankTeamsInChunks = function rerankTeamsInChunks(chunk, field, onlyAgainst) {
+			if (Array.isArray(chunk)) {
+				var newTables = chunk.map(function (team, ind, chunk) {
+					return onlyAgainst ? calcGroup(predictions, team, chunk) : calcGroup(predictions, team);
+				}).sort(sortFuncs[field]);
+				return newTables;
+			}
+			return chunk;
+		};
+		return chunks.map(function (chunk) {
+			return rerankTeamsInChunks(chunk, options.field, options.onlyAgainst);
+		});
+	};
+
+	var rankCalcs = {
+		fullSort: fullSort
+	};
+
+	var emptyTeam = { 'P': 0, 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0 };
+	// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+	var calcGroup = function calcGroup(predictions, team, groupArray) {
+		return predictions.reduce(function (previous, current) {
+			var scores = [-1, -1];
+			var activeGame = false;
+			var wrongOpponent = false;
+			var activeTeam = 'second';
+			var prediction = current.prediction;
+
+			for (var key in prediction) {
+				if (prediction[key] !== null) {
+					if (key === previous.name) {
+						activeGame = true;
+						activeTeam = scores[0] === -1 ? 'first' : 'second';
+					}
+					if (groupArray) {
+						var filterGroup = function filterGroup(team) {
+							return key === team.name;
+						};
+						if (groupArray.filter(filterGroup).length === 0) {
+							wrongOpponent = true;
+						};
+					}
+					scores[0] = scores[0] === -1 ? parseInt(prediction[key]) : scores[0];
+					scores[1] = parseInt(prediction[key]);
+				}
+			}
+			if (!wrongOpponent && activeGame) {
+				var result = scores[0] > scores[1] ? activeTeam === 'first' ? 'W' : 'L' : scores[1] > scores[0] ? activeTeam === 'first' ? 'L' : 'W' : 'D';
+				var GF = activeTeam === 'first' ? scores[0] : scores[1];
+				var GA = activeTeam === 'first' ? scores[1] : scores[0];
+				var newFields = { 'GF': previous.GF + GF, 'GA': previous.GA + GA };
+				newFields.GD = newFields.GF - newFields.GA;
+				newFields[result] = previous[result] + 1;
+				var tempState = Object.assign({}, previous, newFields);
+				newFields.Pts = tempState.W * 3 + tempState.D;
+				newFields.P = tempState.W + tempState.D + tempState.L;
+				return Object.assign({}, tempState, newFields);
+			}
+			return previous;
+		}, Object.assign({}, team, emptyTeam));
+	};
+
+	exports.default = rankCalcs;
+
+/***/ },
+/* 205 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23828,7 +23970,7 @@
 	exports.default = users;
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23874,7 +24016,34 @@
 	exports.activeUserView = activeUserView;
 
 /***/ },
-/* 206 */
+/* 207 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+
+	var initView = { 'type': 'groups', 'actual': false };
+
+	var rightView = function rightView() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? initView : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'SWITCH_RIGHT_VIEW':
+				return Object.assign({}, state, action.newView);
+			default:
+				return state;
+		}
+	};
+
+	exports.default = rightView;
+
+/***/ },
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23887,25 +24056,25 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FixtureContain = __webpack_require__(207);
+	var _FixtureContain = __webpack_require__(209);
 
 	var _FixtureContain2 = _interopRequireDefault(_FixtureContain);
-
-	var _ButtonContain = __webpack_require__(216);
-
-	var _ButtonContain2 = _interopRequireDefault(_ButtonContain);
 
 	var _GroupsContain = __webpack_require__(218);
 
 	var _GroupsContain2 = _interopRequireDefault(_GroupsContain);
 
-	var _UserContain = __webpack_require__(223);
+	var _UserContain = __webpack_require__(222);
 
 	var _UserContain2 = _interopRequireDefault(_UserContain);
 
-	var _PredictionHeaderContain = __webpack_require__(226);
+	var _PredictionHeaderContain = __webpack_require__(225);
 
 	var _PredictionHeaderContain2 = _interopRequireDefault(_PredictionHeaderContain);
+
+	var _RightViewButtonContain = __webpack_require__(229);
+
+	var _RightViewButtonContain2 = _interopRequireDefault(_RightViewButtonContain);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23946,17 +24115,18 @@
 			_react2.default.createElement(
 				'main',
 				{ className: 'container-fluid' },
-				_react2.default.createElement(_ButtonContain2.default, null),
 				_react2.default.createElement(
 					'div',
 					{ className: 'row' },
-					_react2.default.createElement(_PredictionHeaderContain2.default, null)
+					_react2.default.createElement(_PredictionHeaderContain2.default, null),
+					_react2.default.createElement(_RightViewButtonContain2.default, null)
 				),
 				_react2.default.createElement(
 					'div',
 					{ className: 'row' },
 					_react2.default.createElement(_FixtureContain2.default, null),
-					_react2.default.createElement(_UserContain2.default, null)
+					_react2.default.createElement(_UserContain2.default, null),
+					_react2.default.createElement(_GroupsContain2.default, null)
 				)
 			)
 		);
@@ -23965,7 +24135,7 @@
 	exports.default = App;
 
 /***/ },
-/* 207 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23976,11 +24146,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _FixtureList = __webpack_require__(208);
+	var _FixtureList = __webpack_require__(210);
 
 	var _FixtureList2 = _interopRequireDefault(_FixtureList);
 
-	var _actions = __webpack_require__(213);
+	var _actions = __webpack_require__(215);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24012,7 +24182,7 @@
 	exports.default = FixtureContain;
 
 /***/ },
-/* 208 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24027,7 +24197,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Fixture = __webpack_require__(209);
+	var _Fixture = __webpack_require__(211);
 
 	var _Fixture2 = _interopRequireDefault(_Fixture);
 
@@ -24121,7 +24291,7 @@
 	exports.default = FixtureList;
 
 /***/ },
-/* 209 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24134,11 +24304,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TeamContain = __webpack_require__(210);
+	var _TeamContain = __webpack_require__(212);
 
 	var _TeamContain2 = _interopRequireDefault(_TeamContain);
 
-	var _classnames = __webpack_require__(212);
+	var _classnames = __webpack_require__(214);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -24163,10 +24333,12 @@
 
 		var today = new Date(Date.now());
 
-		today.setHours(today.getHours());
+		//today.setHours( today.getHours() );
+
+		//let today = new Date(2016,5,15,9,1);
 
 		var inputClassObj = { 'score-box': true, 'hidden': false };
-		inputClassObj.hidden = !isCurrent || today > reformatDate;
+		inputClassObj.hidden = !isCurrent || today > reformatDate || today > Date.UTC(2016, 5, 15, 13);
 		var inputClass = (0, _classnames2.default)(inputClassObj);
 
 		var iconClassObj = { 'glyphicon': true, 'glyphicon-ok': false, 'glyphicon-remove': false, 'glyphicon-star': false, 'hidden': true };
@@ -24256,7 +24428,7 @@
 	exports.default = Fixture;
 
 /***/ },
-/* 210 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24267,7 +24439,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _TeamFlag = __webpack_require__(211);
+	var _TeamFlag = __webpack_require__(213);
 
 	var _TeamFlag2 = _interopRequireDefault(_TeamFlag);
 
@@ -24285,7 +24457,7 @@
 	exports.default = TeamContain;
 
 /***/ },
-/* 211 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -24315,7 +24487,7 @@
 	exports.default = TeamFlag;
 
 /***/ },
-/* 212 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -24369,7 +24541,7 @@
 
 
 /***/ },
-/* 213 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24377,14 +24549,14 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.switchUsers = exports.changePrediction = exports.SWITCH_USERS = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
+	exports.switchRightView = exports.switchUsers = exports.changePrediction = exports.SWITCH_USERS = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
 	exports.savePredictions = savePredictions;
 	exports.getPredictions = getPredictions;
 	exports.getFixtures = getFixtures;
 	exports.getUsers = getUsers;
 	exports.initData = initData;
 
-	var _isomorphicFetch = __webpack_require__(214);
+	var _isomorphicFetch = __webpack_require__(216);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
@@ -24413,6 +24585,13 @@
 		return {
 			type: SWITCH_USERS,
 			userId: userId
+		};
+	};
+
+	var switchRightView = exports.switchRightView = function switchRightView(newView) {
+		return {
+			type: 'SWITCH_RIGHT_VIEW',
+			newView: newView
 		};
 	};
 
@@ -24478,7 +24657,7 @@
 			}).then(function (response) {
 				return response.json();
 			}).then(function (json) {
-				dispatch(receivePrediction(json[0].predictions));
+				dispatch(receiveUsers(json));
 			});
 		};
 	}
@@ -24503,7 +24682,11 @@
 			dispatch(gettingPrediction());
 
 			return fetchQuick('/getPrediction').then(function (json) {
-				dispatch(receivePrediction(json[0].predictions));
+				if (json.length > 0) {
+					dispatch(receivePrediction(json[0].predictions));
+				} else {
+					dispatch(receivePrediction([]));
+				}
 			});
 		};
 	}
@@ -24538,19 +24721,19 @@
 	//dispatch(getPredictions());
 
 /***/ },
-/* 214 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(215);
+	__webpack_require__(217);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 215 */
+/* 217 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -24989,100 +25172,6 @@
 
 
 /***/ },
-/* 216 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _reactRedux = __webpack_require__(168);
-
-	var _PredictButton = __webpack_require__(217);
-
-	var _PredictButton2 = _interopRequireDefault(_PredictButton);
-
-	var _actions = __webpack_require__(213);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToProps = function mapStateToProps(state) {
-		return {
-			predictions: state.predictions
-		};
-	};
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		return {
-			onPredictClick: function onPredictClick(predictions) {
-				dispatch((0, _actions.savePredictions)(predictions));
-			}
-		};
-	};
-
-	var ButtonContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PredictButton2.default);
-
-	exports.default = ButtonContain;
-
-/***/ },
-/* 217 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _classnames = __webpack_require__(212);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var PredictButton = function PredictButton(_ref) {
-		var predictions = _ref.predictions;
-		var onPredictClick = _ref.onPredictClick;
-
-
-		var alertClasses = (0, _classnames2.default)({ 'text-success': true, 'text-danger': true, 'hidden': true, 'span-spacing': true });
-
-		return _react2.default.createElement(
-			'div',
-			{ className: 'row' },
-			_react2.default.createElement(
-				'div',
-				{ className: 'col-xs-12' },
-				_react2.default.createElement(
-					'button',
-					{ className: 'btn btn-euros btn-primary btn-large', onClick: function onClick() {
-							return onPredictClick(predictions);
-						} },
-					'Save Predictions!'
-				),
-				_react2.default.createElement(
-					'span',
-					{ className: alertClasses },
-					_react2.default.createElement('span', { className: 'glyphicon glyphicon-check', 'aria-hidden': 'true' }),
-					_react2.default.createElement(
-						'span',
-						null,
-						'Success'
-					)
-				)
-			)
-		);
-	};
-
-	exports.default = PredictButton;
-
-/***/ },
 /* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25103,7 +25192,12 @@
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
 			groups: state.groups,
-			savedPredictions: state.savedPredictions
+			savedPredictions: state.savedPredictions,
+			user: state.users.filter(function (user) {
+				return user._id === state.activeUserView;
+			})[0],
+			fixtures: state.fixtures,
+			view: state.rightView
 		};
 	};
 
@@ -25129,22 +25223,61 @@
 
 	var _Group2 = _interopRequireDefault(_Group);
 
+	var _rankCalcs = __webpack_require__(204);
+
+	var _rankCalcs2 = _interopRequireDefault(_rankCalcs);
+
+	var _classnames = __webpack_require__(214);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var GroupList = function GroupList(_ref) {
 		var groups = _ref.groups;
 		var savedPredictions = _ref.savedPredictions;
+		var user = _ref.user;
+		var fixtures = _ref.fixtures;
+		var view = _ref.view;
 
-		//onLoad();
+
+		// Add a prediction object to fixtures so it will work with full sort
+		var reformatFixtures = function reformatFixtures(fixture) {
+			var prediction = {};
+			prediction[fixture.homeTeamName] = fixture.result.goalsHomeTeam;
+			prediction[fixture.awayTeamName] = fixture.result.goalsAwayTeam;
+			return Object.assign({}, fixture, { prediction: prediction });
+		};
+		var sortedGroups = [];
+		if (view.actual) {
+			sortedGroups = _rankCalcs2.default.fullSort(groups, fixtures.map(reformatFixtures), 0);
+		} else {
+			sortedGroups = _rankCalcs2.default.fullSort(groups, user ? user.predictions : savedPredictions, 0);
+		}
+
+		var groupCount = { "A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "F": 0 };
+		// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+		var thirdPlace = sortedGroups.reduce(function (thirdPlace, team) {
+			groupCount[team.group]++;
+			if (groupCount[team.group] === 3) {
+				return thirdPlace = [].concat(thirdPlace, [team]);
+			}
+			return thirdPlace;
+		}, []);
+
+		var colClasses = { 'col-md-6': true, 'hidden': view.type !== 'groups', 'hidden-xs': true };
+		var groupArray = ["A", "B", "C", "D", "E", "F", 'Third Place'];
+
 		return _react2.default.createElement(
 			'div',
-			{ className: 'col-md-6 hidden' },
-			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'A' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'B' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'C' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'D' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'E' }),
-			_react2.default.createElement(_Group2.default, { groups: groups, savedPredictions: savedPredictions, groupLetter: 'F' })
+			{ className: (0, _classnames2.default)(colClasses) },
+			groupArray.map(function (groupLetter) {
+				if (groupLetter === 'Third Place') {
+					return _react2.default.createElement(_Group2.default, { key: groupLetter, groups: thirdPlace, groupLetter: groupLetter, thirdPlace: thirdPlace });
+				} else {
+					return _react2.default.createElement(_Group2.default, { key: groupLetter, groups: sortedGroups, groupLetter: groupLetter, thirdPlace: thirdPlace });
+				}
+			})
 		);
 	};
 
@@ -25170,7 +25303,7 @@
 
 	var _GroupLine2 = _interopRequireDefault(_GroupLine);
 
-	var _rankCalcs = __webpack_require__(222);
+	var _rankCalcs = __webpack_require__(204);
 
 	var _rankCalcs2 = _interopRequireDefault(_rankCalcs);
 
@@ -25178,13 +25311,34 @@
 
 	var Group = function Group(_ref) {
 		var groups = _ref.groups;
-		var savedPredictions = _ref.savedPredictions;
 		var groupLetter = _ref.groupLetter;
+		var thirdPlace = _ref.thirdPlace;
 
 
-		var groupTeams = _rankCalcs2.default.fullSort(groups.filter(function (val, ind, arr) {
-			return val.group === groupLetter;
-		}), savedPredictions);
+		var groupHeader = 'Third Place';
+		var groupTeams = [];
+
+		if (groupLetter !== 'Third Place') {
+			groupTeams = groups.filter(function (val, ind, arr) {
+				return val.group === groupLetter;
+			});
+			groupHeader = 'Group ' + groupLetter;
+		} else {
+			groupTeams = groups;
+		}
+
+		// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+		var groupMap = function groupMap(team, ind, groupTeams) {
+			var inTopFour = function inTopFour(found, thirdPlaceTeam, ind, thirdPlace) {
+				if (team.name === thirdPlaceTeam.name && ind < 4) {
+					return true;
+				}
+				return found;
+			};
+
+			var colorRow = ind < 2 || thirdPlace.reduce(inTopFour, false);
+			return _react2.default.createElement(_GroupLine2.default, _extends({ key: team.name, name: team.name }, team, { colorRow: colorRow }));
+		};
 
 		return _react2.default.createElement(
 			'table',
@@ -25198,8 +25352,7 @@
 					_react2.default.createElement(
 						'td',
 						{ className: 'col-xs-4' },
-						'Group ',
-						groupLetter
+						groupHeader
 					),
 					_react2.default.createElement(
 						'td',
@@ -25246,9 +25399,7 @@
 			_react2.default.createElement(
 				'tbody',
 				null,
-				groupTeams.map(function (team) {
-					return _react2.default.createElement(_GroupLine2.default, _extends({ key: team.name, name: team.name }, team));
-				})
+				groupTeams.map(groupMap)
 			)
 		);
 	};
@@ -25281,13 +25432,15 @@
 		var GA = _ref.GA;
 		var GD = _ref.GD;
 		var Pts = _ref.Pts;
+		var colorRow = _ref.colorRow;
 
 
 		var formatGD = GD > 0 ? '+' + GD : GD;
+		var rowClass = colorRow ? 'success' : '';
 
 		return _react2.default.createElement(
 			'tr',
-			null,
+			{ className: rowClass },
 			_react2.default.createElement(
 				'td',
 				{ className: 'col-xs-4' },
@@ -25340,120 +25493,6 @@
 
 /***/ },
 /* 222 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var pointSort = function pointSort(a, b) {
-		return b.Pts - a.Pts;
-	};
-
-	var goalScoredSort = function goalScoredSort(a, b) {
-		return b.GF - a.GF;
-	};
-
-	var goalDiffSort = function goalDiffSort(a, b) {
-		return b.GD - a.GD;
-	};
-
-	var chunkTeams = function chunkTeams(group, field) {
-		var chunkedArray = [];
-		var previousValue = undefined;
-		var newChunk = [];
-		for (var i = 0; i < group.length; i++) {
-			if (previousValue !== group[i][field]) {
-				if (newChunk.length > 0) {
-					chunkedArray.push(newChunk);
-				}
-				newChunk = [];
-			}
-			newChunk.push(group[i]);
-			previousValue = group[i][field];
-		}
-		chunkedArray.push(newChunk);
-		return chunkedArray;
-	};
-
-	var fullSort = function fullSort(group, predictions) {
-		var groupByPoints = group.sort(pointSort);
-		var chunked = chunkTeams(groupByPoints, 'Pts');
-		sortStageMiniPts(chunked, predictions);
-		if (chunked.length === 4) {
-			return groupByPoints;
-		} else {
-			return groupByPoints;
-		}
-	};
-
-	var sortStageMiniPts = function sortStageMiniPts(chunks, predictions) {
-		chunks.map(function (chunk) {
-			var newRanks = chunk.map(function (team, ind, arr) {
-				return calcGroup(predictions, team, arr);
-			});
-			var superChunk = chunkTeams(newRanks, 'Pts');
-			if (superChunk.length === chunk.length) {
-				return newRanks;
-			}
-			return chunk;
-		});
-		var finalChunks = chunks.reduce(function (previous, current) {
-			return previous.concat(current);
-		}, []);
-		return finalChunks;
-	};
-
-	var rankCalcs = {
-		pointSort: pointSort,
-		goalScoredSort: goalScoredSort,
-		goalDiffSort: goalDiffSort,
-		fullSort: fullSort
-	};
-
-	var emptyTeam = { 'W': 0, 'D': 0, 'L': 0, 'GF': 0, 'GA': 0, 'GD': 0, 'Pts': 0 };
-	// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
-	var calcGroup = function calcGroup(predictions, team, groupArray) {
-
-		return predictions.reduce(function (previous, current) {
-			var scores = [-1, -1];
-			var activeGame = false;
-			var activeTeam = 'second';
-			var prediction = current.prediction;
-			for (var key in prediction) {
-				if (key === previous.name) {
-					activeGame = true;
-					activeTeam = scores[0] === -1 ? 'first' : 'second';
-				}
-				if (groupArray) {
-					if (groupArray.indexOf(key) === -1) {
-						activeGame = false;
-					};
-				}
-				scores[0] = scores[0] === -1 ? parseInt(prediction[key]) : scores[0];
-				scores[1] = parseInt(prediction[key]);
-			}
-			if (activeGame) {
-				var result = scores[0] > scores[1] ? activeTeam === 'first' ? 'W' : 'L' : scores[1] > scores[0] ? activeTeam === 'first' ? 'L' : 'W' : 'D';
-				var GF = activeTeam === 'first' ? scores[0] : scores[1];
-				var GA = activeTeam === 'first' ? scores[1] : scores[0];
-				var newFields = { 'GF': previous.GF + GF, 'GA': previous.GA + GA };
-				newFields.GD = newFields.GF - newFields.GA;
-				newFields[result] = previous[result] + 1;
-				var tempState = Object.assign({}, previous, newFields);
-				newFields.Pts = tempState.W * 3 + tempState.D;
-				return Object.assign({}, tempState, newFields);
-			}
-			return previous;
-		}, Object.assign({}, team, emptyTeam));
-	};
-
-	exports.default = rankCalcs;
-
-/***/ },
-/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25464,17 +25503,18 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _UserList = __webpack_require__(224);
+	var _UserList = __webpack_require__(223);
 
 	var _UserList2 = _interopRequireDefault(_UserList);
 
-	var _actions = __webpack_require__(213);
+	var _actions = __webpack_require__(215);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
-			users: state.users
+			users: state.users,
+			view: state.rightView
 		};
 	};
 
@@ -25491,7 +25531,7 @@
 	exports.default = UserContain;
 
 /***/ },
-/* 224 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25506,19 +25546,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _User = __webpack_require__(225);
+	var _User = __webpack_require__(224);
 
 	var _User2 = _interopRequireDefault(_User);
+
+	var _classnames = __webpack_require__(214);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var UserList = function UserList(_ref) {
 		var users = _ref.users;
+		var view = _ref.view;
 		var onUserClick = _ref.onUserClick;
+
+
+		var colClasses = { 'col-md-6': true, 'hidden': view.type !== 'scores', 'hidden-xs': true };
 
 		return _react2.default.createElement(
 			'div',
-			{ className: 'col-md-6' },
+			{ className: (0, _classnames2.default)(colClasses) },
 			_react2.default.createElement(
 				'table',
 				{ className: 'table table-hover' },
@@ -25561,7 +25609,7 @@
 	exports.default = UserList;
 
 /***/ },
-/* 225 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25611,7 +25659,7 @@
 	exports.default = User;
 
 /***/ },
-/* 226 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25622,7 +25670,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _PredictionHeader = __webpack_require__(227);
+	var _PredictionHeader = __webpack_require__(226);
 
 	var _PredictionHeader2 = _interopRequireDefault(_PredictionHeader);
 
@@ -25642,7 +25690,7 @@
 	exports.default = PredictionHeaderContain;
 
 /***/ },
-/* 227 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25655,21 +25703,25 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _ButtonContain = __webpack_require__(227);
+
+	var _ButtonContain2 = _interopRequireDefault(_ButtonContain);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var PredictionHeader = function PredictionHeader(_ref) {
 		var user = _ref.user;
 		var isCurrent = _ref.isCurrent;
 
-		//onLoad();
 
 		return _react2.default.createElement(
 			'div',
-			{ className: 'col-xs-12' },
+			{ className: 'col-md-6' },
 			_react2.default.createElement(
 				'h3',
 				null,
-				isCurrent ? 'Your Predictions' : user.teamName
+				isCurrent ? 'Your Predictions' : user.teamName,
+				_react2.default.createElement(_ButtonContain2.default, null)
 			)
 		);
 	};
@@ -25677,7 +25729,232 @@
 	exports.default = PredictionHeader;
 
 /***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _PredictButton = __webpack_require__(228);
+
+	var _PredictButton2 = _interopRequireDefault(_PredictButton);
+
+	var _actions = __webpack_require__(215);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			predictions: state.predictions,
+			isCurrent: state.activeUserView === state.thisUser
+		};
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onPredictClick: function onPredictClick(predictions) {
+				dispatch((0, _actions.savePredictions)(predictions));
+			}
+		};
+	};
+
+	var ButtonContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PredictButton2.default);
+
+	exports.default = ButtonContain;
+
+/***/ },
 /* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(214);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PredictButton = function PredictButton(_ref) {
+		var predictions = _ref.predictions;
+		var isCurrent = _ref.isCurrent;
+		var onPredictClick = _ref.onPredictClick;
+
+
+		var alertClasses = (0, _classnames2.default)({ 'text-success': true, 'text-danger': true, 'hidden': true, 'span-spacing': true });
+		var buttonClasses = (0, _classnames2.default)({ 'hidden': !isCurrent, 'margin-left-right': true });
+
+		return _react2.default.createElement(
+			'span',
+			{ className: buttonClasses },
+			_react2.default.createElement(
+				'button',
+				{ className: 'btn btn-euros btn-primary btn-large', onClick: function onClick() {
+						return onPredictClick(predictions);
+					} },
+				'Save Predictions!'
+			),
+			_react2.default.createElement(
+				'span',
+				{ className: alertClasses },
+				_react2.default.createElement('span', { className: 'glyphicon glyphicon-check', 'aria-hidden': 'true' }),
+				_react2.default.createElement(
+					'span',
+					null,
+					'Success'
+				)
+			)
+		);
+	};
+
+	exports.default = PredictButton;
+
+/***/ },
+/* 229 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _reactRedux = __webpack_require__(168);
+
+	var _RightViewButtons = __webpack_require__(230);
+
+	var _RightViewButtons2 = _interopRequireDefault(_RightViewButtons);
+
+	var _actions = __webpack_require__(215);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			view: state.rightView
+		};
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onButtonClick: function onButtonClick(newView) {
+				dispatch((0, _actions.switchRightView)(newView));
+			}
+		};
+	};
+
+	var RightViewButtonContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_RightViewButtons2.default);
+
+	exports.default = RightViewButtonContain;
+
+/***/ },
+/* 230 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _RightViewButtonContain = __webpack_require__(229);
+
+	var _RightViewButtonContain2 = _interopRequireDefault(_RightViewButtonContain);
+
+	var _classnames = __webpack_require__(214);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	//initView = {'type':'groups','actual':false};
+	var RightViewButtons = function RightViewButtons(_ref) {
+		var view = _ref.view;
+		var onButtonClick = _ref.onButtonClick;
+
+
+		var colClasses = { 'col-md-6': true, 'hidden-xs': true, 'hidden-sm': true };
+
+		var secondRowClass = { 'hidden': view.type !== 'groups' };
+
+		return _react2.default.createElement(
+			'div',
+			{ className: (0, _classnames2.default)(colClasses) },
+			_react2.default.createElement(
+				'div',
+				{ className: 'btn-group btn-group-justified btn-group-margin', role: 'group' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'btn-group' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
+								return onButtonClick({ type: 'groups', 'actual': false });
+							} },
+						'View Groups'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'btn-group' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
+								return onButtonClick({ type: 'scores' });
+							} },
+						'View Scores'
+					)
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'btn-group btn-group-justified btn-group-margin', role: 'group' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'btn-group' },
+					_react2.default.createElement(
+						'button',
+						{ className: "btn btn-euros btn-primary " + (0, _classnames2.default)(secondRowClass), onClick: function onClick() {
+								return onButtonClick({ 'actual': false });
+							} },
+						'Predicted'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'btn-group' },
+					_react2.default.createElement(
+						'button',
+						{ className: "btn btn-euros btn-primary " + (0, _classnames2.default)(secondRowClass), onClick: function onClick() {
+								return onButtonClick({ 'actual': true });
+							} },
+						'Actual'
+					)
+				)
+			)
+		);
+	};
+
+	exports.default = RightViewButtons;
+
+/***/ },
+/* 231 */
 /***/ function(module, exports) {
 
 	'use strict';

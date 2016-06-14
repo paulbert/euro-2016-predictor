@@ -1,11 +1,14 @@
 import React, { PropTypes } from 'react'
+import ButtonContain from '../containers/ButtonContain'
 
 const PredictionHeader = ({ user, isCurrent }) => {
-	//onLoad();
 	
 	return (
-	<div className="col-xs-12">
-	<h3>{isCurrent ? 'Your Predictions' : user.teamName}</h3>
+	<div className="col-md-6">
+		<h3>
+			{isCurrent ? 'Your Predictions' : user.teamName}
+			<ButtonContain />
+		</h3>
 	</div>
 )}
 

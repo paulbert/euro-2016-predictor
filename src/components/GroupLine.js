@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react'
 
-const GroupLine = ({ name,P,W,D,L,GF,GA,GD,Pts }) => {
+const GroupLine = ({ name,P,W,D,L,GF,GA,GD,Pts,colorRow }) => {
 	
 	let formatGD = GD > 0 ? '+' + GD : GD;
+	let rowClass = colorRow ? 'success' : '';
 	
 	return (
 	
 	
-			<tr>
+			<tr className={rowClass}>
 				<td className="col-xs-4">{name}</td>
 				<td className="col-xs-1">{P}</td>
 				<td className="col-xs-1">{W}</td>

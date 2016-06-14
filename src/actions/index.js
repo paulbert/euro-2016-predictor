@@ -27,6 +27,13 @@ export const switchUsers = (userId) => {
 	}
 };
 
+export const switchRightView = (newView) => {
+	return {
+		type:'SWITCH_RIGHT_VIEW',
+		newView
+	}
+}
+
 const sendPrediction = () => {
 	return {
 		type:SEND_PREDICTION
@@ -92,7 +99,7 @@ export function savePredictions(predictions) {
 			return response.json()
 		})
 		.then(json => {
-			dispatch(receivePrediction(json[0].predictions));
+			dispatch(receiveUsers(json));
 		});
 	}	
 }
@@ -119,7 +126,11 @@ export function getPredictions() {
 		
 		return fetchQuick('/getPrediction')
 		.then(json => {
-			dispatch(receivePrediction(json[0].predictions));
+			if(json.length > 0) {
+				dispatch(receivePrediction(json[0].predictions));
+			} else {
+				dispatch(receivePrediction([]));
+			}
 		});
 	}	
 }

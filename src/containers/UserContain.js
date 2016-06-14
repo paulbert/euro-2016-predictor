@@ -4,7 +4,8 @@ import { switchUsers } from '../actions'
 
 const mapStateToProps = (state) => {
 	return {
-		users:state.users
+		users:state.users,
+		view:state.rightView
 	}
 };
 

@@ -7,6 +7,7 @@ import users from '../reducers/users.js'
 import { thisUser } from '../reducers/user.js'
 import { activeUserView } from '../reducers/user.js'
 import { combineReducers } from 'redux'
+import rightView from '../reducers/rightView.js'
 
 const euroApp = combineReducers({
 	teams,
@@ -16,7 +17,8 @@ const euroApp = combineReducers({
 	groups,
 	users,
 	thisUser,
-	activeUserView
+	activeUserView,
+	rightView
 });
 
 export default euroApp;

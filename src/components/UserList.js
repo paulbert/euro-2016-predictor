@@ -1,9 +1,13 @@
 import React, { PropTypes } from 'react'
 import User from './User'
+import classnames from 'classnames'
 
-const UserList = ({ users, onUserClick }) => {
+const UserList = ({ users, view, onUserClick }) => {
+	
+	let colClasses = { 'col-md-6':true, 'hidden':view.type !== 'scores', 'hidden-xs':true };
+	
 	return (
-	<div className="col-md-6">
+	<div className={classnames(colClasses)}>
 	<table className="table table-hover">
 		<thead>
 			<tr>
