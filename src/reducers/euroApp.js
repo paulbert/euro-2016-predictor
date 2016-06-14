@@ -8,6 +8,7 @@ import { thisUser } from '../reducers/user.js'
 import { activeUserView } from '../reducers/user.js'
 import { combineReducers } from 'redux'
 import rightView from '../reducers/rightView.js'
+import matchFilter from '../reducers/matchFilter.js'
 
 const euroApp = combineReducers({
 	teams,
@@ -18,7 +19,8 @@ const euroApp = combineReducers({
 	users,
 	thisUser,
 	activeUserView,
-	rightView
+	rightView,
+	matchFilter
 });
 
 export default euroApp;

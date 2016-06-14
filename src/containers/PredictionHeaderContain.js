@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PredictionHeader from '../components/PredictionHeader'
-
+import { changeFilter } from '../actions'
 
 const mapStateToProps = (state) => {
 	return {
@@ -11,6 +11,14 @@ const mapStateToProps = (state) => {
 	}
 };
 
-const PredictionHeaderContain = connect(mapStateToProps)(PredictionHeader);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onFilterClick: (newFilter) => {
+			dispatch(changeFilter(newFilter));
+		}
+	}
+}
+
+const PredictionHeaderContain = connect(mapStateToProps,mapDispatchToProps)(PredictionHeader);
 
 export default PredictionHeaderContain;

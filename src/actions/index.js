@@ -34,6 +34,13 @@ export const switchRightView = (newView) => {
 	}
 }
 
+export const changeFilter = (newFilter) => {
+	return {
+		type:'CHANGE_FILTER',
+		newFilter
+	}
+}
+
 const sendPrediction = () => {
 	return {
 		type:SEND_PREDICTION

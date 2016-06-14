@@ -71,3 +71,15 @@ h3 {
 .table thead {
 	font-weight:bold;
 }
+
+.btn-group-filters {
+	position:relative;
+	padding-left:98px;
+}
+
+.filter-label {
+	position:absolute;
+	left:15px;
+	padding:6px 0 6px 0;
+}
+

@@ -60,11 +60,11 @@
 
 	var _euroApp2 = _interopRequireDefault(_euroApp);
 
-	var _App = __webpack_require__(208);
+	var _App = __webpack_require__(209);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(231);
+	var _reduxThunk = __webpack_require__(232);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -22090,6 +22090,10 @@
 
 	var _rightView2 = _interopRequireDefault(_rightView);
 
+	var _matchFilter = __webpack_require__(208);
+
+	var _matchFilter2 = _interopRequireDefault(_matchFilter);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var euroApp = (0, _redux.combineReducers)({
@@ -22101,7 +22105,8 @@
 		users: _users2.default,
 		thisUser: _user.thisUser,
 		activeUserView: _user.activeUserView,
-		rightView: _rightView2.default
+		rightView: _rightView2.default,
+		matchFilter: _matchFilter2.default
 	});
 
 	exports.default = euroApp;
@@ -23816,9 +23821,6 @@
 		};
 
 		for (var i = 0; i < group.length; i++) {
-			if (group[i].name === 'Wales') {
-				console.log(group[i].name);
-			}
 			if (previousValue !== group[i][field]) {
 				if (newChunk.length > 0) {
 					addNew();
@@ -24044,6 +24046,30 @@
 
 /***/ },
 /* 208 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var matchFilter = function matchFilter() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? 'all' : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'CHANGE_FILTER':
+				return action.newFilter;
+			default:
+				return state;
+		}
+	};
+
+	exports.default = matchFilter;
+
+/***/ },
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24056,23 +24082,23 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FixtureContain = __webpack_require__(209);
+	var _FixtureContain = __webpack_require__(210);
 
 	var _FixtureContain2 = _interopRequireDefault(_FixtureContain);
 
-	var _GroupsContain = __webpack_require__(218);
+	var _GroupsContain = __webpack_require__(219);
 
 	var _GroupsContain2 = _interopRequireDefault(_GroupsContain);
 
-	var _UserContain = __webpack_require__(222);
+	var _UserContain = __webpack_require__(223);
 
 	var _UserContain2 = _interopRequireDefault(_UserContain);
 
-	var _PredictionHeaderContain = __webpack_require__(225);
+	var _PredictionHeaderContain = __webpack_require__(226);
 
 	var _PredictionHeaderContain2 = _interopRequireDefault(_PredictionHeaderContain);
 
-	var _RightViewButtonContain = __webpack_require__(229);
+	var _RightViewButtonContain = __webpack_require__(230);
 
 	var _RightViewButtonContain2 = _interopRequireDefault(_RightViewButtonContain);
 
@@ -24135,7 +24161,7 @@
 	exports.default = App;
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24146,11 +24172,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _FixtureList = __webpack_require__(210);
+	var _FixtureList = __webpack_require__(211);
 
 	var _FixtureList2 = _interopRequireDefault(_FixtureList);
 
-	var _actions = __webpack_require__(215);
+	var _actions = __webpack_require__(216);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24161,7 +24187,9 @@
 			user: state.users.filter(function (user) {
 				return user._id === state.activeUserView;
 			})[0],
-			isCurrent: state.activeUserView === state.thisUser
+			isCurrent: state.activeUserView === state.thisUser,
+			groups: state.groups,
+			matchFilter: state.matchFilter
 		};
 	};
 
@@ -24182,7 +24210,7 @@
 	exports.default = FixtureContain;
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24197,7 +24225,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Fixture = __webpack_require__(211);
+	var _Fixture = __webpack_require__(212);
 
 	var _Fixture2 = _interopRequireDefault(_Fixture);
 
@@ -24208,10 +24236,47 @@
 		var predictions = _ref.predictions;
 		var user = _ref.user;
 		var isCurrent = _ref.isCurrent;
+		var groups = _ref.groups;
+		var matchFilter = _ref.matchFilter;
 		var onScoreChange = _ref.onScoreChange;
 		var onLoad = _ref.onLoad;
 
 		//onLoad();
+
+		var setFixtureLine = function setFixtureLine(fixture) {
+			fixture.key = fixture.f_id;
+			var defaultPrediction = {};
+			defaultPrediction[fixture.homeTeamName] = null;
+			defaultPrediction[fixture.awayTeamName] = null;
+			var reduceToPrediction = function reduceToPrediction(filtered, p, index) {
+				if (p.p_id === fixture.f_id) {
+					return Object.assign({}, filtered, p.prediction, typeof p.points !== 'undefined' ? { points: p.points, bonus: p.bonus } : {});
+				} else {
+					return Object.assign({}, filtered);
+				}
+			};
+			var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
+			var savedPrediction = user ? user.predictions.reduce(reduceToPrediction, defaultPrediction) : {};
+			return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange, isCurrent: isCurrent }));
+		};
+
+		var fixtureFilter = function fixtureFilter(fixture) {
+			if (matchFilter === 'all') {
+				return true;
+			} else {
+				// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
+				var fixtureGroup = groups.reduce(function (teamGroup, team) {
+					if (team.name === fixture.homeTeamName) {
+						return team.group;
+					}
+					return teamGroup;
+				}, '');
+				if (fixtureGroup === matchFilter) {
+					return true;
+				}
+				return false;
+			}
+		};
 
 		return _react2.default.createElement(
 			'div',
@@ -24250,22 +24315,7 @@
 				_react2.default.createElement(
 					'tbody',
 					null,
-					fixtures.map(function (fixture) {
-						fixture.key = fixture.f_id;
-						var defaultPrediction = {};
-						defaultPrediction[fixture.homeTeamName] = null;
-						defaultPrediction[fixture.awayTeamName] = null;
-						var reduceToPrediction = function reduceToPrediction(filtered, p, index) {
-							if (p.p_id === fixture.f_id) {
-								return Object.assign({}, filtered, p.prediction, typeof p.points !== 'undefined' ? { points: p.points, bonus: p.bonus } : {});
-							} else {
-								return Object.assign({}, filtered);
-							}
-						};
-						var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
-						var savedPrediction = user ? user.predictions.reduce(reduceToPrediction, defaultPrediction) : {};
-						return _react2.default.createElement(_Fixture2.default, _extends({ links: fixture._links, key: fixture.key }, fixture, { prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange, isCurrent: isCurrent }));
-					})
+					fixtures.filter(fixtureFilter).map(setFixtureLine)
 				)
 			)
 		);
@@ -24291,7 +24341,7 @@
 	exports.default = FixtureList;
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24304,11 +24354,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TeamContain = __webpack_require__(212);
+	var _TeamContain = __webpack_require__(213);
 
 	var _TeamContain2 = _interopRequireDefault(_TeamContain);
 
-	var _classnames = __webpack_require__(214);
+	var _classnames = __webpack_require__(215);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -24428,7 +24478,7 @@
 	exports.default = Fixture;
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24439,7 +24489,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _TeamFlag = __webpack_require__(213);
+	var _TeamFlag = __webpack_require__(214);
 
 	var _TeamFlag2 = _interopRequireDefault(_TeamFlag);
 
@@ -24457,7 +24507,7 @@
 	exports.default = TeamContain;
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -24487,7 +24537,7 @@
 	exports.default = TeamFlag;
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -24541,7 +24591,7 @@
 
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24549,14 +24599,14 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.switchRightView = exports.switchUsers = exports.changePrediction = exports.SWITCH_USERS = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
+	exports.changeFilter = exports.switchRightView = exports.switchUsers = exports.changePrediction = exports.SWITCH_USERS = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
 	exports.savePredictions = savePredictions;
 	exports.getPredictions = getPredictions;
 	exports.getFixtures = getFixtures;
 	exports.getUsers = getUsers;
 	exports.initData = initData;
 
-	var _isomorphicFetch = __webpack_require__(216);
+	var _isomorphicFetch = __webpack_require__(217);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
@@ -24592,6 +24642,13 @@
 		return {
 			type: 'SWITCH_RIGHT_VIEW',
 			newView: newView
+		};
+	};
+
+	var changeFilter = exports.changeFilter = function changeFilter(newFilter) {
+		return {
+			type: 'CHANGE_FILTER',
+			newFilter: newFilter
 		};
 	};
 
@@ -24721,19 +24778,19 @@
 	//dispatch(getPredictions());
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(217);
+	__webpack_require__(218);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -25172,7 +25229,7 @@
 
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25183,7 +25240,7 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _GroupList = __webpack_require__(219);
+	var _GroupList = __webpack_require__(220);
 
 	var _GroupList2 = _interopRequireDefault(_GroupList);
 
@@ -25206,7 +25263,7 @@
 	exports.default = GroupContain;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25219,7 +25276,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Group = __webpack_require__(220);
+	var _Group = __webpack_require__(221);
 
 	var _Group2 = _interopRequireDefault(_Group);
 
@@ -25227,7 +25284,7 @@
 
 	var _rankCalcs2 = _interopRequireDefault(_rankCalcs);
 
-	var _classnames = __webpack_require__(214);
+	var _classnames = __webpack_require__(215);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -25284,7 +25341,7 @@
 	exports.default = GroupList;
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25299,7 +25356,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _GroupLine = __webpack_require__(221);
+	var _GroupLine = __webpack_require__(222);
 
 	var _GroupLine2 = _interopRequireDefault(_GroupLine);
 
@@ -25407,7 +25464,7 @@
 	exports.default = Group;
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25492,7 +25549,7 @@
 	exports.default = GroupLine;
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25503,11 +25560,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _UserList = __webpack_require__(223);
+	var _UserList = __webpack_require__(224);
 
 	var _UserList2 = _interopRequireDefault(_UserList);
 
-	var _actions = __webpack_require__(215);
+	var _actions = __webpack_require__(216);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25531,7 +25588,7 @@
 	exports.default = UserContain;
 
 /***/ },
-/* 223 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25546,11 +25603,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _User = __webpack_require__(224);
+	var _User = __webpack_require__(225);
 
 	var _User2 = _interopRequireDefault(_User);
 
-	var _classnames = __webpack_require__(214);
+	var _classnames = __webpack_require__(215);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -25609,7 +25666,7 @@
 	exports.default = UserList;
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25659,7 +25716,7 @@
 	exports.default = User;
 
 /***/ },
-/* 225 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25670,9 +25727,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _PredictionHeader = __webpack_require__(226);
+	var _PredictionHeader = __webpack_require__(227);
 
 	var _PredictionHeader2 = _interopRequireDefault(_PredictionHeader);
+
+	var _actions = __webpack_require__(216);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25685,12 +25744,20 @@
 		};
 	};
 
-	var PredictionHeaderContain = (0, _reactRedux.connect)(mapStateToProps)(_PredictionHeader2.default);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			onFilterClick: function onFilterClick(newFilter) {
+				dispatch((0, _actions.changeFilter)(newFilter));
+			}
+		};
+	};
+
+	var PredictionHeaderContain = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PredictionHeader2.default);
 
 	exports.default = PredictionHeaderContain;
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25703,7 +25770,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ButtonContain = __webpack_require__(227);
+	var _ButtonContain = __webpack_require__(228);
 
 	var _ButtonContain2 = _interopRequireDefault(_ButtonContain);
 
@@ -25712,24 +25779,69 @@
 	var PredictionHeader = function PredictionHeader(_ref) {
 		var user = _ref.user;
 		var isCurrent = _ref.isCurrent;
+		var onFilterClick = _ref.onFilterClick;
 
-
+		var groupArray = ["A", "B", "C", "D", "E", "F"];
+		var groupButtons = groupArray.map(function (groupLetter) {
+			return _react2.default.createElement(
+				'div',
+				{ key: groupLetter, className: 'btn-group' },
+				_react2.default.createElement(
+					'button',
+					{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
+							return onFilterClick(groupLetter);
+						} },
+					groupLetter
+				)
+			);
+		});
 		return _react2.default.createElement(
 			'div',
-			{ className: 'col-md-6' },
+			{ className: 'col-md-6 prediction-header' },
 			_react2.default.createElement(
 				'h3',
 				null,
 				isCurrent ? 'Your Predictions' : user.teamName,
 				_react2.default.createElement(_ButtonContain2.default, null)
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'filter-label' },
+				_react2.default.createElement(
+					'label',
+					null,
+					'Filter Matches:'
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'btn-group btn-group-justified btn-group-filters', role: 'group' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'btn-group' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
+								return onFilterClick('all');
+							} },
+						'All'
+					)
+				),
+				groupButtons
 			)
 		);
 	};
 
 	exports.default = PredictionHeader;
 
+	/*{groupArray.map((groupLetter) => {
+					return <div key={groupLetter} className="btn-group">
+						<button className="btn btn-euros btn-primary" onClick={() => onFilterClick(groupLetter)}>{groupLetter}</button>
+					</div>
+				})};*/
+
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25740,11 +25852,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _PredictButton = __webpack_require__(228);
+	var _PredictButton = __webpack_require__(229);
 
 	var _PredictButton2 = _interopRequireDefault(_PredictButton);
 
-	var _actions = __webpack_require__(215);
+	var _actions = __webpack_require__(216);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25768,7 +25880,7 @@
 	exports.default = ButtonContain;
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25781,7 +25893,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(214);
+	var _classnames = __webpack_require__(215);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -25822,7 +25934,7 @@
 	exports.default = PredictButton;
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25833,11 +25945,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _RightViewButtons = __webpack_require__(230);
+	var _RightViewButtons = __webpack_require__(231);
 
 	var _RightViewButtons2 = _interopRequireDefault(_RightViewButtons);
 
-	var _actions = __webpack_require__(215);
+	var _actions = __webpack_require__(216);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25860,7 +25972,7 @@
 	exports.default = RightViewButtonContain;
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25873,11 +25985,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _RightViewButtonContain = __webpack_require__(229);
+	var _RightViewButtonContain = __webpack_require__(230);
 
 	var _RightViewButtonContain2 = _interopRequireDefault(_RightViewButtonContain);
 
-	var _classnames = __webpack_require__(214);
+	var _classnames = __webpack_require__(215);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -25954,7 +26066,7 @@
 	exports.default = RightViewButtons;
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports) {
 
 	'use strict';

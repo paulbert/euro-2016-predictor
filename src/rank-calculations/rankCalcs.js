@@ -21,9 +21,6 @@ const chunkTeams = (group, field) => {
 	}
 
 	for(var i = 0; i < group.length; i++) {
-		if(group[i].name === 'Wales') {
-			console.log(group[i].name);
-		}
 		if(previousValue !== group[i][field]) {
 			if(newChunk.length > 0) {
 				addNew();
