@@ -55,3 +55,19 @@ main {
 .user-row {
 	cursor:pointer;
 }
+
+.margin-left-right {
+	margin: 0 5px 0 5px;
+}
+
+h3 {
+	margin-top:0;
+}
+
+.btn-group-margin {
+	margin-bottom: 10px;
+}
+
+.table thead {
+	font-weight:bold;
+}
