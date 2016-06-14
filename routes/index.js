@@ -76,8 +76,15 @@ module.exports = exports = function(app,db) {
 			if(err) {
 				res.json({'message':'Error'});
 			} else {
-				//console.log(result);
-				res.json(result);
+				fixtures.getFixtures(function(err,fixtures) {
+					users.scoreAndGetUsers(fixtures,function(err,users) {
+						if(err) {
+							res.json({'message':'Error'});
+						} else {
+							res.json(users);
+						}
+					});
+				});
 			}
 		});
 	});
