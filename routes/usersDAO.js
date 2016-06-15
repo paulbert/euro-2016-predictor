@@ -60,11 +60,11 @@ function usersDAO (db) {
 			for(key in p) {
 				var score = parseFloat(p[key]);
 				if(Number.isInteger(score) && score >= 0) {
-					var p_date = val.p_id.split('|')[1].split('-');
+					/*var p_date = val.p_id.split('|')[1].split('-');
 					var year = parseInt(p_date[0]),
 						month = parseInt(p_date[1]) - 1,
-						day = parseInt(p_date[2]);
-					var gameDate = new Date(Date.UTC(year,month,day,19));
+						day = parseInt(p_date[2]);*/
+					var gameDate = new Date(Date.UTC(2016,5,15,13));
 					if(new Date(Date.now()) > gameDate) {
 						valid = false;
 					}
