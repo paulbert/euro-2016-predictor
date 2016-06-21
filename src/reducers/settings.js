@@ -23,8 +23,8 @@ function settingsStatus (state = '', action) {
 			return '';
 		case 'SEND_SETTINGS':
 			return 'waiting';
-		case 'RETURN_SETTINGS':
-			return action.message;
+		case 'SET_SETTINGS_STATUS':
+			return action.status;
 		default:
 			return state;
 	}

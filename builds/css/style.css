@@ -11,6 +11,10 @@ body {
 	font-family:'Lato',sans-serif;
 }
 
+main {
+	overflow-x:scroll;
+}
+
 .span-spacing {
 	margin-left:1em;
 	font-size:1.25em;
@@ -152,4 +156,8 @@ h3 {
 
 .show-more-trash a, .show-new-trash a {
 	cursor:pointer;
+}
+
+.alert-settings {
+	margin-top:10px;
 }

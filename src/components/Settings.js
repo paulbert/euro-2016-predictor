@@ -6,7 +6,7 @@ let Settings = ({user,names,settingsStatus,onSettingsSubmit}) => {
 	
 	const setSetting = (inputted,saved,key) => inputted[key] || (saved ? saved[key] : '');
 	
-	let alertClasses = { 'alert': true, 'alert-danger': true, 'alert-success':false, 'hidden':true };
+	let alertClasses = { 'alert': true, 'alert-danger': true, 'alert-success':false, 'hidden':true, 'alert-settings':true };
 	if(settingsStatus !== '' && settingsStatus !== 'waiting') {
 		alertClasses.hidden = false;
 	}
@@ -45,8 +45,8 @@ let Settings = ({user,names,settingsStatus,onSettingsSubmit}) => {
 	);
 	return ( 
 		<div className="col-xs-12 col-md-6 col-lg-4">
-			<Alert />
 			<ThisView />
+			<Alert />
 		</div>
 	);
 };

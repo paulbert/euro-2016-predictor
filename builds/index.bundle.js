@@ -24112,7 +24112,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.setSettingsStatus = exports.changeSettings = exports.cancelTrashInsert = exports.showMoreTrash = exports.changePreviewUrl = exports.RECEIVE_NEW_TRASH_NUM = exports.RECEIVE_TRASH = exports.GETTING_TRASH = exports.RECEIVE_TRASH_PREVIEW = exports.SEND_TRASH_PREVIEW = exports.loginSwitch = exports.LOGIN_RESET = exports.LOGIN_REJECT = exports.LOGIN_SWITCH = exports.LOGIN_SUBMIT = exports.changeFilter = exports.switchRightView = exports.switchUsers = exports.changePrediction = exports.SWITCH_USERS = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
+	exports.changeSettings = exports.cancelTrashInsert = exports.showMoreTrash = exports.changePreviewUrl = exports.RECEIVE_NEW_TRASH_NUM = exports.RECEIVE_TRASH = exports.GETTING_TRASH = exports.RECEIVE_TRASH_PREVIEW = exports.SEND_TRASH_PREVIEW = exports.loginSwitch = exports.LOGIN_RESET = exports.LOGIN_REJECT = exports.LOGIN_SWITCH = exports.LOGIN_SUBMIT = exports.changeFilter = exports.switchRightView = exports.switchUsers = exports.changePrediction = exports.SWITCH_USERS = exports.GETTING_USERS = exports.RECEIVE_USERS = exports.GETTING_FIXTURES = exports.RECEIVE_FIXTURES = exports.GETTING_PREDICTION = exports.RECEIVE_PREDICTION = exports.SEND_PREDICTION = exports.CHANGE_PREDICTION = undefined;
 	exports.savePredictions = savePredictions;
 	exports.getPredictions = getPredictions;
 	exports.getFixtures = getFixtures;
@@ -24518,10 +24518,16 @@
 		};
 	};
 
-	var setSettingsStatus = exports.setSettingsStatus = function setSettingsStatus(status) {
+	var setSettingsStatus = function setSettingsStatus(status) {
 		return {
 			type: 'SET_SETTINGS_STATUS',
 			status: status
+		};
+	};
+
+	var sendSettings = function sendSettings() {
+		return {
+			type: 'SEND_SETTINGS'
 		};
 	};
 
@@ -24529,7 +24535,7 @@
 
 		return function (dispatch) {
 
-			dispatch(sendTrashPreview());
+			dispatch(sendSettings());
 
 			return (0, _isomorphicFetch2.default)('/userUpdate', {
 				method: 'POST',
@@ -35067,8 +35073,8 @@
 				return '';
 			case 'SEND_SETTINGS':
 				return 'waiting';
-			case 'RETURN_SETTINGS':
-				return action.message;
+			case 'SET_SETTINGS_STATUS':
+				return action.status;
 			default:
 				return state;
 		}
@@ -41923,12 +41929,6 @@
 
 	exports.default = PredictionHeader;
 
-	/*{groupArray.map((groupLetter) => {
-					return <div key={groupLetter} className="btn-group">
-						<button className="btn btn-euros btn-primary" onClick={() => onFilterClick(groupLetter)}>{groupLetter}</button>
-					</div>
-				})};*/
-
 /***/ },
 /* 296 */
 /***/ function(module, exports, __webpack_require__) {
@@ -42945,7 +42945,7 @@
 			return inputted[key] || (saved ? saved[key] : '');
 		};
 
-		var alertClasses = { 'alert': true, 'alert-danger': true, 'alert-success': false, 'hidden': true };
+		var alertClasses = { 'alert': true, 'alert-danger': true, 'alert-success': false, 'hidden': true, 'alert-settings': true };
 		if (settingsStatus !== '' && settingsStatus !== 'waiting') {
 			alertClasses.hidden = false;
 		}
@@ -43013,8 +43013,8 @@
 		return _react2.default.createElement(
 			'div',
 			{ className: 'col-xs-12 col-md-6 col-lg-4' },
-			_react2.default.createElement(Alert, null),
-			_react2.default.createElement(ThisView, null)
+			_react2.default.createElement(ThisView, null),
+			_react2.default.createElement(Alert, null)
 		);
 	};
 

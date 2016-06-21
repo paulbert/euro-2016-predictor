@@ -118,7 +118,7 @@ module.exports = exports = function(app,db) {
 						res.json({'message':'There was an error updating your settings, please try again.'});
 					} else {
 						console.log('Updated user: ' + req.cookies.user);
-						res.json({'message':'OK'});
+						res.json({'message':'Success'});
 					}
 				});
 			} else {

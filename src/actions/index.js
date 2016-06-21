@@ -400,10 +400,16 @@ export const changeSettings = (newVals) => {
 	}
 };
 
-export const setSettingsStatus = (status) => {
+const setSettingsStatus = (status) => {
 	return {
 		type: 'SET_SETTINGS_STATUS',
 		status
+	}
+};
+
+const sendSettings = () => {
+	return {
+		type: 'SEND_SETTINGS',
 	}
 };
 
@@ -411,7 +417,7 @@ export function updateUser(userId,names) {
 	
 	return function(dispatch) {
 		
-		dispatch(sendTrashPreview());
+		dispatch(sendSettings());
 		
 		return fetch('/userUpdate', {
 			method: 'POST',

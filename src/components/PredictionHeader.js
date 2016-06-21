@@ -29,9 +29,3 @@ const PredictionHeader = ({ user, isCurrent, mobileView, thisUser, onFilterClick
 )}
 
 export default PredictionHeader;
-
-/*{groupArray.map((groupLetter) => {
-				return <div key={groupLetter} className="btn-group">
-					<button className="btn btn-euros btn-primary" onClick={() => onFilterClick(groupLetter)}>{groupLetter}</button>
-				</div>
-			})};*/
