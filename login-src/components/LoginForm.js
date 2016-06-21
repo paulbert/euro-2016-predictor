@@ -1,37 +1,17 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { loginSwitch } from '../actions'
-import { loginSubmit } from '../actions'
 import classnames from 'classnames'
-
-const mapStateToProps = (state) => {
-	return {
-		loginView:state.loginView,
-		loginStatus:state.loginStatus,
-		invalidMessage:state.invalidMessage
-	}
-};
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		onSwitchClick: (switchTo) => {
-			dispatch(loginSwitch(switchTo));
-		},
-		onSubmitClick: (user,pass) => {
-			dispatch(loginSubmit(user,pass));
-		}
-	}
-};
 
 let LoginForm = ({loginView,loginStatus,invalidMessage,onSwitchClick,onSubmitClick}) => {
 	let thisMessage = loginView === 'signup' ? 'Already signed up?' : 'Need to sign up?';
 	let switchTo = loginView === 'signup' ? 'login' : 'signup';
 	let loginViews = {};
 	let loginValues = {name:'',pass:'',rptPass:'',teamName:'',gbPred:'',leagueCode:''};
-	let alertClasses = classnames({ 'alert': true, 'alert-danger': true, 'hidden':(invalidMessage === '') });
+	let alertClasses = classnames({ 'alert': true, 'alert-danger': true, 'alert-success':false, 'hidden':(invalidMessage === '') });
 	if(loginStatus === 'invalid') {
 		alertClasses.hidden = false;
 	}
+	
 	const loginChange = (val,prop) => {
 		let newValue = {};
 		newValue[prop] = val;
