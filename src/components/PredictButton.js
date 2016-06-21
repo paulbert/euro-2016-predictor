@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import classnames from 'classnames'
 
-const PredictButton = ({ predictions, isCurrent, onPredictClick }) => {
+const PredictButton = ({ predictions, isCurrent, thisUser, onPredictClick }) => {
 	
 	let alertClasses = classnames({ 'text-success': true, 'text-danger': true, 'hidden':true, 'span-spacing':true });
-	let buttonClasses = classnames({ 'hidden':!isCurrent, 'margin-left-right':true });
+	let buttonClasses = classnames({ 'hidden':!isCurrent || thisUser === '', 'margin-left-right':true });
 	
 	return (
 		<span className={buttonClasses}>

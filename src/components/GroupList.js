@@ -29,7 +29,8 @@ const GroupList = ({ groups, savedPredictions, user, fixtures, view }) => {
 		return thirdPlace;
 	},[]);
 	
-	let colClasses = { 'col-md-6':true, 'hidden':view.type !== 'groups', 'hidden-xs':true };
+	let hideThisMobile = view.mobile !== 'groups';
+	let colClasses = { 'col-md-6':true, 'col-xs-12':true, 'hidden':view.type !== 'groups', 'hidden-xs':hideThisMobile, 'hidden-sm':hideThisMobile };
 	let groupArray = ["A","B","C","D","E","F",'Third Place'];
 	
 	return (

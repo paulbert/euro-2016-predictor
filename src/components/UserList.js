@@ -4,7 +4,8 @@ import classnames from 'classnames'
 
 const UserList = ({ users, view, onUserClick }) => {
 	
-	let colClasses = { 'col-md-6':true, 'hidden':view.type !== 'scores', 'hidden-xs':true };
+	let hideThisMobile = view.mobile !== 'scores';
+	let colClasses = { 'col-md-6':true, 'col-xs-12':true, 'hidden':view.type !== 'scores', 'hidden-xs':hideThisMobile, 'hidden-sm':hideThisMobile };
 	
 	return (
 	<div className={classnames(colClasses)}>

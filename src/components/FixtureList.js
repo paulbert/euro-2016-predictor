@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
 import Fixture from './Fixture'
+import classnames from 'classnames'
 
-const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilter, onScoreChange, onLoad }) => {
+const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilter, thisUser, view, onScoreChange, onLoad }) => {
 	//onLoad();
 	
 	const setFixtureLine = fixture => {
@@ -19,7 +20,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		};
 		let prediction = predictions.reduce(reduceToPrediction,defaultPrediction);
 		let savedPrediction = user ? user.predictions.reduce(reduceToPrediction,defaultPrediction) : {};
-		return <Fixture links={fixture._links} key={fixture.key} {...fixture} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} isCurrent={isCurrent} />;
+		return <Fixture links={fixture._links} key={fixture.key} {...fixture} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} isCurrent={isCurrent} thisUser={thisUser} />;
 	};
 	
 	const fixtureFilter = fixture => {
@@ -40,16 +41,22 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		}
 	}
 	
+	let unsignedUser = (isCurrent && thisUser === '');
+	let predictionsClass = { 'text-center': true, 'hidden': unsignedUser };
+	let hideThisMobile = view.mobile !== 'fixtures';
+	let colClasses = { 'col-md-6':true, 'col-xs-12':true, 'hidden-xs':hideThisMobile, 'hidden-sm':hideThisMobile };
+	
 	return (
 	
-	<div className="col-md-6 col-xs-12">
+	<div className={classnames(colClasses)}>
 	<table className="table">
 		<thead>
 			<tr>
-				<td colSpan="4">Team 1</td>
-				<td colSpan="3">Team 2</td>
-				<td colSpan="1" className="text-center">Predictions</td>
-				<td colSpan="1" className="text-center">Actual</td>
+				<td colSpan="1">Date</td>
+				<td colSpan={unsignedUser ? 2: 3}>Team 1</td>
+				<td colSpan={unsignedUser ? 2: 3}>Team 2</td>
+				<td colSpan="1" className={classnames(predictionsClass)}>Predictions</td>
+				<td colSpan="1" className="text-center">{unsignedUser ? 'Score' : 'Actual'}</td>
 			</tr>
 		</thead>
 		<tbody>

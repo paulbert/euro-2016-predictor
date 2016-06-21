@@ -1,9 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const User = ({ id,teamName,topScorer,predictions,totalScore,onUserClick}) => {
-	
-	
-	
+const User = ({ id,teamName,topScorer,predictions,totalScore,onUserClick}) => {	
 	return (
 	
 	<tr className="user-row" onClick={(e) => onUserClick(id)}>

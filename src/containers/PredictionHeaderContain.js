@@ -7,7 +7,9 @@ const mapStateToProps = (state) => {
 		user:state.users.filter((user) => {
 			return user._id === state.activeUserView
 		})[0],
-		isCurrent:(state.activeUserView === state.thisUser)
+		isCurrent:(state.activeUserView === state.thisUser),
+		thisUser: state.thisUser,
+		mobileView: state.rightView.mobile
 	}
 };
 

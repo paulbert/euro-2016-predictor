@@ -5,7 +5,8 @@ import { savePredictions } from '../actions'
 const mapStateToProps = (state) => {
 	return {
 		predictions:state.predictions,
-		isCurrent:(state.activeUserView === state.thisUser)
+		isCurrent:(state.activeUserView === state.thisUser),
+		thisUser: state.thisUser
 	}
 };
 

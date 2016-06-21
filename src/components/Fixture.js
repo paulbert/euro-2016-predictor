@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import TeamContain from '../containers/TeamContain'
 import classnames from 'classnames'
 
-const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamName, result, prediction, savedPrediction, onScoreChange, isCurrent}) => {
+const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamName, result, prediction, savedPrediction, onScoreChange, isCurrent, thisUser}) => {
 	let reformatDate = new Date(date);
 	let dateString = (reformatDate.getMonth() + 1) + '/' + reformatDate.getDate();
 	
@@ -30,17 +30,18 @@ const Fixture = ({ _links, f_id, date, status, matchday, homeTeamName, awayTeamN
 		}
 	}
 	let iconClass = classnames(iconClassObj);
+	let predictionClass = { 'col-xs-1':true,'hidden':(isCurrent && thisUser === '') };
 	
 	return (
 		<tr>
 			<td className="col-xs-1">{dateString}</td>
 			<td className="col-xs-1"><TeamContain team={homeTeamName} /></td>
 			<td className="col-xs-2">{homeTeamName}</td>
-			<td className="col-xs-1"><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,homeTeamName,e.target.value)}/></td>
+			<td className={classnames(predictionClass)}><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,homeTeamName,e.target.value)}/></td>
 			<td className="col-xs-1"><TeamContain team={awayTeamName} /></td>
 			<td className="col-xs-2">{awayTeamName}</td>
-			<td className="col-xs-1"><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,awayTeamName,e.target.value)}/></td>
-			<td className="col-xs-2 text-center">
+			<td className={classnames(predictionClass)}><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,awayTeamName,e.target.value)}/></td>
+			<td className={classnames(Object.assign({},predictionClass,{'text-center':true}))}>
 				{savedPrediction[homeTeamName]}-{savedPrediction[awayTeamName]}
 				<span className={iconClass} aria-hidden="true"></span>
 			</td>

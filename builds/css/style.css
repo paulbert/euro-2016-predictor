@@ -1,3 +1,7 @@
+#root {
+	overflow-x:hidden;
+}
+
 .score-box {
 	width:100%;
 	min-width:50px;
@@ -17,7 +21,7 @@ body {
 }
 
 main {
-	margin:10px 0 80px 0;
+	margin:10px 0 10px 0;
 }
 
 .navbar-background {
@@ -25,26 +29,46 @@ main {
 	background-repeat:repeat;
 }
 
-.navbar-background * {
-	height:75px;
-	text-align:center;
-}
-
-.navbar-background .nav li a {
-	width:150px;
+.navbar .nav.navbar-nav li a, .navbar-background .navbar-header a {
+	width:100%;
 	color:#FFFFFF;
 	cursor:pointer;
 }
 
-.navbar-background .nav li a:hover {
+.navbar .nav.navbar-nav li a:hover, .navbar-background .navbar-header a:hover {
 	color:#FFFFFF;
 	background-color:rgba(0,0,0,0.4)
 }
 
 @media (min-width: 768px) {
+	.navbar-background * {
+		height:75px;
+		text-align:center;
+	}
+
+	.navbar .nav.navbar-nav li a {
+		width:150px;
+		color:#FFFFFF;
+		cursor:pointer;
+	}
+
+	.navbar-background .nav.navbar-right li a {
+		width:auto;
+	}
+
+	.navbar .nav.navbar-nav li a:hover {
+		color:#FFFFFF;
+		background-color:rgba(0,0,0,0.4)
+	}
+
 	.navbar-background li a {
 		padding-top:29px;
 		padding-bottom:29px;
+	}
+	
+	li.big-cog a {
+		padding-top:27px;
+		padding-bottom:26px;
 	}
 }
 
@@ -83,3 +107,49 @@ h3 {
 	padding:6px 0 6px 0;
 }
 
+.navbar-right {
+	margin-right:0;
+}
+
+.big-cog {
+	font-size:1.5em;
+}
+
+.trash-img {
+	max-width:100%;
+	max-height:25vh;
+}
+
+.trash-talk div.row, .bottom-space {
+	margin-bottom:7px;
+}
+
+.trash-talk .url-input, .trash-talk input {
+	width:100%;
+}
+
+.preview-image span, .preview-image button {
+	margin-right:4px;
+}
+
+.preview-image .panel {
+	margin-bottom:3px;
+}
+
+.show-more-trash, .show-new-trash {
+	text-align:center;
+}
+
+.show-more-trash div {
+	border-top:1px solid #CDCDCD;
+	padding: 3px 0 3px 0;
+}
+
+.show-new-trash div {
+	border-bottom:1px solid #CDCDCD;
+	padding: 3px 0 3px 0;
+}
+
+.show-more-trash a, .show-new-trash a {
+	cursor:pointer;
+}

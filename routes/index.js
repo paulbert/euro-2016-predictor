@@ -3,23 +3,15 @@ var usersDAO = require('./usersDAO'),
 	path = require('path'),
 	sessionsDAO = require('./sessionsDAO'),
 	fixturesDAO = require('./fixturesDAO');
+	trashDAO = require('./trashDAO');
 	
 module.exports = exports = function(app,db) {
 	
 	var users = usersDAO(db),
 		sessions = sessionsDAO(db),
 		fixtures = fixturesDAO(db,app);
+		trash = trashDAO(db,app);
 	
-	app.get('/', function(req,res) { 
-		sessions.checkCookie(req.cookies,function(foundCookie) {
-			if(foundCookie) {
-				app.set('username',req.cookies.user);
-				res.sendFile(path.join(__dirname + '/../builds/templates/index.html'));
-			} else {
-				res.sendFile(path.join(__dirname + '/../builds/templates/login.html'));
-			}
-		});
-	});
 	
 	function addResponseCookie(res,user,passcode) {
 		res.cookie('user',user,{expires: new Date(2016,8,1),httpOnly:false});
@@ -89,6 +81,53 @@ module.exports = exports = function(app,db) {
 		});
 	});
 	
+	app.post('/trashpreview', function(req,res) {
+		var previewUrl = req.body.previewUrl;
+		
+		trash.checkNewTrash(previewUrl,function(result) {
+			res.json({'message':result});
+		});
+		
+	});
+	
+	app.post('/trash', function(req,res) {
+		var insertUrl = req.body.insertUrl;
+		sessions.checkCookie(req.cookies,function(foundCookie) {
+			if(foundCookie) {
+				trash.insertNewTrash(insertUrl,req.cookies.user,function(err,result) {
+					if(err) {
+						res.json({'message':err});
+					} else {
+						console.log('Inserted one trash talk post');
+						res.json({'message':'OK'});
+					}
+				});
+			} else {
+				res.json({'message':'Error. Try reloading page.'});
+			}
+		});
+		
+	});
+	
+	app.post('/userUpdate', function(req,res) {
+		var updateFields = req.body.updateFields;
+		sessions.checkCookie(req.cookies,function(foundCookie) {
+			if(foundCookie) {
+				users.updateUser(req.cookies.user,updateFields,function(err,result) {
+					if(err) {
+						res.json({'message':'There was an error updating your settings, please try again.'});
+					} else {
+						console.log('Updated user: ' + req.cookies.user);
+						res.json({'message':'OK'});
+					}
+				});
+			} else {
+				res.json({'message':'Error. Try reloading page.'});
+			}
+		});
+		
+	});
+	
 	app.get('/getPrediction', function(req,res) {
 		var user = req.cookies.user;
 		users.getUser({_id:user},function(err,result) {
@@ -125,4 +164,28 @@ module.exports = exports = function(app,db) {
 		
 	});
 	
+	app.get('/getTrash', function(req,res) {
+		trash.getTrash(function(err,posts) {
+			if(err) {
+				res.json({'message':'Error'});
+			} else {
+				res.json(posts);
+			}
+		});
+		
+	});
+	
+	app.get('*', function(req,res) {
+		/*
+		sessions.checkCookie(req.cookies,function(foundCookie) {
+			if(foundCookie) {
+				app.set('username',req.cookies.user);
+				res.sendFile(path.join(__dirname + '/../builds/templates/index.html'));
+			} else {
+				res.sendFile(path.join(__dirname + '/../builds/templates/login.html'));
+			}
+		});
+		*/
+		res.sendFile(path.join(__dirname + '/../builds/templates/index.html'));
+	});
 }
