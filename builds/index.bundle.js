@@ -35195,7 +35195,7 @@
 			{ className: 'navbar navbar-default navbar-static-top navbar-background' },
 			_react2.default.createElement(
 				'div',
-				{ className: 'navbar-header visible-sm visible-xs' },
+				{ className: 'navbar-header visible-xs' },
 				_react2.default.createElement(
 					'a',
 					{ className: 'navbar-brand', onClick: function onClick() {

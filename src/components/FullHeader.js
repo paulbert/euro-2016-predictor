@@ -13,7 +13,7 @@ const FullHeader = ({ loggedIn, view, onMenuClick }) => {
 	
 	return (
 	<nav className="navbar navbar-default navbar-static-top navbar-background">
-		<div className="navbar-header visible-sm visible-xs">
+		<div className="navbar-header visible-xs">
 			<a className="navbar-brand" onClick={() => onMenuClick({'menu':!view})}>Menu</a>
 		</div>
 		<div className={classnames(dropdownClass)}>
