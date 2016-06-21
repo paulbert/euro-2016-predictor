@@ -122,8 +122,8 @@ function usersDAO (db) {
 		
 	}
 	
-	function update(item,callback) {
-		db.collection(collection).update({'_id':item._id},item,callback);
+	function update(userId,updateFields,callback) {
+		db.collection(collection).update({'_id':userId},{$set:updateFields},callback);
 	}
 	
 	function checkPassword(user,callback) {
