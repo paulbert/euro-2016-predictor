@@ -17,7 +17,10 @@ let Settings = ({user,names,settingsStatus,onSettingsSubmit}) => {
 		<div className={alertClasses} role="alert">{settingsStatus}</div>
 	);
 	
-	let settingsValues = names;
+	let savedNames = {};
+	savedNames.nameName = setSetting(names,user,'nameName');
+	savedNames.teamName = setSetting(names,user,'teamName');
+	let settingsValues = savedNames;
 	
 	const settingsChange = (val,prop) => {
 		let newValue = {};

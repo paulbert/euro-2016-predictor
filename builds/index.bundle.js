@@ -42960,7 +42960,10 @@
 			);
 		};
 
-		var settingsValues = names;
+		var savedNames = {};
+		savedNames.nameName = setSetting(names, user, 'nameName');
+		savedNames.teamName = setSetting(names, user, 'teamName');
+		var settingsValues = savedNames;
 
 		var settingsChange = function settingsChange(val, prop) {
 			var newValue = {};
