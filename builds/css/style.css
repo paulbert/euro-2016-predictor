@@ -334,7 +334,7 @@ BRACKET STYLES BELOW
 
 .winner .flag-contain {
 	position:relative;
-	height:30px;
+	height:50px;
 	width:70px;
 	display:inline-block;
 }
@@ -347,14 +347,14 @@ BRACKET STYLES BELOW
 
 .winner .champ-name {
 	margin-left:5px;
-	font-size:2em;
+	font-size:1.5em;
 }
 
 .winner-contain {
 	position:absolute;
 	top:50%;
 	transform:translate(0,-200px);
-	height:100px;
+	height:125px;
 	width:200px;
 	border: 4px #00568f solid;
 	border-radius:5px;

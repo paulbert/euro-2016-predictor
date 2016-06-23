@@ -58,8 +58,8 @@ const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, res
 			<td className="col-xs-2"><div>{awayTeamName}<span className={makeCheckClassName(awayCheckmarkClass)} onClick={()=>onPenaltyClick(f_id,'away')}></span></div></td>
 			<td className={classnames(predictionClass)}><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,awayTeamName,e.target.value,'away')}/></td>
 			<td className={classnames(Object.assign({},predictionClass,{'text-center':true}))}>
-				{savedPrediction.penaltyWinner === 'home' ? '*' : ''}{savedPrediction.home || savedPrediction[homeTeamName]}-
-				{savedPrediction.away || savedPrediction[awayTeamName]}{savedPrediction.penaltyWinner === 'away' ? '*' : ''}
+				{(savedPrediction.penaltyWinner === 'home' && savedPrediction.PKs) ? '*' : ''}{savedPrediction.home || savedPrediction[homeTeamName]}-
+				{savedPrediction.away || savedPrediction[awayTeamName]}{(savedPrediction.penaltyWinner === 'away' && savedPrediction.PKs) ? '*' : ''}
 				<span className={iconClass} aria-hidden="true"></span>
 			</td>
 			<td className="col-xs-1 text-center">{result.goalsHomeTeam}-{result.goalsAwayTeam}</td>

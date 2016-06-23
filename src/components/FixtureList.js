@@ -17,7 +17,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 				return Object.assign({},filtered);
 			}
 			if(p.p_id === fixture.f_id) { 
-				return Object.assign({},filtered,p.prediction,(typeof p.points !== 'undefined' ? {points:p.points,bonus:p.bonus}:{}),(p.bracketPrediction ? p.bracketPrediction : {} ),{winner:p.winner,inputPrediction:p.inputPrediction,penaltyWinner:p.penaltyWinner});
+				return Object.assign({},filtered,p.prediction,(typeof p.points !== 'undefined' ? {points:p.points,bonus:p.bonus}:{}),(p.bracketPrediction ? p.bracketPrediction : {} ),{winner:p.winner,inputPrediction:p.inputPrediction,penaltyWinner:p.penaltyWinner,PKs:p.PKs});
 			} else {
 				return Object.assign({},filtered);
 			}

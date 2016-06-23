@@ -32,12 +32,12 @@ const BracketGame = ({ bracketPredictions, bracketForm, matchNum }) => {
 			<div className="bracket-team">
 				<TeamContain team={thisPrediction ? thisPrediction.homeTeamName : thisGame.homeTeamName} />
 				<span className="score">{homeTeamScore}</span>
-				<span className="penalty-mark">{thisPrediction.penaltyWinner === 'home' ? '*':''}</span>
+				<span className="penalty-mark">{(thisPrediction.penaltyWinner === 'home' && thisPrediction.PKs) ? '*':''}</span>
 			</div>
 			<div className="bracket-team">
 				<TeamContain team={thisPrediction ? thisPrediction.awayTeamName : thisGame.awayTeamName} />
 				<span className="score">{awayTeamScore}</span>
-				<span className="penalty-mark">{thisPrediction.penaltyWinner === 'away' ? '*':''}</span>
+				<span className="penalty-mark">{(thisPrediction.penaltyWinner === 'away' && thisPrediction.PKs) ? '*':''}</span>
 			</div>
 		</span>
 		<BracketWinner bracketPredictions={bracketPredictions} matchNum={matchNum} />

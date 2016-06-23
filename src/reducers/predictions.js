@@ -161,7 +161,7 @@ const userUpdatePrediction = (state,users,thisUser) => {
 		
 		if(thisPrediction !== 0) {
 			let userBracketPrediction = Object.assign({},state.bracketPrediction,thisPrediction.bracketPrediction);
-			return Object.assign({},state,{userHomeTeam:thisPrediction.homeTeamName,userAwayTeam:thisPrediction.awayTeamName,userBracketPrediction:userBracketPrediction,userPenaltyWinner:thisPrediction.userPenaltyWinner});
+			return Object.assign({},state,{userHomeTeam:thisPrediction.homeTeamName,userAwayTeam:thisPrediction.awayTeamName,userBracketPrediction:userBracketPrediction,userPenaltyWinner:thisPrediction.penaltyWinner});
 		}
 	}
 	return state;

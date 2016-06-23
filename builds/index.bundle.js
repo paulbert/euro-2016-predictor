@@ -23922,7 +23922,7 @@
 
 			if (thisPrediction !== 0) {
 				var userBracketPrediction = Object.assign({}, state.bracketPrediction, thisPrediction.bracketPrediction);
-				return Object.assign({}, state, { userHomeTeam: thisPrediction.homeTeamName, userAwayTeam: thisPrediction.awayTeamName, userBracketPrediction: userBracketPrediction, userPenaltyWinner: thisPrediction.userPenaltyWinner });
+				return Object.assign({}, state, { userHomeTeam: thisPrediction.homeTeamName, userAwayTeam: thisPrediction.awayTeamName, userBracketPrediction: userBracketPrediction, userPenaltyWinner: thisPrediction.penaltyWinner });
 			}
 		}
 		return state;
@@ -41255,7 +41255,7 @@
 					return Object.assign({}, filtered);
 				}
 				if (p.p_id === fixture.f_id) {
-					return Object.assign({}, filtered, p.prediction, typeof p.points !== 'undefined' ? { points: p.points, bonus: p.bonus } : {}, p.bracketPrediction ? p.bracketPrediction : {}, { winner: p.winner, inputPrediction: p.inputPrediction, penaltyWinner: p.penaltyWinner });
+					return Object.assign({}, filtered, p.prediction, typeof p.points !== 'undefined' ? { points: p.points, bonus: p.bonus } : {}, p.bracketPrediction ? p.bracketPrediction : {}, { winner: p.winner, inputPrediction: p.inputPrediction, penaltyWinner: p.penaltyWinner, PKs: p.PKs });
 				} else {
 					return Object.assign({}, filtered);
 				}
@@ -41534,11 +41534,11 @@
 			_react2.default.createElement(
 				'td',
 				{ className: (0, _classnames2.default)(Object.assign({}, predictionClass, { 'text-center': true })) },
-				savedPrediction.penaltyWinner === 'home' ? '*' : '',
+				savedPrediction.penaltyWinner === 'home' && savedPrediction.PKs ? '*' : '',
 				savedPrediction.home || savedPrediction[homeTeamName],
 				'-',
 				savedPrediction.away || savedPrediction[awayTeamName],
-				savedPrediction.penaltyWinner === 'away' ? '*' : '',
+				savedPrediction.penaltyWinner === 'away' && savedPrediction.PKs ? '*' : '',
 				_react2.default.createElement('span', { className: iconClass, 'aria-hidden': 'true' })
 			),
 			_react2.default.createElement(
@@ -42089,7 +42089,6 @@
 		return _react2.default.createElement(
 			'div',
 			{ className: (0, _classnames2.default)(colClasses) },
-			_react2.default.createElement(_BracketWinner2.default, { bracketPredictions: bracketPredictions }),
 			_react2.default.createElement(
 				'div',
 				{ className: 'bracket' },
@@ -42180,7 +42179,7 @@
 					_react2.default.createElement(
 						'span',
 						{ className: 'penalty-mark' },
-						thisPrediction.penaltyWinner === 'home' ? '*' : ''
+						thisPrediction.penaltyWinner === 'home' && thisPrediction.PKs ? '*' : ''
 					)
 				),
 				_react2.default.createElement(
@@ -42195,7 +42194,7 @@
 					_react2.default.createElement(
 						'span',
 						{ className: 'penalty-mark' },
-						thisPrediction.penaltyWinner === 'away' ? '*' : ''
+						thisPrediction.penaltyWinner === 'away' && thisPrediction.PKs ? '*' : ''
 					)
 				)
 			),
@@ -42637,55 +42636,86 @@
 
 		var alertClasses = (0, _classnames2.default)({ 'text-success': true, 'text-danger': true, 'hidden': true, 'span-spacing': true });
 		var buttonClasses = (0, _classnames2.default)({ 'hidden': !isCurrent || thisUser === '', 'margin-left-right': true });
+		var tooltipClass = 'hidden';
+		var tooltipMessage = '';
+		var penaltyMissing = false;
+		var halfFilled = false;
+		var btnClass = { 'btn': true, 'btn-euros': true, 'btn-primary': true, 'btn-large': true };
 
 		var checkPredictions = function checkPredictions(p) {
 			var findSavedPrediction = function findSavedPrediction(savedP) {
 				return p.matchNum === savedP.matchNum;
 			};
 
-			if (user && p.matchNum && (typeof p.prediction === 'undefined' || typeof p.prediction[p.homeTeamName] === 'undefined')) {
+			if (user && p.matchNum) {
 				var savedP = user.predictions.filter(findSavedPrediction);
 				if (savedP.length > 0) {
 					var userPrediction = savedP[0];
-					var newBracket = Object.assign({}, userPrediction.bracketPrediction, p.bracketPrediction);
+					var useInput = p.inputPrediction && p.inputPrediction.home && p.inputPrediction.away && (p.PKs ? p.winner : true);
+					var newBracket = {};
+					if (useInput) {
+						newBracket = Object.assign({}, userPrediction.bracketPrediction, p.bracketPrediction);
+					} else {
+						newBracket = Object.assign({}, userPrediction.bracketPrediction);
+					}
 					var newPrediction = {};
 					newPrediction[p.homeTeamName] = newBracket.home;
 					newPrediction[p.awayTeamName] = newBracket.away;
 					var homeTeamName = p.homeTeamName || userPrediction.homeTeamName;
 					var awayTeamName = p.awayTeamName || userPrediction.awayTeamName;
-					var newBracketWinner = p.bracketWinner !== '' ? p.bracketWinner : userPrediction.bracketWinner;
-					var newWinner = newBracketWinner === 'home' ? p.homeTeamName : newBracketWinner === 'away' ? p.awayTeamName : userPrediction.winner;
-					return Object.assign({}, userPrediction, { prediction: newPrediction, bracketPrediction: newBracket, bracketWinner: newBracketWinner, winner: newWinner, homeTeamName: homeTeamName, awayTeamName: awayTeamName });
+					var newBracketWinner = p.bracketWinner || p.penaltyWinner || userPrediction.bracketWinner || userPrediction.userPenaltyWinner || '';
+					var newWinner = newBracketWinner === 'home' ? homeTeamName : newBracketWinner === 'away' ? awayTeamName : userPrediction.winner;
+					var newPKs = typeof p.PKs === 'undefined' ? userPrediction.PKs : p.PKs;
+					var newPenaltyWinner = p.penaltyWinner || userPrediction.userPenaltyWinner || '';
+					if (!useInput) {
+						if (p.inputPrediction && (p.inputPrediction.home || p.inputPrediction.away) && !(p.inputPrediction.home && p.inputPrediction.away)) {
+							halfFilled = true;
+						}
+						if (p.PKs && p.inputPrediction && p.inputPrediction.home && p.inputPrediction.away && !p.winner) {
+							penaltyMissing = true;
+						}
+					}
+					return Object.assign({}, userPrediction, { prediction: newPrediction, bracketPrediction: newBracket, bracketWinner: newBracketWinner, winner: newWinner, homeTeamName: homeTeamName, awayTeamName: awayTeamName, PKs: newPKs, penaltyWinner: newPenaltyWinner });
 				}
 			}
 			return p;
 		};
 
-		var tooltip = _react2.default.createElement(
-			_reactBootstrap.Tooltip,
-			{ id: 'tooltip' },
-			_react2.default.createElement(
-				'strong',
-				null,
-				'Holy guacamole!'
-			),
-			' Check this info.'
-		);
+		var tooltip = function tooltip(tooltipMessage, tooltipClass) {
+			return _react2.default.createElement(
+				_reactBootstrap.Tooltip,
+				{ id: 'tooltip', className: tooltipClass },
+				tooltipMessage
+			);
+		};
 
 		var modifiedPredictions = predictions.map(checkPredictions);
+
+		if (penaltyMissing) {
+			tooltipClass = '';
+			tooltipMessage = 'Missing a winner for penalties. Hit a checkbox and then you can save.';
+			btnClass = Object.assign({}, btnClass, { 'disabled': true });
+		} else if (halfFilled) {
+			tooltipClass = '';
+			tooltipMessage = 'Something is half filled.  You can still save, but it might make your bracket weird.';
+		}
+
+		var predictClick = function predictClick(modifiedPredictions) {
+			if (!penaltyMissing) {
+				return onPredictClick(modifiedPredictions);
+			}
+		};
 
 		return _react2.default.createElement(
 			'span',
 			{ className: buttonClasses },
 			_react2.default.createElement(
 				_reactBootstrap.OverlayTrigger,
-				{ placement: 'top', overlay: tooltip },
+				{ placement: 'top', overlay: tooltip(tooltipMessage, tooltipClass) },
 				_react2.default.createElement(
 					'button',
-					{ className: 'btn btn-euros btn-primary btn-large', 'data-toggle': 'tooltip', 'data-placement': 'top', title: 'Tooltip on top', onClick: function onClick() {
-							return onPredictClick(modifiedPredictions);
-						}, onLoad: function onLoad() {
-							return tooltipStart();
+					{ className: (0, _classnames2.default)(btnClass), onClick: function onClick() {
+							return predictClick(modifiedPredictions);
 						} },
 					'Save Predictions!'
 				)
