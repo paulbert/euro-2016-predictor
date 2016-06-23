@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import BracketGame from './BracketGame'
 import classnames from 'classnames'
+import { initPredictions } from '../reducers/initStateCalcs.js'
 
 const Bracket = ({ user, fixtures, view, predictionsTemplate, isCurrent }) => {
 	
@@ -17,7 +18,7 @@ const Bracket = ({ user, fixtures, view, predictionsTemplate, isCurrent }) => {
 	
 	const filterToBracket = p => p.matchNum > 0;
 	let bracketPredictions = (user ? (user.predictions.filter(filterToBracket)) : []);
-	let bracketTemplate = predictionsTemplate.filter(filterToBracket);
+	let bracketTemplate = initPredictions.filter(filterToBracket);
 	
 	const bracketReduceTo = (matchNum,prediction) => {
 		if(matchNum === prediction.matchNum) {
