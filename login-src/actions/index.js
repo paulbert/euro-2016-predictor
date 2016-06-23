@@ -38,15 +38,11 @@ export function loginTry(url,loginValues) {
 		
 		dispatch(loginSubmit());
 		
-		if(loginValues.name === '' || ! loginValues.name) {
-			return dispatch(loginReject('Username required'));
-		}
-		
 		if(loginValues.pass === '' || ! loginValues.pass) {
 			return dispatch(loginReject('Password required'));
 		}	
 		
-		if(url === '/signup' && loginValues.pass !== loginValues.rptPass) {
+		if(loginValues.pass !== loginValues.rptPass) {
 			return dispatch(loginReject('Passwords do not match'));
 		}
 		
@@ -57,7 +53,7 @@ export function loginTry(url,loginValues) {
 		})
 		.then(json => {
 			if(json.message === 'Success') {
-				location.reload();
+				location.assign('/');
 			}
 			dispatch(loginReject(json.message));
 			return setTimeout(()=>dispatch(loginReset()),5000);

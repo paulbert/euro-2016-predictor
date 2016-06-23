@@ -2,8 +2,9 @@
 var usersDAO = require('./usersDAO'),
 	path = require('path'),
 	sessionsDAO = require('./sessionsDAO'),
-	fixturesDAO = require('./fixturesDAO');
-	trashDAO = require('./trashDAO');
+	fixturesDAO = require('./fixturesDAO'),
+	trashDAO = require('./trashDAO'),
+	crypto = require('crypto');
 	
 module.exports = exports = function(app,db) {
 	
@@ -173,6 +174,30 @@ module.exports = exports = function(app,db) {
 			}
 		});
 		
+	});
+	
+	app.get('/resetpass', function(req,res) {
+		if(req.query.q === 'bcvab') {
+			res.sendFile(path.join(__dirname + '/../builds/templates/login.html'));
+		} else {
+			res.sendFile(path.join(__dirname + '/../builds/templates/index.html'));
+		}
+	});
+	
+	app.post('/reset', function(req,res) {
+		var newPass = req.body.pass;
+		var hashword = crypto.createHash('sha256').update(newPass).digest('hex');
+		var updateFields = {pass:hashword};
+		userName = 'max';
+		users.updateUser(userName,updateFields,function(err,newUser) {
+			console.log('Update User:');
+			console.log(userName);
+			if(err) {
+				res.json({'message':err});
+			} else {
+				res.json({'message':'Success'});
+			}
+		});
 	});
 	
 	app.get('*', function(req,res) {

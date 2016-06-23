@@ -22,25 +22,7 @@ let LoginForm = ({loginView,loginStatus,invalidMessage,onSwitchClick,onSubmitCli
 	);
 	loginViews.login = () => (
 	
-		<form onSubmit={(e) => { e.preventDefault(); return onSubmitClick('/login',loginValues);}}>
-			<div className="form-group">
-				<label className="control-label">Username:</label>
-				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'name')} />
-			</div>
-			<div className="form-group">
-				<label className="control-label">Password:</label>
-				<input type="password" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'pass')} />
-			</div>
-			<button type="submit" className="btn btn-default">Login</button>
-		</form>
-		
-	);
-	loginViews.signup = () => (
-		<form onSubmit={(e) => { e.preventDefault(); return onSubmitClick('/signup',loginValues);}}>
-			<div className="form-group">
-				<label className="control-label">Username:</label>
-				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'name')} />
-			</div>
+		<form onSubmit={(e) => { e.preventDefault(); return onSubmitClick('/reset',loginValues);}}>
 			<div className="form-group">
 				<label className="control-label">Password:</label>
 				<input type="password" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'pass')} />
@@ -49,32 +31,15 @@ let LoginForm = ({loginView,loginStatus,invalidMessage,onSwitchClick,onSubmitCli
 				<label className="control-label">Repeat Password:</label>
 				<input type="password" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'rptPass')} />
 			</div>
-			<div className="form-group">
-				<label className="control-label">Team Name:</label>
-				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'teamName')} />
-			</div>
-			<div className="form-group">
-				<label className="control-label">Golden Boot Prediction:</label>
-				<input type="text" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'gbPred')} />
-			</div>
-			<div className="form-group">
-				<label className="control-label">League Code:</label>
-				<input type="password" className="form-control" onChange={(e) => loginValues = loginChange(e.target.value,'leagueCode')} />
-			</div>
 			<button type="submit" className="btn btn-default">Login</button>
 		</form>
+		
 	);
 	let ThisView = loginViews[loginView];
 	return ( 
 		<div>
 			<Alert />
 			<ThisView />
-			<div>
-				<a href="" onClick={(e) => { 
-					e.preventDefault(); 
-					return onSwitchClick(switchTo);
-				}}>{thisMessage}</a>
-			</div>
 		</div>
 	);
 };

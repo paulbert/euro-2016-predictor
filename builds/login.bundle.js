@@ -56,19 +56,19 @@
 
 	var _redux = __webpack_require__(175);
 
-	var _index = __webpack_require__(317);
+	var _index = __webpack_require__(582);
 
 	var _index2 = _interopRequireDefault(_index);
 
-	var _App = __webpack_require__(319);
+	var _App = __webpack_require__(584);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _reduxThunk = __webpack_require__(316);
+	var _reduxThunk = __webpack_require__(581);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-	var _reduxLogger = __webpack_require__(323);
+	var _reduxLogger = __webpack_require__(588);
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
@@ -32498,7 +32498,272 @@
 /* 313 */,
 /* 314 */,
 /* 315 */,
-/* 316 */
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */,
+/* 460 */,
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */,
+/* 477 */,
+/* 478 */,
+/* 479 */,
+/* 480 */,
+/* 481 */,
+/* 482 */,
+/* 483 */,
+/* 484 */,
+/* 485 */,
+/* 486 */,
+/* 487 */,
+/* 488 */,
+/* 489 */,
+/* 490 */,
+/* 491 */,
+/* 492 */,
+/* 493 */,
+/* 494 */,
+/* 495 */,
+/* 496 */,
+/* 497 */,
+/* 498 */,
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -32526,7 +32791,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 317 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32537,7 +32802,7 @@
 
 	var _redux = __webpack_require__(175);
 
-	var _actions = __webpack_require__(318);
+	var _actions = __webpack_require__(583);
 
 	var initialState = {
 		loginStatus: '',
@@ -32592,7 +32857,7 @@
 	exports.default = loginApp;
 
 /***/ },
-/* 318 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32649,15 +32914,11 @@
 
 			dispatch(loginSubmit());
 
-			if (loginValues.name === '' || !loginValues.name) {
-				return dispatch(loginReject('Username required'));
-			}
-
 			if (loginValues.pass === '' || !loginValues.pass) {
 				return dispatch(loginReject('Password required'));
 			}
 
-			if (url === '/signup' && loginValues.pass !== loginValues.rptPass) {
+			if (loginValues.pass !== loginValues.rptPass) {
 				return dispatch(loginReject('Passwords do not match'));
 			}
 
@@ -32667,7 +32928,7 @@
 				data: JSON.stringify(loginValues)
 			}).then(function (json) {
 				if (json.message === 'Success') {
-					location.reload();
+					location.assign('/');
 				}
 				dispatch(loginReject(json.message));
 				return setTimeout(function () {
@@ -32678,7 +32939,7 @@
 	}
 
 /***/ },
-/* 319 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32691,11 +32952,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Spinner = __webpack_require__(320);
+	var _Spinner = __webpack_require__(585);
 
 	var _Spinner2 = _interopRequireDefault(_Spinner);
 
-	var _LoginContain = __webpack_require__(321);
+	var _LoginContain = __webpack_require__(586);
 
 	var _LoginContain2 = _interopRequireDefault(_LoginContain);
 
@@ -32713,7 +32974,7 @@
 	exports.default = App;
 
 /***/ },
-/* 320 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32739,7 +33000,7 @@
 	exports.default = Spinner;
 
 /***/ },
-/* 321 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32750,11 +33011,11 @@
 
 	var _reactRedux = __webpack_require__(168);
 
-	var _LoginForm = __webpack_require__(322);
+	var _LoginForm = __webpack_require__(587);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
-	var _actions = __webpack_require__(318);
+	var _actions = __webpack_require__(583);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32782,7 +33043,7 @@
 	exports.default = LoginContain;
 
 /***/ },
-/* 322 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32835,57 +33096,8 @@
 			return _react2.default.createElement(
 				'form',
 				{ onSubmit: function onSubmit(e) {
-						e.preventDefault();return onSubmitClick('/login', loginValues);
+						e.preventDefault();return onSubmitClick('/reset', loginValues);
 					} },
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Username:'
-					),
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'name');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Password:'
-					),
-					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'pass');
-						} })
-				),
-				_react2.default.createElement(
-					'button',
-					{ type: 'submit', className: 'btn btn-default' },
-					'Login'
-				)
-			);
-		};
-		loginViews.signup = function () {
-			return _react2.default.createElement(
-				'form',
-				{ onSubmit: function onSubmit(e) {
-						e.preventDefault();return onSubmitClick('/signup', loginValues);
-					} },
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Username:'
-					),
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'name');
-						} })
-				),
 				_react2.default.createElement(
 					'div',
 					{ className: 'form-group' },
@@ -32911,42 +33123,6 @@
 						} })
 				),
 				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Team Name:'
-					),
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'teamName');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'Golden Boot Prediction:'
-					),
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'gbPred');
-						} })
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'form-group' },
-					_react2.default.createElement(
-						'label',
-						{ className: 'control-label' },
-						'League Code:'
-					),
-					_react2.default.createElement('input', { type: 'password', className: 'form-control', onChange: function onChange(e) {
-							return loginValues = loginChange(e.target.value, 'leagueCode');
-						} })
-				),
-				_react2.default.createElement(
 					'button',
 					{ type: 'submit', className: 'btn btn-default' },
 					'Login'
@@ -32958,19 +33134,7 @@
 			'div',
 			null,
 			_react2.default.createElement(Alert, null),
-			_react2.default.createElement(ThisView, null),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					'a',
-					{ href: '', onClick: function onClick(e) {
-							e.preventDefault();
-							return onSwitchClick(switchTo);
-						} },
-					thisMessage
-				)
-			)
+			_react2.default.createElement(ThisView, null)
 		);
 	};
 
@@ -32979,7 +33143,7 @@
 	exports.default = LoginForm;
 
 /***/ },
-/* 323 */
+/* 588 */
 /***/ function(module, exports) {
 
 	"use strict";
