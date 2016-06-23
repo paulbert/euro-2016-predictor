@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import TeamContain from '../containers/TeamContain'
 import BracketTier from './BracketTier'
 import classnames from 'classnames'
+import BracketWinner from './BracketWinner'
 
 const BracketGame = ({ bracketPredictions, bracketForm, matchNum }) => {
 	
@@ -31,12 +32,15 @@ const BracketGame = ({ bracketPredictions, bracketForm, matchNum }) => {
 			<div className="bracket-team">
 				<TeamContain team={thisPrediction ? thisPrediction.homeTeamName : thisGame.homeTeamName} />
 				<span className="score">{homeTeamScore}</span>
+				<span className="penalty-mark">{thisPrediction.penaltyWinner === 'home' ? '*':''}</span>
 			</div>
 			<div className="bracket-team">
 				<TeamContain team={thisPrediction ? thisPrediction.awayTeamName : thisGame.awayTeamName} />
 				<span className="score">{awayTeamScore}</span>
+				<span className="penalty-mark">{thisPrediction.penaltyWinner === 'away' ? '*':''}</span>
 			</div>
 		</span>
+		<BracketWinner bracketPredictions={bracketPredictions} matchNum={matchNum} />
 		<BracketTier bracketPredictions={bracketPredictions} bracketForm={bracketForm} matchNumOne={thisGame.homeTeamIs} matchNumTwo={thisGame.awayTeamIs} />
 	</div>
 )}

@@ -27,6 +27,8 @@ const newPredictionState = (state,action) => {
 		newScore.prediction = (typeof newScore.prediction === 'undefined') ? {} : newScore.prediction;
 		newScore.prediction[action.team] = action.score;
 		if(newScore.matchNum) {
+			newScore.inputPrediction = (typeof newScore.inputPrediction === 'undefined') ? {} : newScore.inputPrediction;
+			newScore.inputPrediction[action.bracketTeam] = action.score !== '';
 			newScore.bracketPrediction = (typeof newScore.bracketPrediction === 'undefined') ? {} : newScore.bracketPrediction;
 			newScore.bracketPrediction[action.bracketTeam] = action.score;
 			newScore = resetScore(newScore);
@@ -159,7 +161,7 @@ const userUpdatePrediction = (state,users,thisUser) => {
 		
 		if(thisPrediction !== 0) {
 			let userBracketPrediction = Object.assign({},state.bracketPrediction,thisPrediction.bracketPrediction);
-			return Object.assign({},state,{userHomeTeam:thisPrediction.homeTeamName,userAwayTeam:thisPrediction.awayTeamName,userBracketPrediction:userBracketPrediction});
+			return Object.assign({},state,{userHomeTeam:thisPrediction.homeTeamName,userAwayTeam:thisPrediction.awayTeamName,userBracketPrediction:userBracketPrediction,userPenaltyWinner:thisPrediction.userPenaltyWinner});
 		}
 	}
 	return state;

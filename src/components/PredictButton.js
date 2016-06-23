@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
 import classnames from 'classnames'
+import { Tooltip } from 'react-bootstrap'
+import { OverlayTrigger } from 'react-bootstrap'
 
 const PredictButton = ({ predictions, isCurrent, thisUser, onPredictClick, user }) => {
 	
@@ -28,11 +30,18 @@ const PredictButton = ({ predictions, isCurrent, thisUser, onPredictClick, user 
 		}
 		return p;
 	};
+	
+	const tooltip = (
+		<Tooltip id="tooltip"><strong>Holy guacamole!</strong> Check this info.</Tooltip>
+	);
+	
 	let modifiedPredictions = predictions.map(checkPredictions);
 	
 	return (
 		<span className={buttonClasses}>
-			<button className="btn btn-euros btn-primary btn-large" onClick={() => onPredictClick(modifiedPredictions)}>Save Predictions!</button>
+			<OverlayTrigger placement="top" overlay={tooltip}>
+			<button className="btn btn-euros btn-primary btn-large" data-toggle="tooltip" data-placement="top" title="Tooltip on top" onClick={() => onPredictClick(modifiedPredictions)} onLoad={() => tooltipStart()}>Save Predictions!</button>
+			</OverlayTrigger>
 			<span className={alertClasses}><span className="glyphicon glyphicon-check" aria-hidden="true"></span><span>Success</span></span>
 		</span>
 	);

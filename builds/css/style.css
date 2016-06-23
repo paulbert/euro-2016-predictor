@@ -275,11 +275,15 @@ BRACKET STYLES BELOW
 	height:35px;
 }
 
-.bracket-team .score {
+.bracket-team .score, .penalty-mark {
 	position:absolute;
 	top:50%;
 	right:10px;
 	transform:translate(0,-50%);
+}
+.bracket-team .penalty-mark {
+	right:0px;
+	font-size:1.5em;
 }
 
 .fixture-list div {
@@ -301,4 +305,60 @@ BRACKET STYLES BELOW
 
 .penalty-checkmark.active {
 	color:#00568f;
+}
+
+.winner {
+	position:relative;
+	text-align:center;
+}
+/*
+.champ-name::after {
+	content:'';
+	border-top: 4px #00568f solid;
+	border-left: 4px #00568f solid;
+	border-right: 4px #00568f solid;
+	border-radius:5px 5px 0 0;
+	-webkit-border-radius:5px 5px 0 0;
+	-moz-border-radius:5px 5px 0 0;
+	width:100%;
+}
+
+.winner-bottom {
+	border-bottom: 4px #00568f solid;
+	border-left: 4px #00568f solid;
+	border-right: 4px #00568f solid;
+	border-radius:0 0 5px 5px;
+	-webkit-border-radius:0 0 5px 5px;
+	-moz-border-radius:0 0 5px 5px;
+}*/
+
+.winner .flag-contain {
+	position:relative;
+	height:30px;
+	width:70px;
+	display:inline-block;
+}
+.winner .flag-contain img {
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+}
+
+.winner .champ-name {
+	margin-left:5px;
+	font-size:2em;
+}
+
+.winner-contain {
+	position:absolute;
+	top:50%;
+	transform:translate(0,-200px);
+	height:100px;
+	width:200px;
+	border: 4px #00568f solid;
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	text-align:center;
 }

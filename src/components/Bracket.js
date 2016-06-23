@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import BracketGame from './BracketGame'
+import BracketWinner from './BracketWinner'
 import classnames from 'classnames'
 import { initPredictions } from '../reducers/initStateCalcs.js'
 
@@ -72,6 +73,7 @@ const Bracket = ({ user, fixtures, view, predictionsTemplate, isCurrent }) => {
 	
 	return (
 	<div className={classnames(colClasses)}>
+		<BracketWinner bracketPredictions={bracketPredictions} />
 		<div className="bracket">
 			<BracketGame bracketPredictions={bracketPredictions} bracketForm={bracketForm} matchNum={15} />
 		</div>

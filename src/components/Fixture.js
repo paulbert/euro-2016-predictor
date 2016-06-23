@@ -31,21 +31,35 @@ const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, res
 	}
 	let iconClass = classnames(iconClassObj);
 	let predictionClass = { 'col-xs-1':true,'hidden':(isCurrent && thisUser === '') };
-	let checkmarkClass = { 'hidden':!PKs, 'glyphicon':true, 'glyphicon-ok': true, 'penalty-checkmark':true };
+	let checkmarkClass = { 'glyphicon':true, 'glyphicon-ok': true, 'penalty-checkmark':true };
 	let homeCheckmarkClass = Object.assign({},checkmarkClass,{'active':homeTeamName === prediction.winner});
 	let awayCheckmarkClass = Object.assign({},checkmarkClass,{'active':awayTeamName === prediction.winner});
+	
+	let inputtedValues = prediction.inputPrediction;
+	
+	const makeCheckClassName = (checkmarkClass) => {
+		let hideCheck = false;
+		if(typeof inputtedValues === 'undefined') {
+			hideCheck = true;
+		} else {
+			hideCheck = (!inputtedValues.home || !inputtedValues.away || !PKs);
+		}
+		let newCheckmarkClass = Object.assign({},checkmarkClass,{'hidden':hideCheck});
+		return classnames(newCheckmarkClass);
+	}
 	
 	return (
 		<tr>
 			<td className="col-xs-1">{dateString}</td>
 			<td className="col-xs-1"><TeamContain team={homeTeamName} /></td>
-			<td className="col-xs-2"><div>{homeTeamName}<span className={classnames(homeCheckmarkClass)} onClick={()=>onPenaltyClick(f_id,'home')}></span></div></td>
+			<td className="col-xs-2"><div>{homeTeamName}<span className={makeCheckClassName(homeCheckmarkClass)} onClick={()=>onPenaltyClick(f_id,'home')}></span></div></td>
 			<td className={classnames(predictionClass)}><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,homeTeamName,e.target.value,'home')}/></td>
 			<td className="col-xs-1"><TeamContain team={awayTeamName} /></td>
-			<td className="col-xs-2"><div>{awayTeamName}<span className={classnames(awayCheckmarkClass)} onClick={()=>onPenaltyClick(f_id,'away')}></span></div></td>
+			<td className="col-xs-2"><div>{awayTeamName}<span className={makeCheckClassName(awayCheckmarkClass)} onClick={()=>onPenaltyClick(f_id,'away')}></span></div></td>
 			<td className={classnames(predictionClass)}><input className={inputClass} type="number" min="0" step="1" onChange={(e) => onScoreChange(f_id,awayTeamName,e.target.value,'away')}/></td>
 			<td className={classnames(Object.assign({},predictionClass,{'text-center':true}))}>
-				{savedPrediction.home || savedPrediction[homeTeamName]}-{savedPrediction.away || savedPrediction[awayTeamName]}
+				{savedPrediction.penaltyWinner === 'home' ? '*' : ''}{savedPrediction.home || savedPrediction[homeTeamName]}-
+				{savedPrediction.away || savedPrediction[awayTeamName]}{savedPrediction.penaltyWinner === 'away' ? '*' : ''}
 				<span className={iconClass} aria-hidden="true"></span>
 			</td>
 			<td className="col-xs-1 text-center">{result.goalsHomeTeam}-{result.goalsAwayTeam}</td>
