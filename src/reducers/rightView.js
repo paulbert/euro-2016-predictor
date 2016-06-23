@@ -1,6 +1,6 @@
 
 
-const initView = {'type':'groups','actual':false,'mobile':'fixtures','menu':false};
+const initView = {'type':'bracket','actual':false,'mobile':'fixtures','menu':false};
 
 const rightView = (state = initView,action) => {
 	switch(action.type) {

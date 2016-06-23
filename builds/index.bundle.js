@@ -35107,7 +35107,7 @@
 	});
 
 
-	var initView = { 'type': 'groups', 'actual': false, 'mobile': 'fixtures', 'menu': false };
+	var initView = { 'type': 'bracket', 'actual': false, 'mobile': 'fixtures', 'menu': false };
 
 	var rightView = function rightView() {
 		var state = arguments.length <= 0 || arguments[0] === undefined ? initView : arguments[0];
@@ -35134,7 +35134,7 @@
 	});
 
 	var matchFilter = function matchFilter() {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? 'all' : arguments[0];
+		var state = arguments.length <= 0 || arguments[0] === undefined ? 'bracket' : arguments[0];
 		var action = arguments[1];
 
 		switch (action.type) {
@@ -41984,6 +41984,8 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
+	var _initStateCalcs = __webpack_require__(196);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Bracket = function Bracket(_ref) {
@@ -42009,7 +42011,7 @@
 			return p.matchNum > 0;
 		};
 		var bracketPredictions = user ? user.predictions.filter(filterToBracket) : [];
-		var bracketTemplate = predictionsTemplate.filter(filterToBracket);
+		var bracketTemplate = _initStateCalcs.initPredictions.filter(filterToBracket);
 
 		var bracketReduceTo = function bracketReduceTo(matchNum, prediction) {
 			if (matchNum === prediction.matchNum) {
