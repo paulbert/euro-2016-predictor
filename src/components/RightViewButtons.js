@@ -16,6 +16,9 @@ const RightViewButtons = ({ view, onButtonClick }) => {
 				<button className="btn btn-euros btn-primary" onClick={() => onButtonClick({type:'groups','actual':false})}>View Groups</button>
 			</div>
 			<div className="btn-group">
+				<button className="btn btn-euros btn-primary" onClick={() => onButtonClick({type:'bracket','actual':false})}>View Bracket</button>
+			</div>
+			<div className="btn-group">
 				<button className="btn btn-euros btn-primary" onClick={() => onButtonClick({type:'scores'})}>View Scores</button>
 			</div>
 		</div>

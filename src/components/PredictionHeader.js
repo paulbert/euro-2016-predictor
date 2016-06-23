@@ -21,6 +21,9 @@ const PredictionHeader = ({ user, isCurrent, mobileView, thisUser, onFilterClick
 		<div className="filter-label"><label>Filter Matches:</label></div>
 		<div className="btn-group btn-group-justified btn-group-filters" role="group">
 			<div className="btn-group">
+				<button className="btn btn-euros btn-primary" onClick={() => onFilterClick('bracket')}>Bracket</button>
+			</div>
+			<div className="btn-group">
 				<button className="btn btn-euros btn-primary" onClick={() => onFilterClick('all')}>All</button>
 			</div>
 			{groupButtons}

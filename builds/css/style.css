@@ -166,3 +166,139 @@ h3 {
 .alert-settings {
 	margin-top:10px;
 }
+
+
+/*
+BRACKET STYLES BELOW
+*/
+.bracket {
+	position:relative;
+	margin-left:75%;
+}
+
+.branch {
+	position:relative;
+	margin-left:-150px;
+}
+
+.branch::before {
+	content:'';
+	width:35px;
+	border-top:1px solid #808080;
+	position:absolute;
+	left:115px;
+	top:50%;
+	margin-top:-0.5px;
+}
+
+.branch .game {
+	position:relative;
+	min-height:95px;
+}
+
+.branch .game .tree-label {
+	left:0;
+}
+
+.game .tree-label {
+	width:100px;
+	display:block;
+	padding:5px 10px;
+	text-align:center;
+	position:absolute;
+	top:50%;
+	transform:translate(0,-50%);
+	border:1px solid #808080;
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+}
+
+.game::before {
+	content:'';
+	height:100%;
+	border-left:1px solid #808080;
+	position:absolute;
+	left:114px;
+}
+
+.branch .game::after {
+	content:'';
+	width:15px;
+	border-top:1px solid #808080;
+	position:absolute;
+	left:100px;
+	top:50%;
+}
+
+.game:first-child::before {
+	height:50%;
+	top:50%;
+}
+
+.game:first-child::after {
+	
+}
+
+.game:last-child::before {
+	height:50%;
+}
+
+.game:last-child::after {
+	border-top:none;
+	border-bottom:1px solid #808080;
+}
+
+.game:only-child::before {
+	display:none;
+}
+
+.game:only-child::after {
+	width:25px;
+	height:0;
+	margin-top:0.5px;
+	border-radius:0;
+}
+
+.bracket-team {
+	position:relative;
+	width:100%;
+	height:35px;
+	display:block;
+}
+
+.bracket-team img {
+	position:absolute;
+	top:50%;
+	left:0;
+	transform:translate(0,-50%);
+	height:35px;
+}
+
+.bracket-team .score {
+	position:absolute;
+	top:50%;
+	right:10px;
+	transform:translate(0,-50%);
+}
+
+.fixture-list div {
+	position:relative;
+}
+
+.penalty-checkmark {
+	border: 2px #00568f solid;
+	position:absolute;
+	top:0;
+	right:0;
+	padding:3px;
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	color:#FFFFFF;
+	cursor:pointer;
+}
+
+.penalty-checkmark.active {
+	color:#00568f;
+}

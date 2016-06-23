@@ -2,6 +2,7 @@ import React from 'react'
 import FixtureContain from '../containers/FixtureContain'
 
 import GroupsContain from '../containers/GroupsContain'
+import BracketContain from '../containers/BracketContain'
 import UserContain from '../containers/UserContain'
 import PredictionHeaderContain from '../containers/PredictionHeaderContain'
 import RightViewButtonContain from '../containers/RightViewButtonContain'
@@ -21,6 +22,7 @@ const Home = () => (
 			<FixtureContain />
 			<UserContain />
 			<GroupsContain />
+			<BracketContain />
 		</div>
 	</main>
 

@@ -99,6 +99,7 @@ const emptyTeam = {'P':0,'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0};
 // group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
 const calcGroup = (predictions,team,groupArray) => {
 	return predictions.reduce((previous,current) => {
+		if(!current.matchNum) {
 		let scores = [-1,-1];
 		let activeGame = false;
 		let wrongOpponent = false;
@@ -132,6 +133,7 @@ const calcGroup = (predictions,team,groupArray) => {
 			newFields.Pts = (tempState.W * 3) + tempState.D;
 			newFields.P = tempState.W + tempState.D + tempState.L;
 			return Object.assign({},tempState,newFields);
+		}
 		}
 		return previous;
 	},Object.assign({},team,emptyTeam));

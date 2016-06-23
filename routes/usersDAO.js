@@ -60,20 +60,23 @@ function usersDAO (db) {
 			for(key in p) {
 				var score = parseFloat(p[key]);
 				if(Number.isInteger(score) && score >= 0) {
-					/*var p_date = val.p_id.split('|')[1].split('-');
+					var p_date = val.p_id.split('|')[1].split('-');
 					var year = parseInt(p_date[0]),
 						month = parseInt(p_date[1]) - 1,
-						day = parseInt(p_date[2]);*/
-					var gameDate = new Date(Date.UTC(2016,5,15,13));
-					if(new Date(Date.now()) > gameDate) {
+						day = parseInt(p_date[2]);
+					var gameDate = new Date(Date.UTC(year,month,day,13)),
+						cutoffDate = new Date(Date.UTC(2016,5,25,13)),
+						rightNow = new Date(Date.now());
+					if(rightNow > gameDate || rightNow > cutoffDate) {
 						valid = false;
 					}
 				} else {
 					valid =  false;
 				}
 			}
-			console.log(gameDate);
-			console.log(valid);
+			if(!p) {
+				valid = false;
+			}
 			return valid;
 		}
 		
@@ -96,14 +99,19 @@ function usersDAO (db) {
 				oldPredictions = dbUser.predictions.filter(oldPredictionsToKeep);
 				newPredictions = [].concat(oldPredictions,validPredictions);
 				newUser = Object.assign({},dbUser,{predictions:newPredictions});
-				update(newUser,getUpdatedPredictions);
+				console.log(newUser);
+				updatePredictions(newUser,getUpdatedPredictions);
 			}
 		}
 		
 		function oldPredictionsToKeep(val,ind,arr) {
 			function checkPrediction(previous,current) {
 				if(previous) {
-					return current.p_id !== val.p_id;
+					var matchNumDiff = true;
+					if(val.matchNum) {
+						matchNumDiff = current.matchNum !== val.matchNum;
+					}						
+					return current.p_id !== val.p_id || matchNumDiff;
 				}
 				return previous;
 			}
@@ -120,6 +128,10 @@ function usersDAO (db) {
 		
 		get({_id:user},checkPredictions);
 		
+	}
+	
+	function updatePredictions(user,callback) {
+		db.collection(collection).update({'_id':user._id},user,callback);
 	}
 	
 	function update(userId,updateFields,callback) {

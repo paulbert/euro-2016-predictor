@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import FixtureList from '../components/FixtureList'
 import { changePrediction } from '../actions'
 import { initData } from '../actions'
+import { assignPenaltyWinner } from '../actions'
 
 const mapStateToProps = (state) => {
 	return {
@@ -21,11 +22,14 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	dispatch(initData());
 	return {
-		onScoreChange: (id,team,score) => {
-			dispatch(changePrediction(id,team,score));
+		onScoreChange: (id,team,score,bracketTeam) => {
+			dispatch(changePrediction(id,team,score,bracketTeam));
 		},
 		onLoad: () => {
 			dispatch(getPredictions());
+		},
+		onPenaltyClick: (id,bracketTeam) => {
+			dispatch(assignPenaltyWinner(id,bracketTeam));
 		}
 	}
 }

@@ -6,7 +6,10 @@ const mapStateToProps = (state) => {
 	return {
 		predictions:state.predictions,
 		isCurrent:(state.activeUserView === state.thisUser),
-		thisUser: state.thisUser
+		thisUser: state.thisUser,
+		user:state.users.filter((user) => {
+			return user._id === state.thisUser
+		})[0]
 	}
 };
 

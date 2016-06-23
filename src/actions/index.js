@@ -11,12 +11,21 @@ export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const GETTING_USERS = 'GETTING_USERS';
 export const SWITCH_USERS = 'SWITCH_USERS';
 
-export const changePrediction = (id,team,score) => {
+export const changePrediction = (id,team,score,bracketTeam) => {
 	return {
 		type: CHANGE_PREDICTION,
 		id,
 		team,
-		score
+		score,
+		bracketTeam
+	}
+};
+
+export const assignPenaltyWinner = (id,bracketTeam) => {
+	return {
+		type: 'ASSIGN_PENALTY_WINNER',
+		id,
+		bracketTeam
 	}
 };
 
