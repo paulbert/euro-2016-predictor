@@ -156,13 +156,18 @@ function usersDAO (db) {
 	
 	function scoreAndGetUsers(fixtures,callback) {
 		
-		var breakDates = [new Date(2016,5,23),new Date(2016,5,27),new Date(2016,6,4),new Date(2016,6,8)];
+		var breakDates = [new Date(Date.UTC(2016,5,23)),new Date(Date.UTC(2016,5,29)),new Date(Date.UTC(2016,6,4)),new Date(Date.UTC(2016,6,8))];
 		var pointsArray = [2,4,8,12];
 		
-		function reformatFixtureResult(fixture) {
+		function reformatFixtureResult(fixture,penalties) {
 			var newResult = {};
-			newResult[fixture.homeTeamName] = fixture.result.goalsHomeTeam.toString();
-			newResult[fixture.awayTeamName] = fixture.result.goalsAwayTeam.toString();
+			var goalsResult = fixture.result;
+			if(penalties) {
+				goalsResult = fixture.result.penaltyShootout;
+				console.log(goalsResult);
+			}
+			newResult[fixture.homeTeamName] = goalsResult.goalsHomeTeam.toString();
+			newResult[fixture.awayTeamName] = goalsResult.goalsAwayTeam.toString();
 			return newResult;
 		}
 		
@@ -176,25 +181,85 @@ function usersDAO (db) {
 			return winner;
 		}
 		
+		function checkForBonus(fixture,prediction,winner) {
+			if(prediction[winner]) {
+				var bonus = true,
+					otherTeamFixture = '',
+					otherTeamPrediction = '',
+					team;
+				
+				for(team in fixture) {
+					if(team !== winner) {
+						otherTeamFixture = team;
+						console.log('Other team fixture ' + team);
+					}
+				}
+				
+				for(team in prediction) {
+					if(team !== winner) {
+						otherTeamPrediction = team;
+						console.log('Other team prediction ' + team);
+					}
+				}
+				
+				if(fixture[winner] !== prediction[winner]) {
+					bonus = false;
+				} else if(fixture[otherTeamFixture] !== prediction[otherTeamPrediction]) {
+					bonus = false;
+				}
+				return bonus;
+			}
+			return false;
+		}
+		
 		function scoreUser(user) {
 			function scorePrediction(prediction) {
-				var fixtureFilter = fixtures.filter(function (fixture) {return fixture.f_id === prediction.p_id});
+				var fixtureFilter = fixtures.filter(function (fixture) {
+					return fixture.f_id === prediction.p_id || fixture.date === prediction.date;
+				});
 				function getValue(points,date,ind) {
-					if(date < fixture.date) {
+					if(date < new Date(fixture.date)) {
 						return pointsArray[ind]
 					}
 					return points
 				}
 				if(fixtureFilter.length === 1) {
 					var fixture = fixtureFilter[0];
+					console.log('Calculating ' + fixture.homeTeamName + ' - ' + fixture.awayTeamName + '...');
+					console.log('Fixture status: ' + fixture.status);
 					if(fixture.status === 'FINISHED') {
 						var fixtureValue = breakDates.reduce(getValue,1),
-							fixtureResult = reformatFixtureResult(fixture);
+							fixtureResult = reformatFixtureResult(fixture,false);
 						var realWinner = getWinner(fixtureResult),
+							predictWinner = '';
+						
+						if(fixtureValue === 1) {
 							predictWinner = getWinner(prediction.prediction);
+						} else {
+							predictWinner = prediction.winner;
+							if(realWinner === 'draw') {
+								var penaltiesResult = reformatFixtureResult(fixture,true);
+								realWinner = getWinner(penaltiesResult);
+							}
+						}
+						
+						console.log('Predicted winner: ' + predictWinner + ' . . . ' + 'Real winner: ' + realWinner);
+						
+						console.log('Prediction: ');
+						console.log(prediction.prediction);
+						console.log('Result: ');
+						console.log(fixtureResult);
 						
 						var points = realWinner === predictWinner ? fixtureValue : 0;
-						var bonus = _.isEqual(fixtureResult,prediction.prediction);
+						var bonus = false;
+						console.log('Points: ' + points);
+						if(fixtureValue === 1) {
+							bonus = _.isEqual(fixtureResult,prediction.prediction);
+						} else {
+							bonus = checkForBonus(fixtureResult,prediction.prediction,realWinner);
+							console.log(bonus);
+						}
+						console.log('Bonus: ' + bonus);
 						points = bonus ? points * 2 : points;
 						
 						return Object.assign({},prediction,{points:points,bonus:bonus});

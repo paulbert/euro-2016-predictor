@@ -22273,7 +22273,9 @@
 
 	var initTeams = exports.initTeams = _teams2.default.teams;
 	var initFixtures = exports.initFixtures = fixturesWithId;
-	var initPredictions = exports.initPredictions = [].concat(makeBlankPrediction(fixturesWithId), reformatBracket(_bracket2.default));
+	var initPredictions = exports.initPredictions = function initPredictions() {
+		return [].concat(makeBlankPrediction(fixturesWithId), reformatBracket(_bracket2.default));
+	};
 	var initGroups = exports.initGroups = formatGroups(_groups2.default);
 
 	console.log(initGroups);
@@ -23929,7 +23931,7 @@
 	};
 
 	var predictions = function predictions() {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? _initStateCalcs.initPredictions : arguments[0];
+		var state = arguments.length <= 0 || arguments[0] === undefined ? (0, _initStateCalcs.initPredictions)() : arguments[0];
 		var action = arguments[1];
 
 		switch (action.type) {
@@ -41243,7 +41245,8 @@
 
 		//onLoad();
 
-		var hideOtherUsers = !isCurrent && new Date(Date.now()) < new Date(Date.UTC(2016, 5, 25, 13));
+		//let hideOtherUsers = !isCurrent && new Date(Date.now()) < new Date(Date.UTC(2016,5,25,13));
+		var hideOtherUsers = !isCurrent && new Date(Date.UTC(2016, 5, 25, 13)) < new Date(Date.UTC(2016, 5, 25, 13));
 
 		var setFixtureLine = function setFixtureLine(fixture) {
 			fixture.key = fixture.f_id || fixture.p_id;
@@ -41262,7 +41265,7 @@
 			};
 			var prediction = predictions.reduce(reduceToPrediction, defaultPrediction);
 			var savedPrediction = user ? user.predictions.reduce(reduceToPrediction, defaultPrediction) : {};
-			return _react2.default.createElement(_Fixture2.default, _extends({ key: fixture.key }, fixture, { PKs: fixture.PKs, prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange, isCurrent: isCurrent, thisUser: thisUser, onPenaltyClick: onPenaltyClick }));
+			return _react2.default.createElement(_Fixture2.default, _extends({ key: fixture.key }, fixture, { PKs: fixture.PKs, prediction: prediction, savedPrediction: savedPrediction, onScoreChange: onScoreChange, isCurrent: isCurrent, thisUser: thisUser, realFixture: fixture.realFixture, onPenaltyClick: onPenaltyClick }));
 		};
 
 		var fixtureFilter = function fixtureFilter(fixture) {
@@ -41317,6 +41320,16 @@
 			return fixture;
 		};
 
+		var bracketAddRealFixture = function bracketAddRealFixture(bracketFixture) {
+			var matchFixture = function matchFixture(fixture) {
+				return fixture.date === bracketFixture.date;
+			};
+
+			var realFixture = fixtures.filter(matchFixture)[0];
+
+			return Object.assign({}, bracketFixture, { realFixture: realFixture });
+		};
+
 		var unsignedUser = isCurrent && thisUser === '';
 		var predictionsClass = { 'text-center': true, 'hidden': unsignedUser };
 		var hideThisMobile = view.mobile !== 'fixtures';
@@ -41365,7 +41378,7 @@
 					'tbody',
 					null,
 					fixtures.filter(fixtureFilter).map(setFixtureLine),
-					predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(setFixtureLine)
+					predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(bracketAddRealFixture).map(setFixtureLine)
 				)
 			)
 		);
@@ -41428,6 +41441,7 @@
 		var onScoreChange = _ref.onScoreChange;
 		var isCurrent = _ref.isCurrent;
 		var thisUser = _ref.thisUser;
+		var realFixture = _ref.realFixture;
 		var onPenaltyClick = _ref.onPenaltyClick;
 
 		var reformatDate = new Date(date);
@@ -41437,10 +41451,39 @@
 
 		//today.setHours( today.getHours() );
 
-		//let today = new Date(2016,5,15,9,1);
+		//today = new Date(2016,5,25,9,1);
+
+		var penaltyWinner = '',
+		    goalsHomeTeam = 0,
+		    goalsAwayTeam = 0,
+		    homeTeamNoMatch = false,
+		    awayTeamNoMatch = false;
+
+		if (realFixture) {
+			if (realFixture.result.penaltyShootout) {
+				penaltyWinner = realFixture.result.penaltyShootout.goalsHomeTeam > realFixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+			}
+			if (realFixture.homeTeamName === homeTeamName || realFixture.awayTeamName === awayTeamName || realFixture.homeTeamName !== awayTeamName && realFixture.awayTeamName !== homeTeamName) {
+				goalsHomeTeam = realFixture.result.goalsHomeTeam;
+				goalsAwayTeam = realFixture.result.goalsAwayTeam;
+				homeTeamNoMatch = realFixture.homeTeamName !== homeTeamName;
+				awayTeamNoMatch = realFixture.awayTeamName !== awayTeamName;
+			} else {
+				goalsAwayTeam = realFixture.result.goalsHomeTeam;
+				goalsHomeTeam = realFixture.result.goalsAwayTeam;
+				awayTeamNoMatch = realFixture.homeTeamName !== awayTeamName;
+				homeTeamNoMatch = realFixture.awayTeamName !== homeTeamName;
+				if (penaltyWinner) {
+					penaltyWinner = penaltyWinner === 'home' ? 'away' : 'home';
+				}
+			}
+		} else {
+			goalsHomeTeam = result.goalsHomeTeam;
+			goalsAwayTeam = result.goalsAwayTeam;
+		}
 
 		var inputClassObj = { 'score-box': true, 'hidden': false };
-		inputClassObj.hidden = !isCurrent || Date.UTC(2016, 5, 23, 13) > reformatDate || today > Date.UTC(2016, 5, 25, 13);
+		inputClassObj.hidden = !isCurrent || new Date(Date.UTC(2016, 5, 23, 13)) > reformatDate || today > new Date(Date.UTC(2016, 5, 25, 13));
 		var inputClass = (0, _classnames2.default)(inputClassObj);
 
 		var iconClassObj = { 'glyphicon': true, 'glyphicon-ok': false, 'glyphicon-remove': false, 'glyphicon-star': false, 'hidden': true };
@@ -41544,9 +41587,19 @@
 			_react2.default.createElement(
 				'td',
 				{ className: 'col-xs-1 text-center' },
-				result.goalsHomeTeam,
+				_react2.default.createElement(
+					'span',
+					{ className: (0, _classnames2.default)({ 'text-danger': homeTeamNoMatch }) },
+					penaltyWinner === 'home' ? '*' : '',
+					goalsHomeTeam
+				),
 				'-',
-				result.goalsAwayTeam
+				_react2.default.createElement(
+					'span',
+					{ className: (0, _classnames2.default)({ 'text-danger': awayTeamNoMatch }) },
+					goalsAwayTeam,
+					penaltyWinner === 'away' ? '*' : ''
+				)
 			)
 		);
 	};
@@ -42031,25 +42084,69 @@
 		var filterToBracket = function filterToBracket(p) {
 			return p.matchNum > 0;
 		};
-		var bracketPredictions = user ? user.predictions.filter(filterToBracket) : [];
-		var bracketTemplate = _initStateCalcs.initPredictions.filter(filterToBracket);
+		var assignWinner = function assignWinner(fixture) {
+			var winner = '',
+			    winnerObj = {},
+			    penaltyWinner = '';
+			if (fixture.status === 'FINISHED') {
+				winner = fixture.result.goalsHomeTeam > fixture.result.goalsAwayTeam ? fixture.homeTeamName : fixture.result.goalsAwayTeam > fixture.result.goalsHomeTeam ? fixture.awayTeamName : 'draw';
+				if (winner === 'draw') {
+					winner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? fixture.homeTeamName : fixture.awayTeamName;
+					penaltyWinner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+					winnerObj = { penaltyWinner: penaltyWinner, PKs: true };
+				}
+				winnerObj = Object.assign({}, winnerObj, { winner: winner });
+				return Object.assign({}, fixture, winnerObj);
+			}
+			return fixture;
+		};
 
-		var bracketReduceTo = function bracketReduceTo(matchNum, prediction) {
-			if (matchNum === prediction.matchNum) {
-				return prediction.winner || '';
+		var bracketPredictions = user ? user.predictions.filter(filterToBracket) : [];
+		var bracketTemplate = (0, _initStateCalcs.initPredictions)().filter(filterToBracket);
+
+		var assignMatchNumToFixture = function assignMatchNumToFixture(f) {
+			var matchFixtureToBracket = function matchFixtureToBracket(b) {
+				return f.date === b.date;
+			};
+			var bracketF = bracketTemplate.filter(matchFixtureToBracket)[0];
+			if (bracketF) {
+				var addProps = { matchNum: bracketF.matchNum };
+				if (bracketF.homeTeamIs) {
+					addProps.homeTeamIs = bracketF.homeTeamIs;
+					addProps.awayTeamIs = bracketF.awayTeamIs;
+				}
+				return Object.assign({}, f, addProps);
+			}
+			return f;
+		};
+
+		var bracketFixtures = fixtures.map(assignMatchNumToFixture).filter(filterToBracket).map(assignWinner);
+
+		var bracketReduceTo = function bracketReduceTo(matchNum, match) {
+			if (matchNum === match.matchNum) {
+				//if(actual) {
+				//	return bracketFixtures.reduce(
+				return match.winner || '';
 			}
 			return matchNum;
 		};
 
 		var bracketUpdateWinners = function bracketUpdateWinners(fixture) {
-			var homeWinner = '';
-			var awayWinner = '';
+			var homeWinner = '',
+			    awayWinner = '',
+			    bracketToUpdate = void 0;
 
-			if (user) {
+			if (view.actual) {
+				bracketToUpdate = bracketFixtures;
+			} else {
+				bracketToUpdate = bracketPredictions;
+			}
+
+			if (user && !fixture.homeTeamName) {
 				if (fixture.homeTeamIs) {
-					homeWinner = bracketPredictions.reduce(bracketReduceTo, fixture.homeTeamIs);
+					homeWinner = bracketToUpdate.reduce(bracketReduceTo, fixture.homeTeamIs);
 					fixture.homeTeamName = typeof homeWinner === 'string' ? homeWinner : fixture.homeTeamName;
-					awayWinner = bracketPredictions.reduce(bracketReduceTo, fixture.awayTeamIs);
+					awayWinner = bracketToUpdate.reduce(bracketReduceTo, fixture.awayTeamIs);
 					fixture.awayTeamName = typeof awayWinner === 'string' ? awayWinner : fixture.awayTeamName;
 				}
 			}
@@ -42057,21 +42154,34 @@
 			return fixture;
 		};
 
-		var replaceWithPrediction = function replaceWithPrediction(prediction, fixture) {
-			if (prediction.matchNum === fixture.matchNum) {
-				return Object.assign({}, prediction, fixture);
-			}
-			return prediction;
-		};
-
-		var checkTemplate = function checkTemplate(template) {
-			if (bracketPredictions.length > 0) {
-				return bracketPredictions.reduce(replaceWithPrediction, template);
+		var replaceWithPrediction = function replaceWithPrediction(template, prediction) {
+			if (template.matchNum === prediction.matchNum) {
+				return Object.assign({}, template, prediction);
 			}
 			return template;
 		};
 
-		if (!hideOtherUsers) {
+		var replaceWithFixture = function replaceWithFixture(template, fixture) {
+			if (template.date === fixture.date) {
+				return Object.assign({}, template, fixture);
+			}
+			return template;
+		};
+
+		var checkTemplate = function checkTemplate(template) {
+			if (view.actual) {
+				if (bracketFixtures.length > 0) {
+					return bracketFixtures.reduce(replaceWithFixture, template);
+				}
+			} else {
+				if (bracketPredictions.length > 0) {
+					return bracketPredictions.reduce(replaceWithPrediction, template);
+				}
+			}
+			return template;
+		};
+
+		if (!hideOtherUsers || view.actual) {
 			bracketPredictions = bracketTemplate.map(checkTemplate).map(bracketUpdateWinners);
 		} else {
 			bracketPredictions = bracketTemplate;
@@ -42159,6 +42269,9 @@
 		if (thisPrediction.prediction) {
 			homeTeamScore = thisPrediction.prediction[thisPrediction.homeTeamName];
 			awayTeamScore = thisPrediction.prediction[thisPrediction.awayTeamName];
+		} else if (thisPrediction.result) {
+			homeTeamScore = thisPrediction.result.goalsHomeTeam;
+			awayTeamScore = thisPrediction.result.goalsAwayTeam;
 		}
 
 		return _react2.default.createElement(
@@ -62135,7 +62248,7 @@
 
 		var colClasses = { 'col-md-6': true, 'hidden-xs': true, 'hidden-sm': true };
 
-		var secondRowClass = { 'hidden': view.type !== 'groups' };
+		var secondRowClass = { 'hidden': view.type !== 'groups' && view.type !== 'bracket' };
 
 		return _react2.default.createElement(
 			'div',

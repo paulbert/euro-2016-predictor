@@ -59,7 +59,7 @@ export const reformatBracket = (bracket) => bracket.map((match) => Object.assign
 
 export const initTeams = teams.teams;
 export const initFixtures = fixturesWithId;
-export const initPredictions = [].concat(makeBlankPrediction(fixturesWithId),reformatBracket(bracket));
+export const initPredictions = () => [].concat(makeBlankPrediction(fixturesWithId),reformatBracket(bracket));
 export const initGroups = formatGroups(groups);
 
 console.log(initGroups);

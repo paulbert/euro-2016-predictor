@@ -5,7 +5,8 @@ import classnames from 'classnames'
 const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilter, thisUser, view, onScoreChange, onLoad, onPenaltyClick }) => {
 	//onLoad();
 	
-	let hideOtherUsers = !isCurrent && new Date(Date.now()) < new Date(Date.UTC(2016,5,25,13));
+	//let hideOtherUsers = !isCurrent && new Date(Date.now()) < new Date(Date.UTC(2016,5,25,13));
+	let hideOtherUsers = !isCurrent && new Date(Date.UTC(2016,5,25,13)) < new Date(Date.UTC(2016,5,25,13));
 	
 	const setFixtureLine = fixture => {
 		fixture.key = fixture.f_id || fixture.p_id;
@@ -24,7 +25,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		};
 		let prediction = predictions.reduce(reduceToPrediction,defaultPrediction);
 		let savedPrediction = user ? user.predictions.reduce(reduceToPrediction,defaultPrediction) : {};
-		return <Fixture key={fixture.key} {...fixture} PKs={fixture.PKs} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} isCurrent={isCurrent} thisUser={thisUser} onPenaltyClick={onPenaltyClick} />;
+		return <Fixture key={fixture.key} {...fixture} PKs={fixture.PKs} prediction={prediction} savedPrediction={savedPrediction} onScoreChange={onScoreChange} isCurrent={isCurrent} thisUser={thisUser} realFixture={fixture.realFixture} onPenaltyClick={onPenaltyClick} />;
 	};
 	
 	const fixtureFilter = fixture => {
@@ -75,6 +76,15 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		return fixture;
 	};
 	
+	const bracketAddRealFixture = bracketFixture => {
+		const matchFixture = fixture => fixture.date === bracketFixture.date;
+		
+		let realFixture = fixtures.filter(matchFixture)[0];
+		
+		return Object.assign({},bracketFixture,{realFixture:realFixture});
+		
+	}
+	
 	let unsignedUser = (isCurrent && thisUser === '');
 	let predictionsClass = { 'text-center': true, 'hidden': unsignedUser };
 	let hideThisMobile = view.mobile !== 'fixtures';
@@ -95,7 +105,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		</thead>
 		<tbody>
 			{fixtures.filter(fixtureFilter).map(setFixtureLine)}
-			{predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(setFixtureLine)}
+			{predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(bracketAddRealFixture).map(setFixtureLine)}
 		</tbody>
 	</table>
 	</div>

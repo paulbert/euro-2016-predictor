@@ -7,7 +7,7 @@ const RightViewButtons = ({ view, onButtonClick }) => {
 	
 	let colClasses = { 'col-md-6':true, 'hidden-xs':true, 'hidden-sm':true };
 	
-	let secondRowClass = {'hidden':view.type !== 'groups'};
+	let secondRowClass = {'hidden':view.type !== 'groups' && view.type !== 'bracket'};
 	
 	return (
 	<div className={classnames(colClasses)}>

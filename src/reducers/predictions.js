@@ -168,7 +168,7 @@ const userUpdatePrediction = (state,users,thisUser) => {
 	
 };
 
-const predictions = (state = initPredictions,action) => {
+const predictions = (state = initPredictions(),action) => {
 	switch(action.type) {
 		case 'CHANGE_PREDICTION':
 			return newPredictionState(state,action);

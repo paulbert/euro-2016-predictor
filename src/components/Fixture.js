@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import TeamContain from '../containers/TeamContain'
 import classnames from 'classnames'
 
-const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, result, PKs, prediction, savedPrediction, onScoreChange, isCurrent, thisUser, onPenaltyClick}) => {
+const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, result, PKs, prediction, savedPrediction, onScoreChange, isCurrent, thisUser, realFixture, onPenaltyClick}) => {
 	let reformatDate = new Date(date);
 	let dateString = (reformatDate.getMonth() + 1) + '/' + reformatDate.getDate();
 	
@@ -10,10 +10,39 @@ const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, res
 	
 	//today.setHours( today.getHours() );
 	
-	//let today = new Date(2016,5,15,9,1);
+	//today = new Date(2016,5,25,9,1);
+	
+	let penaltyWinner = '',
+		goalsHomeTeam = 0,
+		goalsAwayTeam = 0,
+		homeTeamNoMatch = false,
+		awayTeamNoMatch = false;
+	
+	if(realFixture) {
+		if(realFixture.result.penaltyShootout) {
+			penaltyWinner = realFixture.result.penaltyShootout.goalsHomeTeam > realFixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+		}
+		if((realFixture.homeTeamName === homeTeamName || realFixture.awayTeamName === awayTeamName) || (realFixture.homeTeamName !== awayTeamName && realFixture.awayTeamName !== homeTeamName)) {
+			goalsHomeTeam = realFixture.result.goalsHomeTeam;
+			goalsAwayTeam = realFixture.result.goalsAwayTeam;
+			homeTeamNoMatch = realFixture.homeTeamName !== homeTeamName;
+			awayTeamNoMatch = realFixture.awayTeamName !== awayTeamName;
+		} else {
+			goalsAwayTeam = realFixture.result.goalsHomeTeam;
+			goalsHomeTeam = realFixture.result.goalsAwayTeam;
+			awayTeamNoMatch = realFixture.homeTeamName !== awayTeamName;
+			homeTeamNoMatch = realFixture.awayTeamName !== homeTeamName;
+			if(penaltyWinner) {
+				penaltyWinner = penaltyWinner === 'home' ? 'away' : 'home';
+			}
+		}
+	} else {
+		goalsHomeTeam = result.goalsHomeTeam;
+		goalsAwayTeam = result.goalsAwayTeam;
+	}
 	
 	let inputClassObj = { 'score-box':true, 'hidden': false }
-	inputClassObj.hidden = (!isCurrent || Date.UTC(2016,5,23,13) > reformatDate || today > Date.UTC(2016,5,25,13));
+	inputClassObj.hidden = (!isCurrent || new Date(Date.UTC(2016,5,23,13)) > reformatDate || today > new Date(Date.UTC(2016,5,25,13)));
 	let inputClass = classnames(inputClassObj);
 	
 	let iconClassObj = { 'glyphicon':true,'glyphicon-ok':false,'glyphicon-remove':false,'glyphicon-star':false,'hidden':true }
@@ -62,7 +91,10 @@ const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, res
 				{savedPrediction.away || savedPrediction[awayTeamName]}{(savedPrediction.penaltyWinner === 'away' && savedPrediction.PKs) ? '*' : ''}
 				<span className={iconClass} aria-hidden="true"></span>
 			</td>
-			<td className="col-xs-1 text-center">{result.goalsHomeTeam}-{result.goalsAwayTeam}</td>
+			<td className="col-xs-1 text-center">
+				<span className={classnames({'text-danger':homeTeamNoMatch})}>{penaltyWinner === 'home' ? '*' : ''}{goalsHomeTeam}</span>-
+				<span className={classnames({'text-danger':awayTeamNoMatch})}>{goalsAwayTeam}{penaltyWinner === 'away' ? '*' : ''}</span>
+			</td>
 		</tr>
 	)
 }

@@ -24,6 +24,9 @@ const BracketGame = ({ bracketPredictions, bracketForm, matchNum }) => {
 	if(thisPrediction.prediction) {
 		homeTeamScore = thisPrediction.prediction[thisPrediction.homeTeamName];
 		awayTeamScore = thisPrediction.prediction[thisPrediction.awayTeamName];
+	} else if(thisPrediction.result) {
+		homeTeamScore = thisPrediction.result.goalsHomeTeam;
+		awayTeamScore = thisPrediction.result.goalsAwayTeam;
 	}
 	
 	return (
