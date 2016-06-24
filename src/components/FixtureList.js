@@ -5,8 +5,8 @@ import classnames from 'classnames'
 const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilter, thisUser, view, onScoreChange, onLoad, onPenaltyClick }) => {
 	//onLoad();
 	
-	//let hideOtherUsers = !isCurrent && new Date(Date.now()) < new Date(Date.UTC(2016,5,25,13));
-	let hideOtherUsers = !isCurrent && new Date(Date.UTC(2016,5,25,13)) < new Date(Date.UTC(2016,5,25,13));
+	let hideOtherUsers = !isCurrent && new Date(Date.now()) < new Date(Date.UTC(2016,5,25,13));
+	//let hideOtherUsers = !isCurrent && new Date(Date.UTC(2016,5,25,13)) < new Date(Date.UTC(2016,5,25,13));
 	
 	const setFixtureLine = fixture => {
 		fixture.key = fixture.f_id || fixture.p_id;
