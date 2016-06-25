@@ -1,4 +1,6 @@
 
+require('newrelic');
+
 var webpack = require('webpack'),
 	express = require('express'),
 	app = express(),
