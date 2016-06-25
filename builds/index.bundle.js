@@ -42598,6 +42598,7 @@
 	var User = function User(_ref) {
 		var id = _ref.id;
 		var teamName = _ref.teamName;
+		var nameName = _ref.nameName;
 		var topScorer = _ref.topScorer;
 		var predictions = _ref.predictions;
 		var totalScore = _ref.totalScore;
@@ -42611,7 +42612,7 @@
 			_react2.default.createElement(
 				"td",
 				{ colSpan: "6" },
-				teamName
+				teamName + (nameName ? ' (' + nameName + ')' : '')
 			),
 			_react2.default.createElement(
 				"td",
@@ -42725,7 +42726,7 @@
 			_react2.default.createElement(
 				'h3',
 				null,
-				isCurrent ? thisUser === '' ? 'Euro 2016' : 'Your Predictions' : user && user.teamName,
+				isCurrent ? thisUser === '' ? 'Euro 2016' : 'Your Predictions' : user && user.teamName + (user.nameName ? ' (' + user.nameName + ')' : ''),
 				_react2.default.createElement(_ButtonContain2.default, null)
 			),
 			_react2.default.createElement(

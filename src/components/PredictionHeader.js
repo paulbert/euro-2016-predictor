@@ -15,7 +15,7 @@ const PredictionHeader = ({ user, isCurrent, mobileView, thisUser, onFilterClick
 	return (
 	<div className={classnames(headerClass)}>
 		<h3>
-			{isCurrent ? (thisUser === '' ? 'Euro 2016' : 'Your Predictions') : user && user.teamName}
+			{isCurrent ? (thisUser === '' ? 'Euro 2016' : 'Your Predictions') : user && user.teamName + (user.nameName ? ' (' + user.nameName + ')' : '') }
 			<ButtonContain />
 		</h3>
 		<div className="filter-label"><label>Filter Matches:</label></div>
