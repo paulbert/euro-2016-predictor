@@ -159,11 +159,11 @@ function usersDAO (db) {
 		var breakDates = [new Date(Date.UTC(2016,5,23)),new Date(Date.UTC(2016,5,29)),new Date(Date.UTC(2016,6,4)),new Date(Date.UTC(2016,6,8))];
 		var pointsArray = [2,4,8,12];
 		
-		function reformatFixtureResult(fixture,penalties) {
+		function reformatFixtureResult(fixture,key) {
 			var newResult = {};
 			var goalsResult = fixture.result;
-			if(penalties) {
-				goalsResult = fixture.result.penaltyShootout;
+			if(key) {
+				goalsResult = fixture.result[key];
 				console.log(goalsResult);
 			}
 			newResult[fixture.homeTeamName] = goalsResult.goalsHomeTeam.toString();
@@ -237,9 +237,13 @@ function usersDAO (db) {
 							predictWinner = getWinner(prediction.prediction);
 						} else {
 							predictWinner = prediction.winner;
-							if(realWinner === 'draw') {
-								var penaltiesResult = reformatFixtureResult(fixture,true);
-								realWinner = getWinner(penaltiesResult);
+							if(realWinner === 'draw' && fixture.result.extraTime) {
+								var extraTimeResult = reformatFixtureResult(fixture,'extraTime');
+								realWinner = getWinner(extraTimeResult);
+								if(realWinner === 'draw' && fixture.result.penaltyShootout) {
+									var penaltiesResult = reformatFixtureResult(fixture,'penaltyShootout');
+									realWinner = getWinner(penaltiesResult);
+								}
 							}
 						}
 						
