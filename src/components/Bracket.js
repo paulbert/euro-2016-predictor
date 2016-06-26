@@ -25,9 +25,12 @@ const Bracket = ({ user, fixtures, view, predictionsTemplate, isCurrent }) => {
 		if(fixture.status === 'FINISHED') {
 			winner = fixture.result.goalsHomeTeam > fixture.result.goalsAwayTeam ? fixture.homeTeamName : (fixture.result.goalsAwayTeam > fixture.result.goalsHomeTeam ? fixture.awayTeamName : 'draw');
 			if(winner === 'draw') {
-				winner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? fixture.homeTeamName : fixture.awayTeamName;
-				penaltyWinner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
-				winnerObj = {penaltyWinner:penaltyWinner,PKs:true};
+				winner = fixture.result.extraTime.goalsHomeTeam > fixture.result.extraTime.goalsAwayTeam ? fixture.homeTeamName : (fixture.result.extraTime.goalsAwayTeam > fixture.result.extraTime.goalsHomeTeam ? fixture.awayTeamName : 'draw');
+				if(winner === 'draw') {
+					winner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? fixture.homeTeamName : fixture.awayTeamName;
+					penaltyWinner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+					winnerObj = {penaltyWinner:penaltyWinner,PKs:true};
+				}
 			}
 			winnerObj = Object.assign({},winnerObj,{winner:winner});
 			return Object.assign({},fixture,winnerObj);
