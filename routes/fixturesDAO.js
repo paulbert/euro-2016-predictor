@@ -89,7 +89,7 @@ function fixturesDAO (db,app) {
 		function checkFixtures(err,results) {
 			//console.log(results);
 			console.log(app.get('nextAPI') + ' < ' + (new Date(Date.now())).getTime());
-			var shouldUpdate = (results.length === 0) || ( (app.get('nextAPI') < (new Date(Date.now())).getTime()) && (results.reduce(checkFixture,false) || results.allFinished(allFinished,true)) );
+			var shouldUpdate = (results.length === 0) || ( (app.get('nextAPI') < (new Date(Date.now())).getTime()) && (results.reduce(checkFixture,false) || results.reduce(allFinished,true)) );
 			if(shouldUpdate) {
 				getNewFixtures();
 			} else {
