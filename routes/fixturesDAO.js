@@ -79,10 +79,17 @@ function fixturesDAO (db,app) {
 			return shouldUpdate;
 		}
 		
+		function allFinished(shouldUpdate,fixture) {
+			if(shouldUpdate) {
+				return fixture.status !== 'FINISHED';
+			}
+			return shouldUpdate;
+		}
+		
 		function checkFixtures(err,results) {
 			//console.log(results);
 			console.log(app.get('nextAPI') + ' < ' + (new Date(Date.now())).getTime());
-			var shouldUpdate = (results.length === 0) || ( (app.get('nextAPI') < (new Date(Date.now())).getTime()) && results.reduce(checkFixture,false) );
+			var shouldUpdate = (results.length === 0) || ( (app.get('nextAPI') < (new Date(Date.now())).getTime()) && (results.reduce(checkFixture,false) || results.allFinished(allFinished,true)) );
 			if(shouldUpdate) {
 				getNewFixtures();
 			} else {
