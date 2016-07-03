@@ -23,6 +23,8 @@ const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, res
 	if(realFixture) {
 		if(realFixture.result.penaltyShootout) {
 			penaltyWinner = realFixture.result.penaltyShootout.goalsHomeTeam > realFixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+			reportedGoalsHomeTeam = realFixture.result.extraTime.goalsHomeTeam;
+			reportedGoalsAwayTeam = realFixture.result.extraTime.goalsAwayTeam;
 		} else if(realFixture.result.extraTime) {
 			reportedGoalsHomeTeam = realFixture.result.extraTime.goalsHomeTeam;
 			reportedGoalsAwayTeam = realFixture.result.extraTime.goalsAwayTeam;
