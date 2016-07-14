@@ -164,7 +164,7 @@ function usersDAO (db) {
 			var goalsResult = fixture.result;
 			if(key) {
 				goalsResult = fixture.result[key];
-				console.log(goalsResult);
+				//console.log(goalsResult);
 			}
 			newResult[fixture.homeTeamName] = goalsResult.goalsHomeTeam.toString();
 			newResult[fixture.awayTeamName] = goalsResult.goalsAwayTeam.toString();
@@ -191,14 +191,14 @@ function usersDAO (db) {
 				for(team in fixture) {
 					if(team !== winner) {
 						otherTeamFixture = team;
-						console.log('Other team fixture ' + team);
+						//console.log('Other team fixture ' + team);
 					}
 				}
 				
 				for(team in prediction) {
 					if(team !== winner) {
 						otherTeamPrediction = team;
-						console.log('Other team prediction ' + team);
+						//console.log('Other team prediction ' + team);
 					}
 				}
 				
@@ -225,8 +225,8 @@ function usersDAO (db) {
 				}
 				if(fixtureFilter.length === 1) {
 					var fixture = fixtureFilter[0];
-					console.log('Calculating ' + fixture.homeTeamName + ' - ' + fixture.awayTeamName + '...');
-					console.log('Fixture status: ' + fixture.status);
+					//console.log('Calculating ' + fixture.homeTeamName + ' - ' + fixture.awayTeamName + '...');
+					//console.log('Fixture status: ' + fixture.status);
 					if(fixture.status === 'FINISHED') {
 						var fixtureValue = breakDates.reduce(getValue,1),
 							fixtureResult = reformatFixtureResult(fixture,false);
@@ -247,23 +247,23 @@ function usersDAO (db) {
 							}
 						}
 						
-						console.log('Predicted winner: ' + predictWinner + ' . . . ' + 'Real winner: ' + realWinner);
+						//console.log('Predicted winner: ' + predictWinner + ' . . . ' + 'Real winner: ' + realWinner);
 						
-						console.log('Prediction: ');
-						console.log(prediction.prediction);
-						console.log('Result: ');
-						console.log(fixtureResult);
+						//console.log('Prediction: ');
+						//console.log(prediction.prediction);
+						//console.log('Result: ');
+						//console.log(fixtureResult);
 						
 						var points = realWinner === predictWinner ? fixtureValue : 0;
 						var bonus = false;
-						console.log('Points: ' + points);
+						//console.log('Points: ' + points);
 						if(fixtureValue === 1) {
 							bonus = _.isEqual(fixtureResult,prediction.prediction);
 						} else {
 							bonus = checkForBonus(fixtureResult,prediction.prediction,realWinner);
 							console.log(bonus);
 						}
-						console.log('Bonus: ' + bonus);
+						//console.log('Bonus: ' + bonus);
 						points = bonus ? points * 2 : points;
 						
 						return Object.assign({},prediction,{points:points,bonus:bonus});

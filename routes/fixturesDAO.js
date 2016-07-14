@@ -88,9 +88,21 @@ function fixturesDAO (db,app) {
 		
 		function checkFixtures(err,results) {
 			//console.log(results);
-			console.log(app.get('nextAPI') + ' < ' + (new Date(Date.now())).getTime());
-			var shouldUpdate = (results.length === 0) || ( (app.get('nextAPI') < (new Date(Date.now())).getTime()) 
-			/* && (results.reduce(checkFixture,false) || results.reduce(allFinished,true))*/ );
+			console.log((new Date(2016,6,10)).getTime() + ' < ' + (new Date(Date.now()).getTime()));
+			var noResults = (results.length === 0),
+				pastCheckTime = app.get('nextAPI') < (new Date(Date.now())).getTime(),
+				fixtureCheck = results.reduce(checkFixture,false) || results.reduce(allFinished,true),
+				notAllResults = results.length !== 51;
+			var shouldUpdate = noResults || fixtureCheck;
+			console.log('Are there no results or is there possibly new fixture information?');
+			console.log(shouldUpdate);
+			shouldUpdate = shouldUpdate && notAllResults;
+			console.log('Do we have less than the 51 matches?');
+			console.log(shouldUpdate);
+			shouldUpdate = shouldUpdate && pastCheckTime;
+			console.log('Are we past check time?');
+			console.log(shouldUpdate);
+			
 			if(shouldUpdate) {
 				getNewFixtures();
 			} else {

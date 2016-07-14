@@ -41457,20 +41457,30 @@
 		    goalsHomeTeam = 0,
 		    goalsAwayTeam = 0,
 		    homeTeamNoMatch = false,
-		    awayTeamNoMatch = false;
+		    awayTeamNoMatch = false,
+		    reportedGoalsHomeTeam = 0,
+		    reportedGoalsAwayTeam = 0;
 
 		if (realFixture) {
 			if (realFixture.result.penaltyShootout) {
 				penaltyWinner = realFixture.result.penaltyShootout.goalsHomeTeam > realFixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+				reportedGoalsHomeTeam = realFixture.result.extraTime.goalsHomeTeam;
+				reportedGoalsAwayTeam = realFixture.result.extraTime.goalsAwayTeam;
+			} else if (realFixture.result.extraTime) {
+				reportedGoalsHomeTeam = realFixture.result.extraTime.goalsHomeTeam;
+				reportedGoalsAwayTeam = realFixture.result.extraTime.goalsAwayTeam;
+			} else {
+				reportedGoalsHomeTeam = realFixture.result.goalsHomeTeam;
+				reportedGoalsAwayTeam = realFixture.result.goalsAwayTeam;
 			}
 			if (realFixture.homeTeamName === homeTeamName || realFixture.awayTeamName === awayTeamName || realFixture.homeTeamName !== awayTeamName && realFixture.awayTeamName !== homeTeamName) {
-				goalsHomeTeam = realFixture.result.goalsHomeTeam;
-				goalsAwayTeam = realFixture.result.goalsAwayTeam;
+				goalsHomeTeam = reportedGoalsHomeTeam;
+				goalsAwayTeam = reportedGoalsAwayTeam;
 				homeTeamNoMatch = realFixture.homeTeamName !== homeTeamName;
 				awayTeamNoMatch = realFixture.awayTeamName !== awayTeamName;
 			} else {
-				goalsAwayTeam = realFixture.result.goalsHomeTeam;
-				goalsHomeTeam = realFixture.result.goalsAwayTeam;
+				goalsAwayTeam = reportedGoalsHomeTeam;
+				goalsHomeTeam = reportedGoalsAwayTeam;
 				awayTeamNoMatch = realFixture.homeTeamName !== awayTeamName;
 				homeTeamNoMatch = realFixture.awayTeamName !== homeTeamName;
 				if (penaltyWinner) {
@@ -42091,9 +42101,12 @@
 			if (fixture.status === 'FINISHED') {
 				winner = fixture.result.goalsHomeTeam > fixture.result.goalsAwayTeam ? fixture.homeTeamName : fixture.result.goalsAwayTeam > fixture.result.goalsHomeTeam ? fixture.awayTeamName : 'draw';
 				if (winner === 'draw') {
-					winner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? fixture.homeTeamName : fixture.awayTeamName;
-					penaltyWinner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
-					winnerObj = { penaltyWinner: penaltyWinner, PKs: true };
+					winner = fixture.result.extraTime.goalsHomeTeam > fixture.result.extraTime.goalsAwayTeam ? fixture.homeTeamName : fixture.result.extraTime.goalsAwayTeam > fixture.result.extraTime.goalsHomeTeam ? fixture.awayTeamName : 'draw';
+					if (winner === 'draw') {
+						winner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? fixture.homeTeamName : fixture.awayTeamName;
+						penaltyWinner = fixture.result.penaltyShootout.goalsHomeTeam > fixture.result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+						winnerObj = { penaltyWinner: penaltyWinner, PKs: true };
+					}
 				}
 				winnerObj = Object.assign({}, winnerObj, { winner: winner });
 				return Object.assign({}, fixture, winnerObj);
