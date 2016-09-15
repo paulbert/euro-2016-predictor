@@ -4,7 +4,10 @@ import { switchRightView } from '../actions'
 
 const mapStateToProps = (state) => {
 	return {
-		view:state.rightView
+		view:state.rightView,
+		user:state.users.filter((user) => {
+			return user._id === state.activeUserView
+		})[0]
 	}
 };
 

@@ -33,14 +33,16 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 			return new Date(fixture.date) < new Date(2016,5,23);
 		} else {
 			// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
-			let fixtureGroup = groups.reduce((teamGroup, team) => {
-				if(team.name === fixture.homeTeamName) {
-					return team.group;
+			if(new Date(fixture.date) < new Date(2016,5,23)) {
+				let fixtureGroup = groups.reduce((teamGroup, team) => {
+					if(team.name === fixture.homeTeamName) {
+						return team.group;
+					}
+					return teamGroup;
+				},'');
+				if(fixtureGroup === matchFilter) {
+					return true;
 				}
-				return teamGroup;
-			},'');
-			if(fixtureGroup === matchFilter) {
-				return true;
 			}
 			return false;
 		}
@@ -56,7 +58,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 	const reformatBracket = fixture => Object.assign({},fixture,{f_id:fixture.p_id,result:{goalsHomeTeam:null,goalsAwayTeam:null},status:'TIMED'});
 	
 	const bracketFilter = prediction => {
-		if(user) {
+		if(user && (matchFilter === 'all' || matchFilter === 'bracket')) {
 			return prediction.matchNum;
 		}
 	};

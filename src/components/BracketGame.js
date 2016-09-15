@@ -18,15 +18,17 @@ const BracketGame = ({ bracketPredictions, bracketForm, matchNum }) => {
 	let thisPrediction = bracketPredictions.filter(p => p.matchNum === matchNum)[0];
 	let thisGame = bracketForm.filter(f => f.matchNum === matchNum)[0];
 	
-	let homeTeamScore = '';
-	let awayTeamScore = '';
+	let homeTeamScore = '',
+		awayTeamScore = '',
+		tempResult = {};
 	
 	if(thisPrediction.prediction) {
 		homeTeamScore = thisPrediction.prediction[thisPrediction.homeTeamName];
 		awayTeamScore = thisPrediction.prediction[thisPrediction.awayTeamName];
 	} else if(thisPrediction.result) {
-		homeTeamScore = thisPrediction.result.goalsHomeTeam;
-		awayTeamScore = thisPrediction.result.goalsAwayTeam;
+		tempResult = thisPrediction.result.extraTime ? thisPrediction.result.extraTime : thisPrediction.result;
+		homeTeamScore = tempResult.goalsHomeTeam;
+		awayTeamScore = tempResult.goalsAwayTeam;
 	}
 	
 	return (

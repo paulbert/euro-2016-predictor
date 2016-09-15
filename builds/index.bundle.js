@@ -41283,14 +41283,16 @@
 				return new Date(fixture.date) < new Date(2016, 5, 23);
 			} else {
 				// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
-				var fixtureGroup = groups.reduce(function (teamGroup, team) {
-					if (team.name === fixture.homeTeamName) {
-						return team.group;
+				if (new Date(fixture.date) < new Date(2016, 5, 23)) {
+					var fixtureGroup = groups.reduce(function (teamGroup, team) {
+						if (team.name === fixture.homeTeamName) {
+							return team.group;
+						}
+						return teamGroup;
+					}, '');
+					if (fixtureGroup === matchFilter) {
+						return true;
 					}
-					return teamGroup;
-				}, '');
-				if (fixtureGroup === matchFilter) {
-					return true;
 				}
 				return false;
 			}
@@ -41308,7 +41310,7 @@
 		};
 
 		var bracketFilter = function bracketFilter(prediction) {
-			if (user) {
+			if (user && (matchFilter === 'all' || matchFilter === 'bracket')) {
 				return prediction.matchNum;
 			}
 		};
@@ -42302,15 +42304,17 @@
 			return f.matchNum === matchNum;
 		})[0];
 
-		var homeTeamScore = '';
-		var awayTeamScore = '';
+		var homeTeamScore = '',
+		    awayTeamScore = '',
+		    tempResult = {};
 
 		if (thisPrediction.prediction) {
 			homeTeamScore = thisPrediction.prediction[thisPrediction.homeTeamName];
 			awayTeamScore = thisPrediction.prediction[thisPrediction.awayTeamName];
 		} else if (thisPrediction.result) {
-			homeTeamScore = thisPrediction.result.goalsHomeTeam;
-			awayTeamScore = thisPrediction.result.goalsAwayTeam;
+			tempResult = thisPrediction.result.extraTime ? thisPrediction.result.extraTime : thisPrediction.result;
+			homeTeamScore = tempResult.goalsHomeTeam;
+			awayTeamScore = tempResult.goalsAwayTeam;
 		}
 
 		return _react2.default.createElement(
@@ -62294,11 +62298,6 @@
 
 		var secondRowClass = { 'hidden': view.type !== 'groups' && view.type !== 'bracket' };
 
-		var actualDefault = false;
-		if (!user) {
-			actualDefault = true;
-		}
-
 		return _react2.default.createElement(
 			'div',
 			{ className: (0, _classnames2.default)(colClasses) },
@@ -62311,7 +62310,7 @@
 					_react2.default.createElement(
 						'button',
 						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
-								return onButtonClick({ type: 'groups', 'actual': actualDefault });
+								return onButtonClick({ type: 'groups', 'actual': !user });
 							} },
 						'View Groups'
 					)
@@ -62322,7 +62321,7 @@
 					_react2.default.createElement(
 						'button',
 						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
-								return onButtonClick({ type: 'bracket', 'actual': actualDefault });
+								return onButtonClick({ type: 'bracket', 'actual': !user });
 							} },
 						'View Bracket'
 					)
@@ -62339,32 +62338,36 @@
 					)
 				)
 			),
-			_react2.default.createElement(
-				'div',
-				{ className: 'btn-group btn-group-justified btn-group-margin', role: 'group' },
-				_react2.default.createElement(
-					'div',
-					{ className: 'btn-group' },
-					_react2.default.createElement(
-						'button',
-						{ className: "btn btn-euros btn-primary " + (0, _classnames2.default)(secondRowClass), onClick: function onClick() {
-								return onButtonClick({ 'actual': false });
-							} },
-						'Predicted'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'btn-group' },
-					_react2.default.createElement(
-						'button',
-						{ className: "btn btn-euros btn-primary " + (0, _classnames2.default)(secondRowClass), onClick: function onClick() {
-								return onButtonClick({ 'actual': true });
-							} },
-						'Actual'
-					)
-				)
-			)
+			function () {
+				if (user) {
+					return _react2.default.createElement(
+						'div',
+						{ className: 'btn-group btn-group-justified btn-group-margin', role: 'group' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'btn-group' },
+							_react2.default.createElement(
+								'button',
+								{ className: "btn btn-euros btn-primary " + (0, _classnames2.default)(secondRowClass), onClick: function onClick() {
+										return onButtonClick({ 'actual': false });
+									} },
+								'Predicted'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'btn-group' },
+							_react2.default.createElement(
+								'button',
+								{ className: "btn btn-euros btn-primary " + (0, _classnames2.default)(secondRowClass), onClick: function onClick() {
+										return onButtonClick({ 'actual': true });
+									} },
+								'Actual'
+							)
+						)
+					);
+				}
+			}()
 		);
 	};
 
@@ -62392,7 +62395,10 @@
 
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
-			view: state.rightView
+			view: state.rightView,
+			user: state.users.filter(function (user) {
+				return user._id === state.activeUserView;
+			})[0]
 		};
 	};
 
@@ -62430,10 +62436,11 @@
 
 	var MobileHeader = function MobileHeader(_ref) {
 		var view = _ref.view;
+		var user = _ref.user;
 		var onSelectChange = _ref.onSelectChange;
 
 
-		var groupClass = { 'hidden': view.mobile !== 'groups', 'form-control': true, 'bottom-space': true };
+		var groupClass = { 'hidden': view.mobile !== 'groups' && view.mobile !== 'bracket', 'form-control': true, 'bottom-space': true };
 
 		return _react2.default.createElement(
 			'div',
@@ -62441,7 +62448,7 @@
 			_react2.default.createElement(
 				'select',
 				{ className: 'form-control bottom-space', onChange: function onChange(e) {
-						return onSelectChange({ 'mobile': e.target.value, 'type': e.target.value });
+						return onSelectChange({ 'mobile': e.target.value, 'type': e.target.value, 'actual': !user });
 					} },
 				_react2.default.createElement(
 					'option',
@@ -62464,22 +62471,26 @@
 					'View Scores'
 				)
 			),
-			_react2.default.createElement(
-				'select',
-				{ className: (0, _classnames2.default)(groupClass), onChange: function onChange(e) {
-						return onSelectChange({ 'actual': e.target.value });
-					} },
-				_react2.default.createElement(
-					'option',
-					{ value: '' },
-					'Predicted'
-				),
-				_react2.default.createElement(
-					'option',
-					{ value: 'true' },
-					'Actual'
-				)
-			)
+			function () {
+				if (user) {
+					return _react2.default.createElement(
+						'select',
+						{ className: (0, _classnames2.default)(groupClass), onChange: function onChange(e) {
+								return onSelectChange({ 'actual': e.target.value === 'actual' });
+							}, value: view.actual ? 'actual' : 'predicted' },
+						_react2.default.createElement(
+							'option',
+							{ value: 'predicted' },
+							'Predicted'
+						),
+						_react2.default.createElement(
+							'option',
+							{ value: 'actual' },
+							'Actual'
+						)
+					);
+				}
+			}()
 		);
 	};
 
