@@ -47,8 +47,11 @@ const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, res
 			}
 		}
 	} else {
-		goalsHomeTeam = result.goalsHomeTeam;
-		goalsAwayTeam = result.goalsAwayTeam;
+		goalsHomeTeam = result.extraTime ? result.extraTime.goalsHomeTeam : result.goalsHomeTeam;
+		goalsAwayTeam = result.extraTime ? result.extraTime.goalsAwayTeam : result.goalsAwayTeam;
+		if(result.penaltyShootout) {
+			penaltyWinner = result.penaltyShootout.goalsHomeTeam > result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+		}
 	}
 	
 	let inputClassObj = { 'score-box':true, 'hidden': false }

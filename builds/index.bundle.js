@@ -35110,8 +35110,18 @@
 		value: true
 	});
 
+	var isGuest = function isGuest() {
+		var cookieArray = document.cookie.split("; ");
+		return cookieArray.reduce(function (previous, cookie) {
+			var keyValueAsArray = cookie.split('=');
+			if (keyValueAsArray[0] === 'user') {
+				return false;
+			}
+			return previous;
+		}, true);
+	};
 
-	var initView = { 'type': 'bracket', 'actual': false, 'mobile': 'fixtures', 'menu': false };
+	var initView = { 'type': 'bracket', 'actual': isGuest(), 'mobile': 'fixtures', 'menu': false };
 
 	var rightView = function rightView() {
 		var state = arguments.length <= 0 || arguments[0] === undefined ? initView : arguments[0];
@@ -41286,12 +41296,21 @@
 			}
 		};
 
+		var actualBracketFilter = function actualBracketFilter(fixture) {
+			if (!user && (matchFilter === 'all' || matchFilter === 'bracket')) {
+				return new Date(fixture.date) > new Date(2016, 5, 23);
+			}
+			return false;
+		};
+
 		var reformatBracket = function reformatBracket(fixture) {
 			return Object.assign({}, fixture, { f_id: fixture.p_id, result: { goalsHomeTeam: null, goalsAwayTeam: null }, status: 'TIMED' });
 		};
 
 		var bracketFilter = function bracketFilter(prediction) {
-			return prediction.matchNum;
+			if (user) {
+				return prediction.matchNum;
+			}
 		};
 
 		var bracketReduceTo = function bracketReduceTo(matchNum, prediction) {
@@ -41378,7 +41397,8 @@
 					'tbody',
 					null,
 					fixtures.filter(fixtureFilter).map(setFixtureLine),
-					predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(bracketAddRealFixture).map(setFixtureLine)
+					predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(bracketAddRealFixture).map(setFixtureLine),
+					fixtures.filter(actualBracketFilter).map(setFixtureLine)
 				)
 			)
 		);
@@ -41488,8 +41508,11 @@
 				}
 			}
 		} else {
-			goalsHomeTeam = result.goalsHomeTeam;
-			goalsAwayTeam = result.goalsAwayTeam;
+			goalsHomeTeam = result.extraTime ? result.extraTime.goalsHomeTeam : result.goalsHomeTeam;
+			goalsAwayTeam = result.extraTime ? result.extraTime.goalsAwayTeam : result.goalsAwayTeam;
+			if (result.penaltyShootout) {
+				penaltyWinner = result.penaltyShootout.goalsHomeTeam > result.penaltyShootout.goalsAwayTeam ? 'home' : 'away';
+			}
 		}
 
 		var inputClassObj = { 'score-box': true, 'hidden': false };
@@ -62217,7 +62240,10 @@
 
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
-			view: state.rightView
+			view: state.rightView,
+			user: state.users.filter(function (user) {
+				return user._id === state.activeUserView;
+			})[0]
 		};
 	};
 
@@ -62260,12 +62286,18 @@
 	//initView = {'type':'groups','actual':false};
 	var RightViewButtons = function RightViewButtons(_ref) {
 		var view = _ref.view;
+		var user = _ref.user;
 		var onButtonClick = _ref.onButtonClick;
 
 
 		var colClasses = { 'col-md-6': true, 'hidden-xs': true, 'hidden-sm': true };
 
 		var secondRowClass = { 'hidden': view.type !== 'groups' && view.type !== 'bracket' };
+
+		var actualDefault = false;
+		if (!user) {
+			actualDefault = true;
+		}
 
 		return _react2.default.createElement(
 			'div',
@@ -62279,7 +62311,7 @@
 					_react2.default.createElement(
 						'button',
 						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
-								return onButtonClick({ type: 'groups', 'actual': false });
+								return onButtonClick({ type: 'groups', 'actual': actualDefault });
 							} },
 						'View Groups'
 					)
@@ -62290,7 +62322,7 @@
 					_react2.default.createElement(
 						'button',
 						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
-								return onButtonClick({ type: 'bracket', 'actual': false });
+								return onButtonClick({ type: 'bracket', 'actual': actualDefault });
 							} },
 						'View Bracket'
 					)

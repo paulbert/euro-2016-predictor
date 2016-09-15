@@ -30,7 +30,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 	
 	const fixtureFilter = fixture => {
 		if(matchFilter === 'all') {
-			return new Date(fixture.date) < new Date(2016,5,23) ;
+			return new Date(fixture.date) < new Date(2016,5,23);
 		} else {
 			// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
 			let fixtureGroup = groups.reduce((teamGroup, team) => {
@@ -44,11 +44,22 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 			}
 			return false;
 		}
-	}
+	};
+	
+	const actualBracketFilter = fixture => {
+		if(!user && (matchFilter === 'all' || matchFilter === 'bracket')) {
+			return new Date(fixture.date) > new Date(2016,5,23);
+		}
+		return false;
+	};
 	
 	const reformatBracket = fixture => Object.assign({},fixture,{f_id:fixture.p_id,result:{goalsHomeTeam:null,goalsAwayTeam:null},status:'TIMED'});
 	
-	const bracketFilter = prediction => prediction.matchNum;
+	const bracketFilter = prediction => {
+		if(user) {
+			return prediction.matchNum;
+		}
+	};
 	
 	const bracketReduceTo = (matchNum,prediction) => {
 		if(matchNum === prediction.matchNum) {
@@ -83,7 +94,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		
 		return Object.assign({},bracketFixture,{realFixture:realFixture});
 		
-	}
+	};
 	
 	let unsignedUser = (isCurrent && thisUser === '');
 	let predictionsClass = { 'text-center': true, 'hidden': unsignedUser };
@@ -106,6 +117,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		<tbody>
 			{fixtures.filter(fixtureFilter).map(setFixtureLine)}
 			{predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(bracketAddRealFixture).map(setFixtureLine)}
+			{fixtures.filter(actualBracketFilter).map(setFixtureLine)}
 		</tbody>
 	</table>
 	</div>

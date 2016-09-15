@@ -1,6 +1,16 @@
 
+const isGuest = () => {
+	var cookieArray = document.cookie.split("; ");
+	return cookieArray.reduce((previous,cookie) => {
+		var keyValueAsArray = cookie.split('=');
+		if(keyValueAsArray[0] === 'user') {
+			return false;
+		}
+		return previous;
+	},true);
+}
 
-const initView = {'type':'bracket','actual':false,'mobile':'fixtures','menu':false};
+const initView = {'type':'bracket','actual':isGuest(),'mobile':'fixtures','menu':false};
 
 const rightView = (state = initView,action) => {
 	switch(action.type) {
