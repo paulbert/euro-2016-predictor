@@ -12,9 +12,10 @@ const GroupList = ({ groups, savedPredictions, user, fixtures, view }) => {
 		prediction[fixture.awayTeamName] = fixture.result.goalsAwayTeam;
 		return Object.assign({},fixture,{prediction:prediction});
 	};
+	const filterFixtures = fixture => new Date(fixture.date) < new Date(2016,5,23); 
 	let sortedGroups = [];
 	if(view.actual) {
-		sortedGroups = rankCalcs.fullSort(groups,fixtures.map(reformatFixtures),0);
+		sortedGroups = rankCalcs.fullSort(groups,fixtures.filter(filterFixtures).map(reformatFixtures),0);
 	} else {
 		sortedGroups = rankCalcs.fullSort(groups,user ? user.predictions : savedPredictions,0);
 	}

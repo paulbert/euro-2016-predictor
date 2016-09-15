@@ -41764,9 +41764,12 @@
 			prediction[fixture.awayTeamName] = fixture.result.goalsAwayTeam;
 			return Object.assign({}, fixture, { prediction: prediction });
 		};
+		var filterFixtures = function filterFixtures(fixture) {
+			return new Date(fixture.date) < new Date(2016, 5, 23);
+		};
 		var sortedGroups = [];
 		if (view.actual) {
-			sortedGroups = _rankCalcs2.default.fullSort(groups, fixtures.map(reformatFixtures), 0);
+			sortedGroups = _rankCalcs2.default.fullSort(groups, fixtures.filter(filterFixtures).map(reformatFixtures), 0);
 		} else {
 			sortedGroups = _rankCalcs2.default.fullSort(groups, user ? user.predictions : savedPredictions, 0);
 		}
