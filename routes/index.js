@@ -11,12 +11,13 @@ module.exports = exports = function(app,db) {
 	var users = usersDAO(db),
 		sessions = sessionsDAO(db),
 		fixtures = fixturesDAO(db,app);
-		trash = trashDAO(db,app);
+		trash = trashDAO(db,app),
+		cookieTime = 30 * 24 * 3600000;
 	
 	
 	function addResponseCookie(res,user,passcode) {
-		res.cookie('user',user,{expires: new Date(2016,8,1),httpOnly:false});
-		res.cookie('passcode',passcode,{expires: new Date(2016,8,1),httpOnly:false});
+		res.cookie('user',user,{expires: new Date(Date.now() + cookieTime),httpOnly:false});
+		res.cookie('passcode',passcode,{expires: new Date(Date.now() + cookieTime),httpOnly:false});
 		res.set('Access-Control-Allow-Origin','*');
 		res.set('Access-Control-Allow-Credentials','true');
 	}
