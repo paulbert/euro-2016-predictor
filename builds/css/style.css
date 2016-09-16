@@ -79,6 +79,13 @@ main {
 		padding-top:27px;
 		padding-bottom:26px;
 	}
+	
+}
+
+@media (max-width: 768px) {
+	.table-container,.bracket-container {
+		overflow-x:scroll;
+	}
 }
 
 .btn-euros {
@@ -107,7 +114,7 @@ h3 {
 
 .btn-group-filters {
 	position:relative;
-	padding-left:98px;
+	padding-left:107px;
 }
 
 .filter-label {
@@ -173,17 +180,17 @@ BRACKET STYLES BELOW
 */
 .bracket {
 	position:relative;
-	margin-left:75%;
+	margin-left:400px;
 }
 
 .branch {
 	position:relative;
-	margin-left:-150px;
+	margin-left:-130px;
 }
 
 .branch::before {
 	content:'';
-	width:35px;
+	width:15px;
 	border-top:1px solid #808080;
 	position:absolute;
 	left:115px;
@@ -362,3 +369,37 @@ BRACKET STYLES BELOW
 	-moz-border-radius:5px;
 	text-align:center;
 }
+
+@media (max-width: 1200px) {
+	.bracket {
+		margin-left:310px;
+	}
+	
+	.game::before {
+		left:94px;
+	}
+
+	.branch .game::after {
+		width:5px;
+		left:90px
+	}
+	
+	.branch {
+		margin-left:-100px;
+	}
+
+	.branch::before {
+		width:5px;
+		left:95px;
+	}
+	
+	.game .tree-label {
+		width:90px;
+		padding:5px;
+	}
+	
+	.winner-contain {
+		width:180px;
+	}
+}
+

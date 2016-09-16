@@ -7,7 +7,7 @@ const FullHeader = ({ loggedIn, view, onMenuClick }) => {
 	let loginClass = { 'hidden': loggedIn };
 	let menuClass = { 'hidden': !loggedIn };
 	let settingsClass = { 'hidden': !loggedIn, 'big-cog': true, 'hidden-sm':true, 'hidden-xs':true };
-	let mobileSettingsClass = { 'hidden': !loggedIn, 'visible-sm':true, 'visible-xs':true };
+	let mobileSettingsClass = { 'hidden': !loggedIn, 'visible-sm':loggedIn, 'visible-xs':loggedIn };
 	
 	let dropdownClass = {'collapse':true,'navbar-collapse':true,'in':view};
 	

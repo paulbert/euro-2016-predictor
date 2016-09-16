@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import ButtonContain from '../containers/ButtonContain'
 import classnames from 'classnames'
 
-const PredictionHeader = ({ user, isCurrent, mobileView, thisUser, onFilterClick }) => {
+const PredictionHeader = ({ user, isCurrent, mobileView, thisUser,matchFilter, onFilterClick }) => {
 	let groupArray = ["A","B","C","D","E","F"];
 	let groupButtons = groupArray.map((groupLetter) => {
 		return <div key={groupLetter} className="btn-group">
@@ -11,6 +11,7 @@ const PredictionHeader = ({ user, isCurrent, mobileView, thisUser, onFilterClick
 	});
 	let thisMobileView = mobileView === 'fixtures';
 	let headerClass = { 'col-md-6':true,'col-xs-12':true,'prediction-header':true,'hidden-xs':!thisMobileView,'hidden-sm':!thisMobileView };
+	let groupClass = { 'btn-group':true, 'btn-group-justified':true,'hidden':matchFilter === 'bracket' };
 	
 	return (
 	<div className={classnames(headerClass)}>
@@ -19,13 +20,15 @@ const PredictionHeader = ({ user, isCurrent, mobileView, thisUser, onFilterClick
 			<ButtonContain />
 		</h3>
 		<div className="filter-label"><label>Filter Matches:</label></div>
-		<div className="btn-group btn-group-justified btn-group-filters" role="group">
+		<div className="btn-group btn-group-justified btn-group-filters btn-group-margin" role="group">
 			<div className="btn-group">
 				<button className="btn btn-euros btn-primary" onClick={() => onFilterClick('bracket')}>Bracket</button>
 			</div>
 			<div className="btn-group">
-				<button className="btn btn-euros btn-primary" onClick={() => onFilterClick('all')}>All</button>
+				<button className="btn btn-euros btn-primary" onClick={() => onFilterClick('group')}>Groups</button>
 			</div>
+		</div>
+		<div className={classnames(groupClass)} role="group">
 			{groupButtons}
 		</div>
 	</div>

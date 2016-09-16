@@ -29,8 +29,8 @@ const Group = ({ groups,groupLetter,thirdPlace }) => {
 	}
 	
 	return (
-	
-	<table className="table">
+	<div className="table-container">
+	<table className="table group-table">
 		<thead>
 			<tr>
 				<td className="col-xs-4">{groupHeader}</td>
@@ -48,7 +48,7 @@ const Group = ({ groups,groupLetter,thirdPlace }) => {
 			{groupTeams.map(groupMap)}
 		</tbody>
 	</table>
-	
+	</div>
 )}
 
 export default Group;

@@ -29,9 +29,9 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 	};
 	
 	const fixtureFilter = fixture => {
-		if(matchFilter === 'all') {
+		if(matchFilter === 'group') {
 			return new Date(fixture.date) < new Date(2016,5,23);
-		} else {
+		} else if(matchFilter !== 'bracket'){
 			// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
 			if(new Date(fixture.date) < new Date(2016,5,23)) {
 				let fixtureGroup = groups.reduce((teamGroup, team) => {
@@ -44,12 +44,12 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 					return true;
 				}
 			}
-			return false;
 		}
+		return false;
 	};
 	
 	const actualBracketFilter = fixture => {
-		if(!user && (matchFilter === 'all' || matchFilter === 'bracket')) {
+		if(!user && matchFilter === 'bracket') {
 			return new Date(fixture.date) > new Date(2016,5,23);
 		}
 		return false;
@@ -58,7 +58,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 	const reformatBracket = fixture => Object.assign({},fixture,{f_id:fixture.p_id,result:{goalsHomeTeam:null,goalsAwayTeam:null},status:'TIMED'});
 	
 	const bracketFilter = prediction => {
-		if(user && (matchFilter === 'all' || matchFilter === 'bracket')) {
+		if(user && matchFilter === 'bracket') {
 			return prediction.matchNum;
 		}
 	};
@@ -101,7 +101,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 	let unsignedUser = (isCurrent && thisUser === '');
 	let predictionsClass = { 'text-center': true, 'hidden': unsignedUser };
 	let hideThisMobile = view.mobile !== 'fixtures';
-	let colClasses = { 'col-md-6':true, 'col-xs-12':true, 'hidden-xs':hideThisMobile, 'hidden-sm':hideThisMobile };
+	let colClasses = { 'col-md-6':true, 'col-xs-12':true, 'hidden-xs':hideThisMobile, 'hidden-sm':hideThisMobile, 'table-container':true };
 	
 	return (
 	

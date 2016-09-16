@@ -35426,7 +35426,7 @@
 		var loginClass = { 'hidden': loggedIn };
 		var menuClass = { 'hidden': !loggedIn };
 		var settingsClass = { 'hidden': !loggedIn, 'big-cog': true, 'hidden-sm': true, 'hidden-xs': true };
-		var mobileSettingsClass = { 'hidden': !loggedIn, 'visible-sm': true, 'visible-xs': true };
+		var mobileSettingsClass = { 'hidden': !loggedIn, 'visible-sm': loggedIn, 'visible-xs': loggedIn };
 
 		var dropdownClass = { 'collapse': true, 'navbar-collapse': true, 'in': view };
 
@@ -41279,9 +41279,9 @@
 		};
 
 		var fixtureFilter = function fixtureFilter(fixture) {
-			if (matchFilter === 'all') {
+			if (matchFilter === 'group') {
 				return new Date(fixture.date) < new Date(2016, 5, 23);
-			} else {
+			} else if (matchFilter !== 'bracket') {
 				// group setter { 'name': val, 'W':0, 'D':0, 'L':0, 'GF':0, 'GA':0, 'GD':0, 'Pts':0, 'group':thisLetter }
 				if (new Date(fixture.date) < new Date(2016, 5, 23)) {
 					var fixtureGroup = groups.reduce(function (teamGroup, team) {
@@ -41294,12 +41294,12 @@
 						return true;
 					}
 				}
-				return false;
 			}
+			return false;
 		};
 
 		var actualBracketFilter = function actualBracketFilter(fixture) {
-			if (!user && (matchFilter === 'all' || matchFilter === 'bracket')) {
+			if (!user && matchFilter === 'bracket') {
 				return new Date(fixture.date) > new Date(2016, 5, 23);
 			}
 			return false;
@@ -41310,7 +41310,7 @@
 		};
 
 		var bracketFilter = function bracketFilter(prediction) {
-			if (user && (matchFilter === 'all' || matchFilter === 'bracket')) {
+			if (user && matchFilter === 'bracket') {
 				return prediction.matchNum;
 			}
 		};
@@ -41354,7 +41354,7 @@
 		var unsignedUser = isCurrent && thisUser === '';
 		var predictionsClass = { 'text-center': true, 'hidden': unsignedUser };
 		var hideThisMobile = view.mobile !== 'fixtures';
-		var colClasses = { 'col-md-6': true, 'col-xs-12': true, 'hidden-xs': hideThisMobile, 'hidden-sm': hideThisMobile };
+		var colClasses = { 'col-md-6': true, 'col-xs-12': true, 'hidden-xs': hideThisMobile, 'hidden-sm': hideThisMobile, 'table-container': true };
 
 		return _react2.default.createElement(
 			'div',
@@ -41886,65 +41886,69 @@
 		};
 
 		return _react2.default.createElement(
-			'table',
-			{ className: 'table' },
+			'div',
+			{ className: 'table-container' },
 			_react2.default.createElement(
-				'thead',
-				null,
+				'table',
+				{ className: 'table group-table' },
 				_react2.default.createElement(
-					'tr',
+					'thead',
 					null,
 					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-4' },
-						groupHeader
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'P'
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'W'
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'D'
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'L'
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'GF'
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'GA'
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'GD'
-					),
-					_react2.default.createElement(
-						'td',
-						{ className: 'col-xs-1' },
-						'Pts'
+						'tr',
+						null,
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-4' },
+							groupHeader
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'P'
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'W'
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'D'
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'L'
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'GF'
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'GA'
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'GD'
+						),
+						_react2.default.createElement(
+							'td',
+							{ className: 'col-xs-1' },
+							'Pts'
+						)
 					)
+				),
+				_react2.default.createElement(
+					'tbody',
+					null,
+					groupTeams.map(groupMap)
 				)
-			),
-			_react2.default.createElement(
-				'tbody',
-				null,
-				groupTeams.map(groupMap)
 			)
 		);
 	};
@@ -42242,8 +42246,12 @@
 			{ className: (0, _classnames2.default)(colClasses) },
 			_react2.default.createElement(
 				'div',
-				{ className: 'bracket' },
-				_react2.default.createElement(_BracketGame2.default, { bracketPredictions: bracketPredictions, bracketForm: bracketForm, matchNum: 15 })
+				{ className: 'bracket-container' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'bracket' },
+					_react2.default.createElement(_BracketGame2.default, { bracketPredictions: bracketPredictions, bracketForm: bracketForm, matchNum: 15 })
+				)
 			)
 		);
 	};
@@ -42699,7 +42707,8 @@
 			})[0],
 			isCurrent: state.activeUserView === state.thisUser,
 			thisUser: state.thisUser,
-			mobileView: state.rightView.mobile
+			mobileView: state.rightView.mobile,
+			matchFilter: state.matchFilter
 		};
 	};
 
@@ -42744,6 +42753,7 @@
 		var isCurrent = _ref.isCurrent;
 		var mobileView = _ref.mobileView;
 		var thisUser = _ref.thisUser;
+		var matchFilter = _ref.matchFilter;
 		var onFilterClick = _ref.onFilterClick;
 
 		var groupArray = ["A", "B", "C", "D", "E", "F"];
@@ -42762,6 +42772,7 @@
 		});
 		var thisMobileView = mobileView === 'fixtures';
 		var headerClass = { 'col-md-6': true, 'col-xs-12': true, 'prediction-header': true, 'hidden-xs': !thisMobileView, 'hidden-sm': !thisMobileView };
+		var groupClass = { 'btn-group': true, 'btn-group-justified': true, 'hidden': matchFilter === 'bracket' };
 
 		return _react2.default.createElement(
 			'div',
@@ -42783,7 +42794,7 @@
 			),
 			_react2.default.createElement(
 				'div',
-				{ className: 'btn-group btn-group-justified btn-group-filters', role: 'group' },
+				{ className: 'btn-group btn-group-justified btn-group-filters btn-group-margin', role: 'group' },
 				_react2.default.createElement(
 					'div',
 					{ className: 'btn-group' },
@@ -42801,11 +42812,15 @@
 					_react2.default.createElement(
 						'button',
 						{ className: 'btn btn-euros btn-primary', onClick: function onClick() {
-								return onFilterClick('all');
+								return onFilterClick('group');
 							} },
-						'All'
+						'Groups'
 					)
-				),
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: (0, _classnames2.default)(groupClass), role: 'group' },
 				groupButtons
 			)
 		);

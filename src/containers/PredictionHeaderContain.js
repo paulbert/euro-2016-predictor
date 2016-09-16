@@ -9,7 +9,8 @@ const mapStateToProps = (state) => {
 		})[0],
 		isCurrent:(state.activeUserView === state.thisUser),
 		thisUser: state.thisUser,
-		mobileView: state.rightView.mobile
+		mobileView: state.rightView.mobile,
+		matchFilter: state.matchFilter
 	}
 };
 

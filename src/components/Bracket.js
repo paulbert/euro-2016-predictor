@@ -131,8 +131,10 @@ const Bracket = ({ user, fixtures, view, predictionsTemplate, isCurrent }) => {
 	
 	return (
 	<div className={classnames(colClasses)}>
-		<div className="bracket">
-			<BracketGame bracketPredictions={bracketPredictions} bracketForm={bracketForm} matchNum={15} />
+		<div className="bracket-container">
+			<div className="bracket">
+				<BracketGame bracketPredictions={bracketPredictions} bracketForm={bracketForm} matchNum={15} />
+			</div>
 		</div>
 	</div>
 )}
