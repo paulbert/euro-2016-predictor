@@ -25,7 +25,7 @@ var compiler = webpack({
 	output: {
 		path: 'builds',
 		filename: '[name].bundle.js',
-		sourceMapFilename: 'bundle.map'
+		sourceMapFilename: '[name].bundle.map'
 	},
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
@@ -39,7 +39,8 @@ var compiler = webpack({
 			{ test: /\.json$/, loader: 'json' },
 			{ test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel', query:{presets:['es2015','react','stage-0']} }
 		]
-	}	
+	},
+	devtool:'source-map'
 });
 
 var db_name = 'euros';
