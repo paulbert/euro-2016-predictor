@@ -2,9 +2,9 @@
 var fileType = require('file-type');
 var request = require('request');
 
-function trashDAO (db) {
+function trashDAO (db,testUsers) {
 	
-	var collection = 'trash';
+	var collection = 'trash' + testUsers ? '_test' : '';
 	
 	function insertNewTrash(url,userId,callback) {
 		db.collection(collection).insert({trash:url,userId:userId,date:new Date(Date.now())},callback);

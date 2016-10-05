@@ -2,9 +2,9 @@
 var crypto = require('crypto');
 var _ = require('underscore');
 
-function usersDAO (db) {
+function usersDAO (db,testUsers) {
 	
-	var collection = 'users';
+	var collection = 'users' + testUsers ? '_test' : '';
 	
 	function get(user,callback) {
 		var id = user._id ? user._id : user.name;
@@ -61,16 +61,18 @@ function usersDAO (db) {
 				var score = parseFloat(p[key]);
 				if(Number.isInteger(score) && score >= 0) {
 					// Checks validity of prediction based on date (based on cutoff of start of knockout stages and match start time)
-					// var p_date = val.p_id.split('|')[1].split('-');
-					// var year = parseInt(p_date[0]),
-						// month = parseInt(p_date[1]) - 1,
-						// day = parseInt(p_date[2]);
-					// var gameDate = new Date(Date.UTC(year,month,day,13)),
-						// cutoffDate = new Date(Date.UTC(2016,5,25,13)),
-						// rightNow = new Date(Date.now());
-					// if(rightNow > gameDate || rightNow > cutoffDate) {
-						// valid = false;
-					// }
+					if(!testUsers) {
+						var p_date = val.p_id.split('|')[1].split('-');
+						var year = parseInt(p_date[0]),
+							month = parseInt(p_date[1]) - 1,
+							day = parseInt(p_date[2]);
+						var gameDate = new Date(Date.UTC(year,month,day,13)),
+							cutoffDate = new Date(Date.UTC(2016,5,25,13)),
+							rightNow = new Date(Date.now());
+						if(rightNow > gameDate || rightNow > cutoffDate) {
+							valid = false;
+						}
+					}
 				} else {
 					valid =  false;
 				}

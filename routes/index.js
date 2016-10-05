@@ -8,10 +8,12 @@ var usersDAO = require('./usersDAO'),
 	
 module.exports = exports = function(app,db) {
 	
-	var users = usersDAO(db),
+	var testUsers = true;
+	
+	var users = usersDAO(db,testUsers),
 		sessions = sessionsDAO(db),
 		fixtures = fixturesDAO(db,app);
-		trash = trashDAO(db,app),
+		trash = trashDAO(db,testUsers),
 		cookieTime = 30 * 24 * 3600000;
 	
 	
