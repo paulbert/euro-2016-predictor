@@ -4,7 +4,8 @@ var request = require('request');
 
 function trashDAO (db,testUsers) {
 	
-	var collection = 'trash' + (testUsers ? '_test' : '');
+	var collection = 'trash' + (testUsers ? '_test' : ''),
+		usersCollection = 'users' + (testUsers ? '_test' : '');
 	
 	function insertNewTrash(url,userId,callback) {
 		db.collection(collection).insert({trash:url,userId:userId,date:new Date(Date.now())},callback);
@@ -64,7 +65,7 @@ function trashDAO (db,testUsers) {
 				callback(err);
 			} else {
 				trashArray = trash;
-				db.collection('users').find({}).toArray(trashUserJoin);
+				db.collection(usersCollection).find({}).toArray(trashUserJoin);
 			}
 		}
 		

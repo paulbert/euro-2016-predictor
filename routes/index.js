@@ -8,7 +8,7 @@ var usersDAO = require('./usersDAO'),
 	
 module.exports = exports = function(app,db) {
 	
-	var testUsers = true;
+	var testUsers = false;
 	
 	var users = usersDAO(db,testUsers),
 		sessions = sessionsDAO(db,testUsers),
