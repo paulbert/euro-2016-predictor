@@ -4,7 +4,7 @@ var request = require('request');
 
 function trashDAO (db,testUsers) {
 	
-	var collection = 'trash' + testUsers ? '_test' : '';
+	var collection = 'trash' + (testUsers ? '_test' : '');
 	
 	function insertNewTrash(url,userId,callback) {
 		db.collection(collection).insert({trash:url,userId:userId,date:new Date(Date.now())},callback);

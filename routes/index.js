@@ -11,7 +11,7 @@ module.exports = exports = function(app,db) {
 	var testUsers = true;
 	
 	var users = usersDAO(db,testUsers),
-		sessions = sessionsDAO(db),
+		sessions = sessionsDAO(db,testUsers),
 		fixtures = fixturesDAO(db,app);
 		trash = trashDAO(db,testUsers),
 		cookieTime = 30 * 24 * 3600000;

@@ -23940,6 +23940,7 @@
 		switch (action.type) {
 			case 'CHANGE_PREDICTION':
 				return newPredictionState(state, action);
+			// When receiving users with new predictions set props which help populate list with match winners previously selected
 			case 'RECEIVE_USERS':
 				var thisUser = getCurrentUser();
 				if (thisUser === '') {

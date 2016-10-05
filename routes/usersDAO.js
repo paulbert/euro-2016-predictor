@@ -4,8 +4,8 @@ var _ = require('underscore');
 
 function usersDAO (db,testUsers) {
 	
-	var collection = 'users' + testUsers ? '_test' : '',
-		leagueCollection = 'league' + testUsers ? '_test' : '';
+	var collection = 'users' + (testUsers ? '_test' : ''),
+		leagueCollection = 'league' + (testUsers ? '_test' : '');
 	
 	function get(user,callback) {
 		var id = user._id ? user._id : user.name;
@@ -42,6 +42,8 @@ function usersDAO (db,testUsers) {
 		
 		function checkCode (err,result) {
 			console.log('Checking league code...');
+			console.log(result);
+			console.log(result.code);
 			if(result.code === user.leagueCode) {
 				console.log('league code checks out');
 				get(formattedUser,checkUnique);
@@ -50,6 +52,8 @@ function usersDAO (db,testUsers) {
 				callback('League code is invalid',0);
 			}
 		}
+		
+		console.log('League: ' + leagueCollection);
 		
 		db.collection(leagueCollection).findOne({},checkCode);
 		

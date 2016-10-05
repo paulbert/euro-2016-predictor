@@ -1,9 +1,9 @@
 
 var crypto = require('crypto');
 
-function sessionsDAO (db) {
+function sessionsDAO (db,testUsers) {
 	
-	var collection = 'sessions';
+	var collection = 'sessions' + (testUsers ? '_test' : '');
 	
 	function getUserSessions(user,callback) {
 		var userId = user._id ? user._id : user.name;
