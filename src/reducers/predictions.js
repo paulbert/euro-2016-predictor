@@ -1,3 +1,5 @@
+// State for the currently typed in prediction for the logged in user
+// Stores information to be saved and updates future winners in the list
 
 import { initPredictions } from '../reducers/initStateCalcs.js'
 import { reformatBracket } from '../reducers/initStateCalcs.js'
@@ -172,6 +174,7 @@ const predictions = (state = initPredictions(),action) => {
 	switch(action.type) {
 		case 'CHANGE_PREDICTION':
 			return newPredictionState(state,action);
+		// When receiving users with new predictions set props which help populate list with match winners previously selected
 		case 'RECEIVE_USERS':
 			let thisUser = getCurrentUser();
 			if(thisUser === '') {

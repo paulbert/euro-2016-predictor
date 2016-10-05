@@ -1,3 +1,4 @@
+// State for the currently selected user's saved predictions as received from server
 
 const deDupe = (oldArray,newArray) => {
 	let filteredArray = newArray.filter((val,ind,arr) => {
