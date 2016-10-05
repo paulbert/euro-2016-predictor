@@ -118,7 +118,7 @@ const FixtureList = ({ fixtures, predictions, user, isCurrent, groups, matchFilt
 		</thead>
 		<tbody>
 			{fixtures.filter(fixtureFilter).map(setFixtureLine)}
-			// Populate listed fixtures from bracket from prediction state when viewing user or from fixture (actual) state when no user is specified
+			// Populate listed fixtures from bracket from prediction state (changeable predictions) when viewing user or from fixture (actual scores) state when no user is specified
 			{predictions.filter(bracketFilter).map(reformatBracket).map(bracketUpdateWinners).map(bracketAddRealFixture).map(setFixtureLine)}
 			{fixtures.filter(actualBracketFilter).map(setFixtureLine)}
 		</tbody>
