@@ -4,7 +4,8 @@ var _ = require('underscore');
 
 function usersDAO (db,testUsers) {
 	
-	var collection = 'users' + testUsers ? '_test' : '';
+	var collection = 'users' + testUsers ? '_test' : '',
+		leagueCollection = 'league' + testUsers ? '_test' : '';
 	
 	function get(user,callback) {
 		var id = user._id ? user._id : user.name;
@@ -48,7 +49,7 @@ function usersDAO (db,testUsers) {
 			}
 		}
 		
-		db.collection('league').findOne({},checkCode);
+		db.collection(leagueCollection).findOne({},checkCode);
 		
 	}
 	
