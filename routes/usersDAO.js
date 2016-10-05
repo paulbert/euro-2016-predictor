@@ -43,8 +43,10 @@ function usersDAO (db,testUsers) {
 		function checkCode (err,result) {
 			console.log('Checking league code...');
 			if(result.code === user.leagueCode) {
+				console.log('league code checks out');
 				get(formattedUser,checkUnique);
 			} else {
+				console.log('wrong league code!');
 				callback('League code is invalid',0);
 			}
 		}
