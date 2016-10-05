@@ -54,8 +54,11 @@ const Fixture = ({ f_id, date, status, matchday, homeTeamName, awayTeamName, res
 		}
 	}
 	
-	let inputClassObj = { 'score-box':true, 'hidden': false }
-	inputClassObj.hidden = (!isCurrent || new Date(Date.UTC(2016,5,23,13)) > reformatDate || today > new Date(Date.UTC(2016,5,25,13)));
+	let inputClassObj = { 'score-box':true, 'hidden': false };
+	// Set input boxes to be hidden if not on current user
+	inputClassObj.hidden = (!isCurrent);
+	// Set input boxes to be hidden if knockout stages have started or if match is in the group stages
+	// inputClassObj.hidden = (!isCurrent || new Date(Date.UTC(2016,5,23,13)) > reformatDate || today > new Date(Date.UTC(2016,5,25,13)));
 	let inputClass = classnames(inputClassObj);
 	
 	let iconClassObj = { 'glyphicon':true,'glyphicon-ok':false,'glyphicon-remove':false,'glyphicon-star':false,'hidden':true }
